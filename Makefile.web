@@ -1,0 +1,34 @@
+include Makefile.common
+
+TARGET = 1ST_READ
+
+OPTFLAGS=-O3 -fomit-frame-pointer -fno-delayed-branch -DDREAMCAST -Wall -Werror
+KOS_ROMDISK_DIR = romdisk_boot
+KOS_BASE = .
+COMPILER_CC = emcc
+COMPILER_INCLUDES = ../addons/libtari/include
+
+all: complete
+
+complete: build_develop
+
+clean:
+	-del -f $(TARGET).elf 
+	-del /s *.o
+	-del -f $(TARGET).BIN
+	-del -f assets/debug/*.pkg
+	-del -r -f romdisk_boot
+	-del -r -f filesystem
+	-del -f romdisk.img
+	-del -f web
+
+build_develop: $(OBJS) 
+	-mkdir web
+	emcc $(OBJS) -O2 -s ALLOW_MEMORY_GROWTH=1 -s USE_SDL=2 -s USE_SDL_IMAGE=2 \
+	-L../addons/libtari/bin -ltari \
+	--use-preload-plugins \
+    --preload-file tracks --preload-file ../addons/libtari/assets/effects@effects --preload-file ../addons/libtari/assets/logo@logo --preload-file assets --preload-file assets/fonts@fonts --preload-file assets/debug@debug -o web/DreamFight16.html
+	
+
+TARI_INCLUDE = ../addons/libtari/include
+include ../addons/libtari/Makefile.commonweb

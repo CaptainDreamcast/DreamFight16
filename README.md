@@ -1,2 +1,2 @@
-# DreamFight16
-2D Fighter for the Sega Dreamcast.
+# Dream Fight 16 A.D.
+2D Fighter for Sega Dreamcast.

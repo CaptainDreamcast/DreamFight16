@@ -128,9 +128,17 @@
   <ItemGroup>
     <ClCompile Include="..\fightscreen.c" />
     <ClCompile Include="..\main.c" />
+    <ClCompile Include="..\mugenanimationreader.c" />
+    <ClCompile Include="..\mugendefreader.c" />
+    <ClCompile Include="..\mugenspritefilereader.c" />
+    <ClCompile Include="..\stage.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fightscreen.h" />
+    <ClInclude Include="..\mugenanimationreader.h" />
+    <ClInclude Include="..\mugendefreader.h" />
+    <ClInclude Include="..\mugenspritefilereader.h" />
+    <ClInclude Include="..\stage.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,9 @@
     <ClCompile Include="..\mugenanimationreader.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\mugencommandreader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fightscreen.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\mugenanimationreader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mugencommandreader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -129,6 +129,7 @@
     <ClCompile Include="..\fightscreen.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\mugenanimationreader.c" />
+    <ClCompile Include="..\mugencommandreader.c" />
     <ClCompile Include="..\mugendefreader.c" />
     <ClCompile Include="..\mugenspritefilereader.c" />
     <ClCompile Include="..\stage.c" />
@@ -136,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="..\fightscreen.h" />
     <ClInclude Include="..\mugenanimationreader.h" />
+    <ClInclude Include="..\mugencommandreader.h" />
     <ClInclude Include="..\mugendefreader.h" />
     <ClInclude Include="..\mugenspritefilereader.h" />
     <ClInclude Include="..\stage.h" />

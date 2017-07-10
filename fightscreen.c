@@ -7,6 +7,7 @@
 
 #include "stage.h"
 #include "mugenanimationreader.h"
+#include "mugencommandreader.h"
 
 static Screen* getNextFightScreenScreen() {
 	
@@ -36,6 +37,7 @@ static Screen* getNextFightScreenScreen() {
 static void loadFightScreen() {
 	loadStageFromMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
 	loadMugenAnimationFile("assets/kfm.air");
+	loadMugenCommandFile("assets/kfm.cmd");
 }
 
 Screen FightScreen = {

@@ -133,7 +133,9 @@ static void handleHitboxSizeAssignment() {
 }
 
 static int isHitboxSizeAssignment(char* tName) {
-	return !strcmp("Clsn2Default", tName) || !strcmp("Clsn2", tName) || !strcmp("Clsn1Default", tName) || !strcmp("Clsn1", tName);
+	char name[100];
+	sscanf(tName, "%s", name);
+	return !strcmp("Clsn2Default", name) || !strcmp("Clsn2", name) || !strcmp("Clsn1Default", name) || !strcmp("Clsn1", name);
 }
 
 static void handleCollisionHitboxAssignment(List* tHitboxes, MugenDefScriptGroupElement* tElement) {

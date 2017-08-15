@@ -1002,13 +1002,13 @@ char * getPlayerHitDefinitionAttributes(Player* p)
 
 int getPlayerVariable(Player* p, int tIndex)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	return p->mVars[tIndex];
 }
 
 void setPlayerVariable(Player* p, int tIndex, int tValue)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	p->mVars[tIndex] = tValue;
 }
 
@@ -1021,13 +1021,13 @@ void addPlayerVariable(Player * p, int tIndex, int tValue)
 
 int getPlayerSystemVariable(Player* p, int tIndex)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	return p->mSystemVars[tIndex];
 }
 
 void setPlayerSystemVariable(Player* p, int tIndex, int tValue)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	p->mSystemVars[tIndex] = tValue;
 }
 
@@ -1040,13 +1040,13 @@ void addPlayerSystemVariable(Player * p, int tIndex, int tValue)
 
 double getPlayerFloatVariable(Player* p, int tIndex)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	return p->mFloatVars[tIndex];
 }
 
 void setPlayerFloatVariable(Player* p, int tIndex, double tValue)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	p->mFloatVars[tIndex] = tValue;
 }
 
@@ -1059,13 +1059,13 @@ void addPlayerFloatVariable(Player * p, int tIndex, double tValue)
 
 double getPlayerSystemFloatVariable(Player* p, int tIndex)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	return p->mSystemFloatVars[tIndex];
 }
 
 void setPlayerSystemFloatVariable(Player* p, int tIndex, double tValue)
 {
-	assert(tIndex < 100);
+	// assert(tIndex < 100); // TODO: figure out
 	p->mSystemFloatVars[tIndex] = tValue;
 }
 
@@ -2411,7 +2411,10 @@ int getPlayerPaletteNumber(Player * p)
 
 void setPlayerScreenBound(Player * p, int tIsBoundToScreen, int tIsCameraFollowingX, int tIsCameraFollowingY)
 {
-	(void)p, tIsBoundToScreen, tIsCameraFollowingX, tIsCameraFollowingY;
+	(void)p;
+	(void)tIsBoundToScreen;
+	(void)tIsCameraFollowingX;
+	(void)tIsCameraFollowingY;
 	// TODO
 }
 

@@ -207,7 +207,8 @@ int getExplodAmount(Player * tPlayer)
 
 int getExplodAmountWithID(Player * tPlayer, int tID)
 {
-	(void)tPlayer, tID;
+	(void)tPlayer;
+	(void)tID;
 	return 0; // TODO
 }
 

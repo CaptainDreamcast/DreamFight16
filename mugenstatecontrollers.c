@@ -1878,15 +1878,6 @@ static void handleExplodThreeIntegerElements(MugenAssignment* tAssignment, Playe
 	freeMemory(flag);
 }
 
-static void handleExplodOneFloatElement(MugenAssignment* tAssignment, Player* tPlayer, int tID, void(tFunc)(int, double), double tDefault) {
-	char* flag = evaluateAssignmentAndReturnAsAllocatedString(tAssignment, tPlayer);
-
-	if (!strcmp("", flag)) tFunc(tID, tDefault);
-	else tFunc(tID, atof(flag));
-
-	freeMemory(flag);
-}
-
 static void handleExplodTwoFloatElements(MugenAssignment* tAssignment, Player* tPlayer, int tID, void(tFunc)(int, double, double), double tDefault1, double tDefault2) {
 	char* flag = evaluateAssignmentAndReturnAsAllocatedString(tAssignment, tPlayer);
 
@@ -1904,21 +1895,6 @@ static void handleExplodTwoFloatElements(MugenAssignment* tAssignment, Player* t
 	tFunc(tID, val1, val2);
 
 	freeMemory(flag);
-}
-
-static void handleExplodTwoOptionalIntegerElements(MugenAssignment* tAssignment, Player* tPlayer, int tID, void(tFunc)(int, int, int), void(tFuncDisable)(int)) {
-	char* flag = evaluateAssignmentAndReturnAsAllocatedString(tAssignment, tPlayer);
-
-	if (!strcmp("", flag)) {
-		tFuncDisable(tID);
-	}
-
-	freeMemory(flag);
-
-	int x, y;
-	getTwoIntegerValuesWithDefaultValues(tAssignment, tPlayer, &x, &y, 0, 0);
-
-	tFunc(tID, x, y);
 }
 
 static void handleHitDefinitionOneIntegerElement(MugenAssignment* tAssignment, Player* tPlayer, void(tFunc)(Player*, int), int tDefault) {
@@ -2975,7 +2951,8 @@ static void handleAngleSetController(MugenStateController* tController, Player* 
 
 static void handleRemovingExplod(MugenStateController* tController, Player* tPlayer) {
 	RemoveExplodController* e = tController->mData;
-	(void)e, tPlayer;
+	(void)e;
+	(void)tPlayer;
 	// TODO: implement with rest of explod
 
 }

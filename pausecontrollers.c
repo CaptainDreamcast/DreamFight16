@@ -139,7 +139,9 @@ void setSuperPauseAnimation(int tIsInPlayerFile, int tAnimationNumber)
 
 void setSuperPauseSound(int tIsInPlayerFile, int tSoundGroup, int tSoundItem)
 {
-	(void)tIsInPlayerFile, tSoundGroup, tSoundItem;
+	(void)tIsInPlayerFile;
+	(void)tSoundGroup;
+	(void)tSoundItem;
 	// TODO
 }
 

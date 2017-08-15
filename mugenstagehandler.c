@@ -126,7 +126,10 @@ void scrollMugenStageHandlerDown()
 
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase)
 {
-	(void)tTime, tFrequency, tAmplitude, tPhase;
+	(void)tTime;
+	(void)tFrequency;
+	(void)tAmplitude;
+	(void)tPhase;
 	// TODO;
 }
 

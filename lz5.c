@@ -4,7 +4,8 @@
 
 static void naivememcpy(uint8_t* dst, uint32_t *dstpos, uint32_t ofs, uint32_t len)
 {
-	for (int run = len; run > 0; run--)
+	int run;
+	for (run = len; run > 0; run--)
 	{
 		dst[*dstpos] = dst[((*dstpos) - ofs)];
 		(*dstpos)++;
@@ -72,7 +73,8 @@ static uint32_t processLZ(uint8_t* dst, uint8_t* src, uint32_t* dstpos, uint32_t
 
 static uint32_t processSRLE(uint8_t* dst, uint8_t* src, uint32_t* dstpos, uint32_t* srcpos)
 {
-	for (int run = 0; run < (src[*srcpos] >> 5); run++)
+	int run;
+	for (run = 0; run < (src[*srcpos] >> 5); run++)
 	{
 		dst[*dstpos] = (src[*srcpos] & 0x1F);
 		(*dstpos)++;
@@ -83,7 +85,8 @@ static uint32_t processSRLE(uint8_t* dst, uint8_t* src, uint32_t* dstpos, uint32
 
 static uint32_t processLRLE(uint8_t* dst, uint8_t* src, uint32_t* dstpos, uint32_t* srcpos)
 {
-	for (int run = 0; run < (src[(*srcpos) + 1] + 8); run++)
+	int run;
+	for (run = 0; run < (src[(*srcpos) + 1] + 8); run++)
 	{
 		dst[*dstpos] = (src[*srcpos] & 0x1F);
 		(*dstpos)++;
@@ -115,7 +118,8 @@ void decompressLZ5(uint8_t* tDst, uint8_t* tSrc, uint32_t tSourceLength)
 		//if the bit is 0, it is an RLE Packet, otherwise it is an LZ packet.
 		uint8_t ctrlbyt = tSrc[srcpos];
 		srcpos++;
-		for (int b = 0; (b < 8); b++)
+		int b;
+		for (b = 0; (b < 8); b++)
 		{
 			if (!(ctrlbyt & (1 << b)))
 				processRLE(tDst, tSrc, &dstpos, &srcpos);

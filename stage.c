@@ -8,6 +8,7 @@
 #include <tari/system.h>
 #include <tari/animation.h>
 #include <tari/stagehandler.h>
+#include <tari/math.h>
 
 #include "mugendefreader.h"
 #include "mugenspritefilereader.h"
@@ -300,7 +301,11 @@ static void loadStageTextures(char* tPath) {
 static void loadStageBackgroundElements(char* tPath, MugenDefScript* s) {
 	MugenDefScriptGroup* bgdef = loadStageBackgroundDefinitionAndReturnGroup(s);
 
+	printf("load textures\n");
+
 	loadStageTextures(tPath);
+
+	printf("loaded textures\n");
 
 	gData.mBackgroundElements = new_list();
 	int i = 0;
@@ -336,11 +341,15 @@ static void loadStage(void* tData)
 	loadStageMusic(&s);
 	setMugenStageHandlerCameraCoordinates(makeVector3DI(320, 240, 0)); // TODO
 
-	loadStageBackgroundElements(gData.mDefinitionPath, &s);
+	printf("load gb elements\n");
+	int isEval = 0;		
+	if(isEval) loadStageBackgroundElements(gData.mDefinitionPath, &s);
 
 	setStageCamera();
 
 	unloadMugenDefScript(s);
+
+	printf("loading finished\n");
 }
 
 static void updateCameraMovement() {

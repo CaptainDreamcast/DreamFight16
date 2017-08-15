@@ -3,11 +3,13 @@
 #include <assert.h>
 #include <ctype.h>
 
+#define DEBUG
+
 #include <tari/file.h>
 #include <tari/memoryhandler.h>
 #include <tari/log.h>
 #include <tari/system.h>
-
+#include <tari/math.h>
 
 typedef struct MugenDefToken_t {
 	char mValue[MUGEN_DEF_STRING_LENGTH];
@@ -117,7 +119,12 @@ static void moveBufferPointerForward(Buffer* b, BufferPointer* p) {
 
 static void moveBufferPointerBack(BufferPointer* p) {
 	while (isEmpty(*p)) {
-		assert(!decreaseAndCheckIfOver(p));
+		if(!decreaseAndCheckIfOver(p)) {
+			(*p)[100] = '\0';
+			printf("test: %s\n", *p);
+			abortSystem();
+		}
+		//assert(!decreaseAndCheckIfOver(p));
 	}
 }
 
@@ -661,6 +668,7 @@ static void deleteTokens(MugenDefToken* t) {
 
 MugenDefScript loadMugenDefScript(char * tPath)
 {
+	printf("load %s\n", tPath);
 	debugLog("Start loading script.");
 	debugString(tPath);
 
@@ -675,6 +683,7 @@ MugenDefScript loadMugenDefScript(char * tPath)
 	tokensToDefScript(&d, root);
 	deleteTokens(root);
 
+	printf("Finished loading\n");
 	return d;
 }
 

@@ -6,6 +6,7 @@
 #include <tari/log.h>
 #include <tari/system.h>
 #include <tari/input.h>
+#include <tari/math.h>
 
 typedef struct {
 	char mName[100];

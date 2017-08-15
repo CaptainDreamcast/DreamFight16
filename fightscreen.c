@@ -5,6 +5,7 @@
 #include <tari/input.h>
 #include <tari/stagehandler.h>
 #include <tari/collisionhandler.h>
+#include <tari/system.h>
 
 #include "stage.h"
 #include "mugenanimationreader.h"
@@ -39,16 +40,21 @@ static void loadFightScreen() {
 	instantiateActor(MugenStateHandler);
 	instantiateActor(ExplodHandler);
 	
+	loadMugenConstantsFile("assets/kfm/kfm.cns");
+	printf("asdds 1\n");
+	loadMugenConstantsFile("assets/kfm/kfm.cns");
+	abortSystem();
+
 	setStageMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
 	instantiateActor(StageBP);
 
 	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
-	setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
+	//setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
 	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
 
-	setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
+	//setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
 	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");
-	//setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
+	setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
 	loadPlayers();
 
 	instantiateActor(FightUIBP);

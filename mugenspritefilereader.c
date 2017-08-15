@@ -7,6 +7,7 @@
 #include <tari/log.h>
 #include <tari/system.h>
 #include <tari/texture.h>
+#include <tari/math.h>
 
 #include "lz5.h"
 
@@ -221,7 +222,8 @@ static Buffer decodeRLE8BufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
 	{
 		if (((input[srcpos] & 0xC0) == 0x40))
 		{
-			for (int run = 0; run < (input[srcpos] & 0x3F); run++)
+			int run;
+			for (run = 0; run < (input[srcpos] & 0x3F); run++)
 			{
 				output[dstpos] = input[srcpos + 1];
 				dstpos++;
@@ -281,6 +283,8 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 	int finalWidth = getFinalImageSize(w);
 	int finalHeight = getFinalImageSize(h);
 	int32_t pcxImageSize = bytesPerPixel*w*h;
+
+	printf("load sprite1: %d/%d %d/%d\n", w, finalWidth, h, finalHeight);
 
 	assert(header.mBitsPerPixel == 8);
 	assert(header.mEncoding == 1);

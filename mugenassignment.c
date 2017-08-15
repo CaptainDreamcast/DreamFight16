@@ -117,7 +117,8 @@ static int isOnHighestLevelWithStartPosition(char* tText, char* tPattern, int* t
 	int depth1 = 0;
 	int depth2 = 0;
 	int depth3 = 0;
-	for (int i = tStart; i < n - m + 1; i++) {
+	int i;
+	for (i = tStart; i < n - m + 1; i++) {
 		if (tText[i] == '(') depth1++;
 		if (tText[i] == ')') depth1--;
 		if (tText[i] == '[') depth2++;
@@ -127,7 +128,8 @@ static int isOnHighestLevelWithStartPosition(char* tText, char* tPattern, int* t
 		if (depth1 || depth2 || depth3) continue;
 
 		int isSame = 1;
-		for (int j = 0; j < m; j++) {
+		int j;
+		for (j = 0; j < m; j++) {
 			if (tText[i + j] != tPattern[j]) {
 				isSame = 0;
 				break;
@@ -485,7 +487,8 @@ static int isNumericalConstant(char* tText) {
 	if (n == 0) return 0;
 
 	int mPointAmount = 0;
-	for (int i = 0; i < n; i++) {
+	int i;
+	for (i = 0; i < n; i++) {
 		if (tText[i] == '.') mPointAmount++;
 		else if (tText[i] >= '0' && tText[i] <= '9') continue;
 		else return 0;
@@ -507,7 +510,8 @@ static int isFloatConstant(char* tText) {
 	if (n == 0) return 0;
 
 	int mPointAmount = 0;
-	for (int i = 0; i < n; i++) {
+	int i;
+	for (i = 0; i < n; i++) {
 		if (tText[i] == '.') mPointAmount++;
 		else if (tText[i] >= '0' && tText[i] <= '9') continue;
 		else return 0;

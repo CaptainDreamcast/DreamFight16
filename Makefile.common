@@ -1,1 +1,8 @@
-OBJS = main.o 
+OBJS = main.o \
+collision.o config.o fightscreen.o fightui.o gamelogic.o lz5.o \
+mugenanimationhandler.o mugenanimationreader.o mugenassignment.o \
+mugenassignmentevaluator.o mugencommandhandler.o mugencommandreader.o \
+mugendefreader.o mugenexplod.o mugensound.o mugenspritefilereader.o \
+mugenstagehandler.o mugenstatecontrollers.o mugenstatehandler.o \
+mugenstatereader.o pausecontrollers.o playerdefinition.o \
+playerhitdata.o stage.o

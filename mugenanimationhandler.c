@@ -445,6 +445,8 @@ static void drawSingleMugenAnimation(void* tCaller, void* tData) {
 		e->mHasActiveFrameAngle = 0;
 	}
 
+	(void)drawAngle; // TODO: use
+
 	if (e->mHasOneFrameScale) {
 		drawScale = e->mOneFrameScale;
 		e->mHasOneFrameScale = 0;

@@ -1,0 +1,94 @@
+[Data]
+life = 1000
+attack = 100
+defence = 100
+fall.defence_up = 0;1
+liedown.time = 11
+airjuggle = 1
+sparkno = s8000
+guard.sparkno = s8030
+KO.echo = 0
+volume = 255
+IntPersistIndex = 28
+FloatPersistIndex = 40
+
+[Size]
+xscale = 1           ;Horizontal scaling factor.
+yscale = 1           ;Vertical scaling factor.
+ground.back = 16     ;Player width (back, ground)
+ground.front = 16    ;Player width (front, ground)
+air.back = 16        ;Player width (back, air)
+air.front = 16       ;Player width (front, air)
+height = 60          ;Height of player (for opponent to jump over)
+attack.dist = 160    ;Default attack distance
+proj.attack.dist = 90 ;Default attack distance for projectiles
+proj.doscale = 0     ;Set to 1 to scale projectiles too
+head.pos = 0, -80   ;Approximate position of head
+mid.pos = 0, -58    ;Approximate position of midsection
+shadowoffset = 0     ;Number of pixels to vertically offset the shadow
+draw.offset = 0,0    ;Player drawing offset in pixels (x, y)
+
+[Velocity]
+walk.fwd  = 2.3      ;Walk forward
+walk.back = -2.2     ;Walk backward
+run.fwd  = 4.5,0.0;4.6, 0    ;Run forward (x, y)
+run.back = -6.5,-2.8 ;Hop backward (x, y)
+jump.neu = 0,-10.4    ;Neutral jumping velocity (x, y)
+jump.back = -2.2   ;Jump back Speed (x, y)
+jump.fwd = 2.3       ;Jump forward Speed (x, y)
+runjump.back = -4.5,-6.3;8.1 ;Running jump speeds (opt)
+runjump.fwd = 4.5,-6.3;8.1      ;.
+airjump.neu = 0,-6.3;8.1      ;.
+airjump.back = -4.5      ;Air jump speeds (opt)
+airjump.fwd = 4.5         ;.
+air.gethit.groundrecover = -.15,-3.5  ;Velocity for ground recovery state (x, y) **MUGEN 1.0**
+air.gethit.airrecover.mul = .5,.2     ;Multiplier for air recovery velocity (x, y) **MUGEN 1.0**
+air.gethit.airrecover.add = 0,-4.5    ;Velocity offset for air recovery (x, y) **MUGEN 1.0**
+air.gethit.airrecover.back = -1       ;Extra x-velocity for holding back during air recovery **MUGEN 1.0**
+air.gethit.airrecover.fwd = 0         ;Extra x-velocity for holding forward during air recovery **MUGEN 1.0**
+air.gethit.airrecover.up = -2         ;Extra y-velocity for holding up during air recovery **MUGEN 1.0**
+air.gethit.airrecover.down = 1.5      ;Extra y-velocity for holding down during air recovery **MUGEN 1.0**
+
+
+[Movement]
+airjump.num = 0      ;Number of air jumps allowed (opt)
+airjump.height = 35  ;Minimum distance from ground before you can air jump (opt)
+yaccel = .5       ;Vertical acceleration
+stand.friction = .85  ;Friction coefficient when standing
+crouch.friction = .82 ;Friction coefficient when crouching
+stand.friction.threshold = 2          ;If player's speed drops below this threshold while standing, stop his movement **MUGEN 1.0**
+crouch.friction.threshold = .05       ;If player's speed drops below this threshold while crouching, stop his movement **MUGEN 1.0**
+air.gethit.groundlevel = 25           ;Y-position at which a falling player is considered to hit the ground **MUGEN 1.0**
+air.gethit.groundrecover.ground.threshold = -20 ;Y-position below which falling player can use the recovery command **MUGEN 1.0**
+air.gethit.groundrecover.groundlevel = 10   ;Y-position at which player in the ground recovery state touches the ground **MUGEN 1.0**
+air.gethit.airrecover.threshold = -1  ;Y-velocity above which player may use the air recovery command **MUGEN 1.0**
+air.gethit.airrecover.yaccel = .5    ;Vertical acceleration for player in the air recovery state **MUGEN 1.0**
+air.gethit.trip.groundlevel = 15      ;Y-position at which player in the tripped state touches the ground **MUGEN 1.0**
+down.bounce.offset = 0, 20            ;Offset for player bouncing off the ground (x, y) **MUGEN 1.0**
+down.bounce.yaccel = .4               ;Vertical acceleration for player bouncing off the ground **MUGEN 1.0**
+down.bounce.groundlevel = 12          ;Y-position at which player bouncing off the ground touches the ground again **MUGEN 1.0**
+down.friction.threshold = .05         ;If the player's speed drops below this threshold while lying down, stop his movement **MUGEN 1.0**
+
+
+[Quotes]
+victory1 = "Heheheh, I've defeated everyone but Reimu. I wonder if Reimu can beat me? " ;
+victory2 = "As I thought, I'm number one... Well, that was the obvious result." ;
+victory3 = "Hah, aren't you a defiant challenger." ;
+victory4 = "Don't be ridiculous. How do you plan on beating me, exactly?" ;
+victory5 = "You look weaker than that last one." ;
+victory6 = "You weren't nearly as strong as you thought you were..." ;
+;;Victory vs Reimu
+victory7 = "So weak, as always. I can't believe you're still the shrine maiden." ;
+victory8 = "Oh, who cares about some cheap shrine in the middle of nowhere? My goal is to exact revenge on the entire human race." ;
+;;Victory vs Marisa
+victory9 = "Still not training hard I see..." ;
+victory10 = "I wonder if you really can defeat me." ;
+;;Victory vs Yuuka
+victory11 = "I see Marisa has picked up a few tricks from you." ;
+victory12 = "You, the strongest youkai in Gensokyo? That was pathetic." ;
+;;Victory vs Alice
+victory13 = "Oh, well I don't remember every single face of the small fries I encounter." ;
+victory14 = "What did you even come here for?" ;
+
+
+

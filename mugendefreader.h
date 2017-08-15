@@ -3,6 +3,8 @@
 #include <tari/datastructures.h>
 #include <tari/geometry.h>
 
+#define MUGEN_DEF_STRING_LENGTH 500
+
 typedef enum {
 	MUGEN_DEF_SCRIPT_GROUP_STRING_ELEMENT,
 	MUGEN_DEF_SCRIPT_GROUP_NUMBER_ELEMENT,
@@ -11,7 +13,7 @@ typedef enum {
 } MugenDefScriptGroupElementType;
 
 typedef struct {
-	char mElement[20][100];
+	char mElement[20][MUGEN_DEF_STRING_LENGTH];
 
 } MugenStringVector;
 
@@ -20,7 +22,7 @@ typedef struct {
 } MugenDefScriptVectorElement;
 
 typedef struct {
-	char mString[100];
+	char mString[MUGEN_DEF_STRING_LENGTH];
 
 } MugenDefScriptStringElement;
 
@@ -58,9 +60,13 @@ char* getAllocatedMugenDefStringVariable(MugenDefScript* tScript, char* tGroupNa
 int isMugenDefStringVariableAsElement(MugenDefScriptGroupElement* tElement);
 char* getAllocatedMugenDefStringVariableAsElement(MugenDefScriptGroupElement* tElement);
 
+int isMugenDefVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 
 int isMugenDefFloatVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 double getMugenDefFloatVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
+int isMugenDefFloatVariableAsElement(MugenDefScriptGroupElement* tElement);
+double getMugenDefFloatVariableAsElement(MugenDefScriptGroupElement* tElement);
+
 
 int isMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 int getMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
@@ -77,3 +83,10 @@ Vector3DI getMugenDefVectorIVariable(MugenDefScript* tScript, char* tGroupName, 
 
 int isMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement* tElement);
 MugenStringVector getMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement* tElement);
+
+void loadStringOrDefault(char* tDst, MugenDefScript* s, char* tGroup, char* tVariable, char* tDefault);
+
+void loadFloatOrDefault(double* tDst, MugenDefScript* s, char* tGroup, char* tVariable, double tDefault);
+void loadIntegerOrDefault(int* tDst, MugenDefScript* s, char* tGroup, char* tVariable, int tDefault);
+void loadVectorOrDefault(Vector3D* tDst, MugenDefScript* s, char* tGroup, char* tVariable, Vector3D tDefault);
+void loadVectorIOrDefault(Vector3DI* tDst, MugenDefScript* s, char* tGroup, char* tVariable, Vector3DI tDefault);

@@ -1,0 +1,39 @@
+;Kazmer13@aol.com
+;MugenTomb
+;http://mugentomb.cjb.net
+
+; Player information
+[Info]
+name = "liukang"
+displayname = "Liu Kang"
+versiondate = 12,01,2001    ;Version date of character
+mugenversion = 04,01,2001   ;Version of M.U.G.E.N character works on
+author = "Kazmer13"           ;Character author name
+pal.defaults = 1
+
+; Files for the player
+[Files]
+cmd      = liukang.cmd   ;Command set
+cns      = liukang.cns   ;Constants
+st       = liukang.cns   ;States
+st2      = liukangsp.st ;Specials
+st3      = liukangComm.st ; Common state overrides
+st4      = liukangBlood.st
+st5      = liukangFatality.st
+stcommon = common1.cns     ;Common states
+sprite   = liukang.sff   ;Sprite
+anim     = liukang.air   ;smoke.air
+sound   = liukang.snd   ;Sound
+pal1     = red.act            ;(LP)
+pal2     = blue.act           ;(LK)
+pal3     = lgtblue.act        ;(C)
+pal4     = green.act          ;(HP)
+pal5     = orange.act         ;(HK)
+pal6     = grey.act           ;(Z)
+pal7     = emerald.act   
+pal8     = gold.act   
+pal9     = dullblue.act  
+
+[Arcade]
+intro.storyboard = intro.def
+ending.storyboard = ending.def

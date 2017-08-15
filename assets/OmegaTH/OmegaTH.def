@@ -1,0 +1,24 @@
+[Info]
+name = "OmegaTH"         
+displayname = "Omega Tom Hanks"  
+versiondate = 04,14,2001    
+mugenversion = 04,14,2001  
+author = "Neo Ankh & ShinRyoga"        
+pal.defaults = 1     
+
+[Files]
+cmd     = OmegaTH.cmd   
+cns     = OmegaTH.cns   
+st      = OmegaTH.cns   
+stcommon = OmegaTH1.cns 
+sprite  = OmegaTH.sff   
+anim    = OmegaTH.air   
+sound   = OmegaTH.snd   
+pal1    = OmegaTH.act  
+
+; Arcade mode
+[Arcade]
+intro.storyboard = intro.def
+ending.storyboard = ending.def
+
+ 

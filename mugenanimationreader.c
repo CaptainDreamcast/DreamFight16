@@ -24,6 +24,7 @@ static struct {
 	List mOwnHitbox2;
 
 	int mIsLoopStart;
+	int mIsReadingDefaultHitbox;
 } gMugenAnimationState;
 
 static void setGlobalAnimationState() {
@@ -62,10 +63,12 @@ static void resetSingleAnimationState() {
 }
 
 
-static MugenAnimation* makeEmptyMugenAnimation() {
+static MugenAnimation* makeEmptyMugenAnimation(int tID) {
 	MugenAnimation* ret = allocMemory(sizeof(MugenAnimation));
-	ret->mLoopStart = -1;
+	ret->mLoopStart = 0;
 	ret->mSteps = new_vector();
+	ret->mID = tID;
+	ret->mTotalDuration = 0;
 	return ret;
 }
 
@@ -87,12 +90,51 @@ static int isAnimationVector(char* tVariableName) {
 	return !strcmp(text, "vector_statement");
 }
 
-static void insertAnimationStepIntoAnimation(MugenAnimations* tAnimations, int tGroupID, MugenAnimationStep* tElement) {
+static void insertAnimationStepIntoAnimation(MugenAnimation* e, MugenAnimationStep* tElement) {
+	if (gMugenAnimationState.mIsLoopStart) e->mLoopStart = vector_size(&e->mSteps);
+	e->mTotalDuration += tElement->mDuration;
+	vector_push_back_owned(&e->mSteps, tElement);
+}
+
+static void insertAnimationStepIntoAnimations(MugenAnimations* tAnimations, int tGroupID, MugenAnimationStep* tElement) {
 	assert(int_map_contains(&tAnimations->mAnimations, tGroupID));
 	
 	MugenAnimation* e = int_map_get(&tAnimations->mAnimations, tGroupID);
-	if (gMugenAnimationState.mIsLoopStart) e->mLoopStart = vector_size(&e->mSteps);
-	vector_push_back_owned(&e->mSteps, tElement);
+	insertAnimationStepIntoAnimation(e, tElement);
+}
+
+static void handleNewAnimationStepBlendFlags(MugenAnimationStep* e, char* blendFlags) {
+	e->mIsAddition = blendFlags[0] == 'A';
+	e->mIsSubtraction = blendFlags[0] == 'S';
+	if (e->mIsAddition || e->mIsSubtraction) {
+		char* sourcePos = strchr(blendFlags + 1, 'S');
+		if (sourcePos == NULL) {
+			if (blendFlags[1] == '1') {
+				e->mSrcBlendValue = 256;
+				e->mDstBlendValue = 128;
+			}
+			else {
+				e->mSrcBlendValue = 256;
+				e->mDstBlendValue = 256;
+			}
+		}
+		else {
+			char* dstPos = strchr(blendFlags + 1, 'D');
+			assert(dstPos != NULL);
+
+			char text1[20];
+			char text2[20];
+
+			strcpy(text1, sourcePos);
+			*strchr(text1, 'D') = '\0';
+
+			strcpy(text2, dstPos);
+
+			e->mSrcBlendValue = atoi(text1);
+			e->mDstBlendValue = atoi(text2);
+		}
+
+	}
 }
 
 static void handleNewAnimationStep(MugenAnimations* tAnimations, int tGroupID, MugenDefScriptGroupElement* tElement) {
@@ -124,18 +166,39 @@ static void handleNewAnimationStep(MugenAnimations* tAnimations, int tGroupID, M
 	e->mIsFlippingHorizontally = strchr(flipFlags, 'H') != NULL;
 	e->mIsFlippingVertically = strchr(flipFlags, 'V') != NULL;
 	
-	insertAnimationStepIntoAnimation(tAnimations, tGroupID, e);
+	char* blendFlags = vectorElement->mVector.mElement[6];
+	handleNewAnimationStepBlendFlags(e, blendFlags);
+
+	e->mInterpolateOffset = 0;
+	e->mInterpolateBlend = 0;
+	e->mInterpolateScale = 0;
+	e->mInterpolateAngle = 0;
+
+	insertAnimationStepIntoAnimations(tAnimations, tGroupID, e);
 	resetSingleAnimationState();
 }
 
-static void handleHitboxSizeAssignment() {
+static void handleHitboxSizeAssignment(char* tName) {
+	char name[100];
+	sscanf(tName, "%s", name);
 
+	if (!strcmp("clsn1default", name) || !strcmp("clsn2default", name)) {
+		gMugenAnimationState.mIsReadingDefaultHitbox = 1;
+	}
+	else if(!strcmp("clsn1", name) || !strcmp("clsn2", name)) {
+		gMugenAnimationState.mIsReadingDefaultHitbox = 0;
+	}
+	else {
+		logError("Unrecognized collision size name.");
+		logErrorString(name);
+		abortSystem();
+	}
 }
 
 static int isHitboxSizeAssignment(char* tName) {
 	char name[100];
 	sscanf(tName, "%s", name);
-	return !strcmp("Clsn2Default", name) || !strcmp("Clsn2", name) || !strcmp("Clsn1Default", name) || !strcmp("Clsn1", name);
+	return !strcmp("clsn2default", name) || !strcmp("clsn2", name) || !strcmp("clsn1default", name) || !strcmp("clsn1", name);
 }
 
 static void handleCollisionHitboxAssignment(List* tHitboxes, MugenDefScriptGroupElement* tElement) {
@@ -151,8 +214,8 @@ static void handleCollisionHitboxAssignment(List* tHitboxes, MugenDefScriptGroup
 	Position topLeft = makePosition(min(x1, x2), min(y1, y2), 0);
 	Position bottomRight = makePosition(max(x1, x2), max(y1, y2), 0);
 
-	Collider* e = allocMemory(sizeof(Collider));
-	*e = makeColliderFromRect(makeCollisionRect(topLeft, bottomRight));
+	CollisionRect* e = allocMemory(sizeof(CollisionRect));
+	*e = makeCollisionRect(topLeft, bottomRight);
 	
 	list_push_back_owned(tHitboxes, e);
 }
@@ -171,18 +234,24 @@ static void handleHitboxAssignment(MugenDefScriptGroupElement* tElement) {
 	assert(opening);
 	*opening = '\0';
 
-	if (!strcmp("Clsn1Default", name)) {
-		handleCollisionHitboxAssignment(&gMugenAnimationState.mDefaultHitboxes1, tElement);	
-	} else if (!strcmp("Clsn2Default", name)) {
-		handleCollisionHitboxAssignment(&gMugenAnimationState.mDefaultHitboxes2, tElement);
+
+	if (!strcmp("clsn1", name)) {
+		if (gMugenAnimationState.mIsReadingDefaultHitbox) {
+			handleCollisionHitboxAssignment(&gMugenAnimationState.mDefaultHitboxes1, tElement);
+		}
+		else {
+			handleOwnHitboxExistence(&gMugenAnimationState.mOwnHitbox1, &gMugenAnimationState.mHasOwnHitbox1);
+			handleCollisionHitboxAssignment(&gMugenAnimationState.mOwnHitbox1, tElement);
+		}
 	}
-	else if (!strcmp("Clsn1", name)) {
-		handleOwnHitboxExistence(&gMugenAnimationState.mOwnHitbox1, &gMugenAnimationState.mHasOwnHitbox1);
-		handleCollisionHitboxAssignment(&gMugenAnimationState.mOwnHitbox1, tElement);
-	}
-	else if (!strcmp("Clsn2", name)) {
-		handleOwnHitboxExistence(&gMugenAnimationState.mOwnHitbox2, &gMugenAnimationState.mHasOwnHitbox2);
-		handleCollisionHitboxAssignment(&gMugenAnimationState.mOwnHitbox2, tElement);
+	else if (!strcmp("clsn2", name)) {
+		if (gMugenAnimationState.mIsReadingDefaultHitbox) {
+			handleCollisionHitboxAssignment(&gMugenAnimationState.mDefaultHitboxes2, tElement);
+		}
+		else {
+			handleOwnHitboxExistence(&gMugenAnimationState.mOwnHitbox2, &gMugenAnimationState.mHasOwnHitbox2);
+			handleCollisionHitboxAssignment(&gMugenAnimationState.mOwnHitbox2, tElement);
+		}
 	}
 	else {
 		logError("Unable to decode assignment type.");
@@ -200,7 +269,7 @@ static int isHitboxAssignment(char* tName) {
 
 	*opening = '\0';
 
-	return !strcmp("Clsn2Default", name) || !strcmp("Clsn2", name) || !strcmp("Clsn1Default", name) || !strcmp("Clsn1", name);
+	return !strcmp("clsn2Default", name) || !strcmp("clsn2", name) || !strcmp("clsn1Default", name) || !strcmp("clsn1", name);
 }
 
 
@@ -214,6 +283,71 @@ static void handleLoopStart() {
 	gMugenAnimationState.mIsLoopStart = 1;
 }
 
+static int isInterpolation(char* tVariableName) {
+	char text1[100], text2[100];
+	int items = sscanf(tVariableName, "%s %s", text1, text2);
+	if (items < 2) return 0;
+	
+	return !strcmp("Interpolate", text1);
+}
+
+static void handleOffsetInterpolation(MugenAnimations* tAnimation, int tGroup) {
+	MugenAnimation* anim = getMugenAnimation(tAnimation, tGroup);
+	assert(vector_size(&anim->mSteps));
+	MugenAnimationStep* step = vector_get(&anim->mSteps, vector_size(&anim->mSteps) - 1);
+
+	step->mInterpolateOffset = 1;
+}
+
+static void handleBlendInterpolation(MugenAnimations* tAnimation, int tGroup) {
+	MugenAnimation* anim = getMugenAnimation(tAnimation, tGroup);
+	assert(vector_size(&anim->mSteps));
+	MugenAnimationStep* step = vector_get(&anim->mSteps, vector_size(&anim->mSteps) - 1);
+
+	step->mInterpolateBlend = 1;
+}
+
+static void handleScaleInterpolation(MugenAnimations* tAnimation, int tGroup) {
+	MugenAnimation* anim = getMugenAnimation(tAnimation, tGroup);
+	assert(vector_size(&anim->mSteps));
+	MugenAnimationStep* step = vector_get(&anim->mSteps, vector_size(&anim->mSteps) - 1);
+
+	step->mInterpolateScale = 1;
+}
+
+static void handleAngleInterpolation(MugenAnimations* tAnimation, int tGroup) {
+	MugenAnimation* anim = getMugenAnimation(tAnimation, tGroup);
+	assert(vector_size(&anim->mSteps));
+	MugenAnimationStep* step = vector_get(&anim->mSteps, vector_size(&anim->mSteps) - 1);
+
+	step->mInterpolateAngle = 1;
+}
+
+static void handleInterpolation(MugenDefScriptGroupElement* e, MugenAnimations* tAnimation, int tGroup) {
+	char text1[100], text2[100];
+	int items = sscanf(e->mName, "%s %s", text1, text2);
+	assert(items == 2);
+	assert(!strcmp("Interpolate", text1));
+
+	if (!strcmp("Offset", text2)) {
+		handleOffsetInterpolation(tAnimation, tGroup);
+	}
+	else if (!strcmp("Blend", text2)) {
+		handleBlendInterpolation(tAnimation, tGroup);
+	}
+	else if (!strcmp("Scale", text2)) {
+		handleScaleInterpolation(tAnimation, tGroup);
+	}
+	else if (!strcmp("Angle", text2)) {
+		handleAngleInterpolation(tAnimation, tGroup);
+	}
+	else {
+		logError("Unrecognized interpolation type.");
+		logErrorString(text2);
+		abortSystem();
+	}
+}
+
 static void loadSingleAnimationElementStatement(void* tCaller, void* tData) {
 	MugenDefScriptGroupElement* element = tData;
 	AnimationLoadCaller* caller = tCaller;
@@ -221,13 +355,16 @@ static void loadSingleAnimationElementStatement(void* tCaller, void* tData) {
 	if (isAnimationVector(element->mName)) {
 		handleNewAnimationStep(caller->mAnimations, caller->mGroupID, element);
 	} else if (isHitboxSizeAssignment(element->mName)) {
-		handleHitboxSizeAssignment();
+		handleHitboxSizeAssignment(element->mName);
 	}
 	else if (isHitboxAssignment(element->mName)) {
 		handleHitboxAssignment(element);
 	}
 	else if (isLoopStart(element->mName)) {
 		handleLoopStart();
+	}
+	else if (isInterpolation(element->mName)) {
+		handleInterpolation(element, caller->mAnimations, caller->mGroupID);
 	}
 	else {
 		logError("Unrecognized type.");
@@ -236,9 +373,23 @@ static void loadSingleAnimationElementStatement(void* tCaller, void* tData) {
 	}
 }
 
+static int isAnimationGroup(MugenDefScriptGroup* tGroup) {
+	char text1[100], text2[100], val[100];
+
+	int items = sscanf(tGroup->mName, "%s %s %s", text1, text2, val);
+
+	if (items != 3) return 0;
+	if (strcmp("Begin", text1)) return 0;
+	if (strcmp("Action", text2)) return 0;
+
+	return 1;
+}
+
 static void loadSingleAnimationGroup(MugenAnimations* tAnimations, MugenDefScriptGroup* tGroup) {
+	if (!isAnimationGroup(tGroup)) return;
+
 	int id = getAnimationID(tGroup);
-	MugenAnimation* anim = makeEmptyMugenAnimation();
+	MugenAnimation* anim = makeEmptyMugenAnimation(id);
 	int_map_push_owned(&tAnimations->mAnimations, id, anim);
 	resetGlobalAnimationState();
 	resetSingleAnimationState();
@@ -274,5 +425,50 @@ MugenAnimations loadMugenAnimationFile(char * tPath)
 
 	loadAnimationFileFromDefScript(&ret, &defScript);
 
+	unloadMugenDefScript(defScript);
+
 	return ret;
+}
+
+MugenAnimation* getMugenAnimation(MugenAnimations * tAnimations, int i)
+{
+	if (!int_map_contains(&tAnimations->mAnimations, i)) {
+		logError("Could not load animation.");
+		logErrorInteger(i);
+		abortSystem();
+	}
+
+	return int_map_get(&tAnimations->mAnimations, i);
+}
+
+MugenAnimation * createOneFrameMugenAnimationForSprite(int tSpriteGroup, int tSpriteItem)
+{
+	MugenAnimation* e = makeEmptyMugenAnimation(0);
+	MugenAnimationStep* step = allocMemory(sizeof(MugenAnimationStep));
+
+	step->mPassiveHitboxes = new_list();
+	step->mAttackHitboxes = new_list();
+	step->mGroupNumber = tSpriteGroup;
+	step->mSpriteNumber = tSpriteItem;
+	step->mDelta = makePosition(0, 0, 0);
+	step->mDuration = INF;
+	step->mIsFlippingHorizontally = 0;
+	step->mIsFlippingVertically = 0;
+
+	step->mIsAddition = 0;
+	step->mIsSubtraction = 0;
+
+	step->mInterpolateOffset = 0;
+	step->mInterpolateBlend = 0;
+	step->mInterpolateScale = 0;
+	step->mInterpolateAngle = 0;
+
+	gMugenAnimationState.mIsLoopStart = 1;
+	insertAnimationStepIntoAnimation(e, step);
+
+	return e;
+}
+
+int hasMugenAnimation(MugenAnimations* tAnimations, int i) {
+	return int_map_contains(&tAnimations->mAnimations, i);
 }

@@ -1,0 +1,35 @@
+[SceneDef]
+spr = introandending.sff
+startscene = 0         ;Starting scene number (for debugging)
+
+;------------------------------------
+
+[Scene 0]
+fadein.time = 60
+fadein.col = 0,0,0
+fadeout.time = 60
+fadeout.col = 0,0,0
+clearcolor = 0,0,0
+layer1.anim =  0
+layer1.offset = 0,15
+bgm.loop = 0
+end.time = 750
+
+[Scene 0]
+fadein.time = 60
+fadein.col = 0,0,0
+fadeout.time = 60
+fadeout.col = 0,0,0
+clearcolor = 0,0,0
+layer1.anim =  1
+layer1.offset = 0,15
+bgm = intro.mp3      
+bgmvolume = 255
+bgm.loop = 0
+end.time = 750
+
+[Begin Action 0]
+0,0, 0,0, -1
+
+[Begin Action 1]
+0,1, 0,0, -1

@@ -1,0 +1,165 @@
+[Statedef 30000]
+type = S
+anim = 9999
+
+;△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△△
+;システムディレクション
+
+
+[State ブロッキング];ブロッキングのあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(0) = 1    ;   0:OFF  1:ON 
+
+
+[State ブロッキング受付時間];ブロッキング入力時の受付時間を設定します(-2～4まで)
+type = VarSet
+trigger1 = 1
+var(1) = 0
+
+
+[State ガードブロッキング];ガードブロッキングのあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(2) = 1    ;   0:OFF  1:ON 
+
+
+[State ガードブロッキング受付時間];ガードブロッキング入力時の受付時間を設定します(-2～4まで)
+type = VarSet
+trigger1 = 1
+var(3) = 0
+
+
+[State 強制ガード];ガード中に方向キーをガード方向以外へ押しても連続でガードすることができます
+type = VarSet
+trigger1 = 1
+var(4) = 0    ;   0:OFF  1:ON 
+
+
+[State 地上チェーンコンボ];地上技でチェーンコンボができます(ターゲットコンボ使用不可)
+type = VarSet
+trigger1 = 1
+var(5) = 0    ;   0:OFF  1:ON 
+
+
+[State 空中チェーンコンボ];ジャンプ技でチェーンコンボができます
+type = VarSet
+trigger1 = 1
+var(6) = 0    ;   0:OFF  1:ON 
+
+
+[State 全通常技がキャンセル可能];すべての通常技がキャンセル可能になります
+type = VarSet
+trigger1 = 1
+var(7) = 0    ;   0:OFF  1:ON 
+
+
+[State 全通常技からハイジャンプ可能];すべての通常技がハイジャンプでキャンセル可能になります
+type = VarSet
+trigger1 = 1
+var(8) = 0    ;   0:OFF  1:ON 
+
+
+[State 全通常技からダッシュ可能];すべての通常技がダッシュでキャンセル可能になります
+type = VarSet
+trigger1 = 1
+var(9) = 0    ;   0:OFF  1:ON 
+
+
+[State 必殺技→必殺技orＳＡ];必殺技から必殺技、またはスーパーアーツへキャンセルすることができます
+type = VarSet
+trigger1 = 1
+var(10) = 0   ;   0:OFF  1:ON 
+
+
+[State ＳＡキャンセルＳＡ];スーパーアーツからスーパーアーツへキャンセルすることができます
+type = VarSet
+trigger1 = 1
+var(11) = 0   ;   0:OFF  1:ON 
+
+
+[State 空中コンボ制限値];空中コンボができる時間の長さを制限している数値を設定します(0～4まで)
+type = VarSet
+trigger1 = 1
+var(12) = 2   ;  削減値(0:0  1:4  2:6  3:9  4:無限)
+
+
+[State 音声変更];キャラクターボイスを変更します
+type = VarSet
+trigger1 = 1
+var(13) = 0   ;   0:3rd  1:2nd
+
+
+[State 真・昇龍拳 演出];真・昇龍拳成功時のズームアップのあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(14) = 1   ;   0:OFF  1:ON 
+
+
+[State ＡＩ];ＡＩのあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(15) = 1   ;   0:OFF  1:ON 
+
+
+[State ＳＡセレクト表記];ＳＡセレクト表記を設定します
+type = VarSet
+trigger1 = 1
+var(16) = 0   ;   0:ローマ字  1:日本語 
+
+
+[State ＳＡゲージｙ軸];数値を小さくするとゲージは上の方へ移動します
+type = VarSet
+trigger1 = 1
+var(17) = ceil(gameheight-12)
+
+
+[State ＳＡセレクト初期配置]
+type = VarSet
+trigger1 = 1
+var(18) = 0   ;   0:ALL  1:SA1  2:SA2  3:SA3  4:ランダム  
+
+
+[State コマンド先行入力受付時間];数値を大きくすることでコマンド先行入力の受付時間が延びます(1～10まで)
+type = VarSet
+trigger1 = 1
+var(19) = 3
+
+
+[State スタン];気絶のあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(20) = 1   ;   0:OFF  1:ON 
+
+
+[State スタンゲージ];スタンゲージのあり・なしを設定します(DoubleRes=4専用)
+type = VarSet
+trigger1 = 1
+var(21) = 1   ;   0:OFF  1:ON 
+
+
+[State スタンゲージｘ軸];数値を大きくするとゲージは右の方へ移動します(2P側は左右逆)
+type = VarSet
+trigger1 = 1
+var(22) = ceil(gamewidth/2-30)
+
+
+[State スタンゲージｙ軸]; 数値を大きくするとゲージは下の方へ移動します
+type = VarSet
+trigger1 = 1
+var(23) = 30
+
+
+[State メッセージアイコン];メッセージアイコンのあり・なしを設定します
+type = VarSet
+trigger1 = 1
+var(24) = 1   ;   0:OFF  1:ON 
+
+
+[State メッセージアイコンy軸];数値を大きくするとアイコンは下の方へ移動します
+type = VarSet
+trigger1 = 1
+var(25) = 50
+
+
+

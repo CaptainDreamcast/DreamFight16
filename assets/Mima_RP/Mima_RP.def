@@ -1,0 +1,42 @@
+[Info]
+name = "Mima_RP"
+displayname = "Mima"
+versiondate = 07,29,2017
+mugenversion = 1.0
+author ="RicePigeon"
+pal.defaults = 1,2,4,7
+localcoord = 320,240
+
+[Files]
+sprite = Mima_RP.sff
+anim = Mima_RP.air
+sound = Mima_RP.snd
+cmd = Mima_RP.cma
+cns = Mima_RP.cns
+stcommon = Mima_RP-Common1.st
+st = Mima_RP.st
+st1 = Mima_RP-Normals.st
+st2 = Mima_RP-Specials.st
+st3 = Mima_RP-Supers.st
+st4 = Mima_RP-Negative.st
+st5 = helper.st
+st6 = custom.st
+;st7 = Buffer.st
+
+[Palette Keymap]
+a = 1 ;Press button X to select palette 1, etc.
+b = 2
+c = 3
+x = 4
+y = 5
+z = 6
+a2 = 7 ;Hold Start and press button X for palette 7, etc.
+b2 = 8
+c2 = 9
+x2 = 10
+y2 = 11
+z2 = 12
+
+[Arcade]
+intro.storyboard = 
+ending.storyboard = 

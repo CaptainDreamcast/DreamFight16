@@ -1,0 +1,255 @@
+; Standing Animation
+[Begin Action 0]
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 5
+0,1, 0,0, 5
+
+; Turning
+[Begin Action 5]
+0,0, 0,0, 2, H
+
+; Crouch Turning
+[Begin Action 6]
+0,0, 0,0, 2, H
+
+; Stand to crouch
+[Begin Action 10]
+10,0, 0,0, 2
+
+; Crouching animation
+[Begin Action 11]
+10,1, 0,0, 1
+
+; Crouch to Stand
+[Begin Action 12]
+10,0, 0,0, 2
+
+; Walking Forward
+[Begin Action 20]
+20,0, 0,0, -1
+
+; Walking Back
+[Begin Action 21]
+21,0, 0,0, -1
+
+; Jump start frame
+[Begin Action 40]
+10,0, 0,0, 8
+
+; Starting Jumping up
+[Begin Action 41]
+0,0, 0,0, 4
+
+; Starting Jumping forwards
+[Begin Action 42]
+20,0, 0,0, -1
+
+; Starting Jumping backwards
+[Begin Action 43]
+21,0, 0,0, -1
+
+; Jump land animation
+[Begin Action 47]
+10,0, 0,0, 6
+
+; Run forwards
+[Begin Action 100]
+20,0, 0,0, -1
+
+; Hop backwards
+[Begin Action 105]
+21,0, 0,0, -1
+
+; Lose
+[Begin Action 170]
+0,0, 0,0, 14
+
+; Win
+[Begin Action 181]
+200,0, 0,0, 4
+181,0, 0,0, 5
+181,1, 0,0, 5
+181,2, 0,0, 5
+181,3, 0,0, 5
+181,4, 0,0, 5
+181,5, 0,0, 5
+181,6, 0,0, 30
+181,5, 0,0, 7
+181,4, 0,0, 6
+181,3, 0,0, 5
+181,2, 0,0, -1
+
+;Big
+[Begin Action 201]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+201,0,0,0, 360
+
+;The Green Mile
+[Begin Action 206]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+206,0,0,0, 360
+
+;Forest Gump
+[Begin Action 211]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+211,0,0,0, 360
+
+;Sleepless in Seattle
+[Begin Action 216]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+216,0,0,0, 360
+
+;Cast Away
+[Begin Action 221]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+221,0,0,0, 360
+
+;Saving Private Ryan
+[Begin Action 226]
+Clsn1: 1
+ Clsn1[0] = -54,-139, 52,  1
+226,0,0,0, 360
+
+;Hooch
+[Begin Action 1001]
+1001,0,0,0, 30
+1001,2,0,0, 15
+Clsn1: 1
+ Clsn1[0] = -180,-180, 202,  1
+1001,3,0,0, -1
+
+;Magic Shoes
+[Begin Action 191]
+191,0,0,0, 10
+191,1,0,0, 10
+191,2,0,0, 10
+
+;Magic Shoes
+[Begin Action 192]
+1500,0,0,0,225
+Loopstart
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 5
+0,1, 0,0, 5
+
+;Evil Tom
+[Begin Action 2000]
+1500,0,0,0,300
+Loopstart
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 5
+0,1, 0,0, 5
+
+;Victims
+[Begin Action 2002]
+2002,0,0,0,-1
+
+;Goo
+[Begin Action 2003]
+2003,0,0,0,-1
+
+;Blank
+[Begin Action 2004]
+2004,0,0,0,-1
+
+;Explosion1
+[Begin Action 2010]
+2010,0,0,0,7
+2010,1,0,0,7
+2010,2,0,0,7
+2010,3,0,0,7
+2010,4,0,0,7
+
+;Explosion2
+[Begin Action 2011]
+2011,0,0,0,7
+2011,1,0,0,7
+2011,2,0,0,7
+2011,3,0,0,7
+2011,4,0,0,7
+2011,5,0,0,7
+2011,6,0,0,7
+2011,7,0,0,7
+2011,8,0,0,7
+2011,9,0,0,7
+2011,10,0,0,7
+2011,11,0,0,7
+2011,12,0,0,7
+2011,13,0,0,7
+
+;Applause
+[Begin Action 182]
+10,0,0,0,7
+10,1,0,0,7
+10,0,0,0,7
+0,0,0,0,7
+
+;Dances with Hooch
+[Begin Action 183]
+10,0,0,0,7
+10,1,0,0,7
+10,0,0,0,7
+0,0,0,0,7
+
+;Hooch Drop
+[Begin Action 184]
+1001,0,0,0,-1
+
+;Hooch Dance
+[Begin Action 185]
+1001,0,0,0,60
+Loopstart
+1001,0,0,0,11
+1001,1,0,0,11
+
+;Wilson
+[Begin Action 186]
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 5
+0,1, 0,0, 5
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 5
+0,1, 0,0, 5
+0,0, 0,0, 14
+0,1, 0,0, 5
+0,2, 0,0, 5
+0,3, 0,0, 14
+0,2, 0,0, 6
+1500,0,0,0,-1
+
+;Wilson Bouncing
+[Begin Action 187]
+187,0,0,0,5
+187,1,0,0,5
+187,2,0,0,5
+187,3,0,0,5
+187,4,0,0,5
+187,5,0,0,5
+187,4,0,0,5
+187,3,0,0,5
+187,2,0,0,5
+187,1,0,0,5
+
+
+
+

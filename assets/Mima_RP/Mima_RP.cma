@@ -1,0 +1,1629 @@
+;-| Button Remapping |-----------------------------------------------------
+; If the following lines are NOT preceded by semicolons, please
+; add them or remove the remap entirely since Ricepigeon is a
+; lazy bastard who forgets to remove it before releasing stuff
+; *facepalms*
+;[Remap]
+;x = x
+;y = y
+;z = b;z
+;a = s;a
+;b = a;b
+;c = c
+;s = z
+
+;-| Default Values |-------------------------------------------------------
+[Defaults]
+; Default value for the "time" parameter of a Command. Minimum 1.
+command.time = 15
+; Default value for the "buffer.time" parameter of a Command. Minimum 1,
+; maximum 30.
+command.buffer.time = 1
+
+;-| Single Button |---------------------------------------------------------
+[Command]
+name = "a"
+command = a
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "b"
+command = b
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "c"
+command = c
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "x"
+command = x
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "y"
+command = y
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "z"
+command = z
+time = 1
+;buffer.time = 2
+
+[Command]
+name = "U"
+command = U
+time = 1
+[Command]
+name = "U"
+command = UF
+time = 1
+[Command]
+name = "U"
+command = UB
+time = 1
+
+[Command]
+name = "back"
+command = B
+time = 1
+[Command]
+name = "D"
+command = $D
+time = 1
+[Command]
+name = "fwd" ; REQUIRED for command buffering
+command = F
+time = 1
+
+[Command]
+name = "start"
+command = s
+time = 1
+;buffer.time = 2
+
+;-| Hold Dir |--------------------------------------------------------------
+[Command]
+name = "holdfwd";Required (do not remove)
+command = /$F
+time = 1
+
+[Command]
+name = "holdback";Required (do not remove)
+command = /$B
+time = 1
+
+[Command]
+name = "holdup" ;Required (do not remove)
+command = /$U
+time = 1
+
+[Command]
+name = "holddown";Required (do not remove)
+command = /$D
+time = 1
+
+[Command]
+name = "holdfwd_r" ; Raw hold forward (REQUIRED for command buffering)
+command = /F
+time = 1
+[Command]
+name = "holddown_r" ; Raw hold forward (REQUIRED for command buffering)
+command = /D
+time = 1
+[Command]
+name = "holdback_r" ; Raw hold forward (REQUIRED for command buffering)
+command = /B
+time = 1
+[Command]
+name = "holdup_r" ; Raw hold forward (REQUIRED for command buffering)
+command = /U
+time = 1
+
+[Command]
+name = "fwd";Required (do not remove)
+command = F
+time = 1
+
+[Command]
+name = "back";Required (do not remove)
+command = B
+time = 1
+
+[Command]
+name = "up" ;Required (do not remove)
+command = U
+time = 1
+
+[Command]
+name = "down";Required (do not remove)
+command = D
+time = 1
+
+;-| Hold Button |----------------------------------------------------------
+; Please define Anim 74140108 in your AIR file if AND ONLY IF you place these
+; 7 Hold Button commands immediately after the 11 Single Button and Hold Dir
+; commands at the very top of your CMD list, as demonstrated here.
+; In this version of the AI code, these commands are only used by the XOR
+; method, and thus are optional.  But there remains a possibility that a
+; future version of the helper method might be helped by having these
+; commands placed here, and Anim 74140108 would then be used to indicate
+; that a partner character has a compatible CMD.
+
+[Command]
+name = "holda"
+command = /a
+time = 1
+
+[Command]
+name = "holdb"
+command = /b
+time = 1
+
+[Command]
+name = "holdc"
+command = /c
+time = 1
+
+[Command]
+name = "holdx"
+command = /x
+time = 1
+
+[Command]
+name = "holdy"
+command = /y
+time = 1
+
+[Command]
+name = "holdz"
+command = /z
+time = 1
+
+[Command]
+name = "holdstart"
+command = /s
+time = 1
+
+
+
+[Command]
+name = "rlsx"
+command = ~x
+time = 1
+
+[Command]
+name = "rlsy"
+command = ~y
+time = 1
+
+[Command]
+name = "rlsz"
+command = ~z
+time = 1
+
+
+;-| Spellcards Lvl 3 |---------------------------------------------------------
+;--------------------------------
+[Command]
+name = "QCFx2_PPP"
+command = ~D,DF,$F,D,DF,$F,x+y+z
+time = 24
+buffer.time = 4
+
+[Command]
+name = "QCFx2_PPP"
+command = ~D,DF,$F,D,DF,$F,c
+time = 24
+buffer.time = 4
+[Command]
+name = "QCFx2_PPP"
+command = ~D,DF,$F,D,DF,$F,~c
+time = 24
+buffer.time = 4
+
+[Command]
+name = "QCFx2_PPPR"
+command = ~D,DF,$F,D,DF,$F,~x
+time = 24
+buffer.time = 3
+
+[Command]
+name = "QCFx2_PPPR"
+command = ~D,DF,$F,D,DF,$F,~y
+time = 24
+buffer.time = 3
+
+[Command]
+name = "QCFx2_PPPR"
+command = ~D,DF,$F,D,DF,$F,~z
+time = 24
+buffer.time = 3
+
+[Command]
+name = "QCFx2_C"
+command = ~D,DF,$F,D,DF,$F,c
+time = 24
+buffer.time = 4
+[Command]
+name = "QCFx2_C"
+command = ~D,DF,$F,D,DF,$F,~c
+time = 24
+buffer.time = 4
+
+
+
+
+
+[Command]
+name = "QCBx2_PPP"
+command = ~D,DB,$B,D,DB,$B,x+y+z
+time = 24
+buffer.time = 4
+
+[Command]
+name = "QCBx2_PPP"
+command = ~D,DB,$B,D,DB,$B,c
+time = 24
+buffer.time = 4
+[Command]
+name = "QCBx2_PPP"
+command = ~D,DB,$B,D,DB,$B,~c
+time = 24
+buffer.time = 4
+
+[Command]
+name = "QCBx2_PPPR"
+command = ~D,DB,$B,D,DB,$B,~x
+time = 24
+buffer.time = 3
+
+[Command]
+name = "QCBx2_PPPR"
+command = ~D,DB,$B,D,DB,$B,~y
+time = 24
+buffer.time = 3
+
+[Command]
+name = "QCBx2_PPPR"
+command = ~D,DB,$B,D,DB,$B,~z
+time = 24
+buffer.time = 3
+
+
+[Command]
+name = "QCBx2_C"
+command = ~D,DB,$B,D,DB,$B,c
+time = 24
+buffer.time = 4
+[Command]
+name = "QCBx2_C"
+command = ~D,DB,$B,D,DB,$B,~c
+time = 24
+buffer.time = 4
+
+;-| Spellcards Lvl 2 |---------------------------------------------------------
+ 
+;-| Spellcards - Level 1 |--------------------------------------------------
+
+[Command]
+name = "214214_X"
+command = ~D,DB,$B,D,DB,$B,x
+time = 24
+buffer.time = 3
+[Command]
+name = "214214_X"
+command = ~D,DB,$B,D,DB,$B,~x
+time = 24
+buffer.time = 3
+[Command]
+name = "214214_Y"
+command = ~D,DB,$B,D,DB,$B,y
+time = 24
+buffer.time = 3
+[Command]
+name = "214214_Y"
+command = ~D,DB,$B,D,DB,$B,~y
+time = 24
+buffer.time = 3
+
+[Command]
+name = "214214_Z"
+command = ~D,DB,$B,D,DB,$B,z
+time = 24
+buffer.time = 3
+[Command]
+name = "214214_Z"
+command = ~D,DB,$B,D,DB,$B,~z
+time = 24
+buffer.time = 3
+
+
+[Command]
+name = "236236_X"
+command = ~D,DF,$F,D,DF,$F,x
+time = 24
+buffer.time = 3
+[Command]
+name = "236236_X"
+command = ~D,DF,$F,D,DF,$F,~x
+time = 24
+buffer.time = 3
+[Command]
+name = "236236_Y"
+command = ~D,DF,$F,D,DF,$F,y
+time = 24
+buffer.time = 3
+[Command]
+name = "236236_Y"
+command = ~D,DF,$F,D,DF,$F,~y
+time = 24
+buffer.time = 3
+
+[Command]
+name = "236236_Z"
+command = ~D,DF,$F,D,DF,$F,z
+time = 24
+buffer.time = 3
+[Command]
+name = "236236_Z"
+command = ~D,DF,$F,D,DF,$F,~z
+time = 24
+buffer.time = 3
+
+;-| Specials |-----------------------------------------------------------------
+[Command]
+name = "RDP_PPP"
+command = ~B,D,$B,x+y+z
+time = 14
+buffer.time = 3
+[Command]
+name = "RDP_PPP"
+command = ~B,D,$B,c
+time = 14
+buffer.time = 3
+[Command]
+name = "RDP_PPP"
+command = ~B,D,$B,~c
+time = 14
+buffer.time = 3
+[Command]
+name = "RDP_PPPR"
+command = ~B,D,$B,~x
+time = 14
+buffer.time = 3
+[Command]
+name = "RDP_PPPR"
+command = ~B,D,$B,~y
+time = 14
+buffer.time = 3
+[Command]
+name = "RDP_PPPR"
+command = ~B,D,$B,~z
+time = 14
+buffer.time = 3
+
+;-------------------------------------------
+[Command]
+name = "DP_PPP"
+command = ~F,D,$F,x+y+z
+time = 14
+buffer.time = 3
+[Command]
+name = "DP_PPP"
+command = ~F,D,$F,c
+time = 14
+buffer.time = 3
+[Command]
+name = "DP_PPP"
+command = ~F,D,$F,~c
+time = 14
+buffer.time = 3
+[Command]
+name = "DP_PPPR"
+command = ~F,D,$F,~x
+time = 14
+buffer.time = 3
+[Command]
+name = "DP_PPPR"
+command = ~F,D,$F,~y
+time = 14
+buffer.time = 3
+[Command]
+name = "DP_PPPR"
+command = ~F,D,$F,~z
+time = 14
+buffer.time = 3
+
+
+
+;-------------------------------------------
+[Command]
+name = "623_X"
+command = ~F,D,$F,x
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "623_X"
+command = ~F,D,$F,~x
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "623_Y"
+command = ~F,D,$F,y
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "623_Y"
+command = ~F,D,$F,~y
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "623_Z"
+command = ~F,D,$F,z
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "623_Z"
+command = ~F,D,$F,~z
+time = 12;20
+buffer.time = 3
+
+
+
+;-------------------------------------------
+[Command]
+name = "421_X"
+command = ~B,D,$B,x
+time = 12;20
+buffer.time = 3
+[Command]
+name = "421_X"
+command = ~B,D,$B,~x
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "421_Y"
+command = ~B,D,$B,y
+time = 12;20
+buffer.time = 3
+[Command]
+name = "421_Y"
+command = ~B,D,$B,~y
+time = 12;20
+buffer.time = 3
+
+[Command]
+name = "421_Z"
+command = ~B,D,$B,z
+time = 12;20
+buffer.time = 3
+[Command]
+name = "421_Z"
+command = ~B,D,$B,~z
+time = 12;20
+buffer.time = 3
+
+
+;-------------------------------------------
+[Command]
+name = "41236_X"
+;command = ~B,DB,D,DF,F,x
+command = ~B,DB,$D,DF,$F,x
+time = 16;20
+buffer.time = 3
+[Command]
+name = "41236_X"
+command = ~B,DB,$D,DF,$F,~x
+;command = ~B,$D,F,~x
+time = 16;20
+buffer.time = 3
+
+[Command]
+name = "41236_Y"
+command = ~B,DB,$D,DF,$F,y
+;command = ~B,$D,F,y
+time = 16;20
+buffer.time = 3
+[Command]
+name = "41236_Y"
+command = ~B,DB,$D,DF,$F,~y
+;command = ~B,$D,F,~y
+time = 16;20
+buffer.time = 3
+
+[Command]
+name = "41236_Z"
+command= ~B,DB,$D,DF,$F,z
+;command = ~B,$D,F,z
+time = 16;20
+buffer.time = 3
+[Command]
+name = "41236_Z"
+command = ~B,DB,$D,DF,$F,~z
+;command = ~B,$D,F,~z
+time = 16;20
+buffer.time = 3
+
+;-------------------------------------------
+[Command]
+name = "63214_X"
+;command = ~F,DF,D,DB,B,x
+command = ~F,DF,$D,DB,$B,x
+time = 16;20
+buffer.time = 3
+[Command]
+name = "63214_X"
+command = ~F,DF,$D,DB,$B,~x
+;command = ~F,$D,B,~x
+time = 16;20
+buffer.time = 3
+
+[Command]
+name = "63214_Y"
+command = ~F,DF,$D,DB,$B,y
+;command = ~F,$D,B,y
+time = 16;20
+buffer.time = 3
+[Command]
+name = "63214_Y"
+command = ~F,DF,$D,DB,$B,~y
+;command = ~F,$D,B,~y
+time = 16;20
+buffer.time = 3
+
+[Command]
+name = "63214_Z"
+command = ~F,DF,$D,DB,$B,z
+;command = ~F,$D,B,z
+time = 16;20
+buffer.time = 3
+[Command]
+name = "63214_Z"
+command = ~F,DF,$D,DB,$B,~z
+;command = ~F,$D,B,~z
+time = 16;20
+buffer.time = 3
+
+
+;-------------------------------------------
+[Command]
+name = "236_X"
+command = ~D,DF,$F,x
+time = 10
+buffer.time = 3
+[Command]
+name = "236_X"
+command = ~D,DF,$F, ~x
+time = 10
+buffer.time = 3
+
+[Command]
+name = "236_Y"
+command = ~D,DF,$F,y
+time = 10
+buffer.time = 3
+[Command]
+name = "236_Y"
+command = ~D,DF,$F, ~y
+time = 10
+buffer.time = 3
+
+[Command]
+name = "236_Z"
+command = ~D,DF,$F,z
+time = 10
+buffer.time = 3
+[Command]
+name = "236_Z"
+command = ~D,DF,$F, ~z
+time = 10
+buffer.time = 3
+
+;-------------------------------------------
+[Command]
+name = "214_X"
+command = ~D,DB,$B,x
+time = 10
+buffer.time = 3
+[Command]
+name = "214_X"
+command = ~D,DB,$B, ~x
+time = 10
+buffer.time = 3
+
+[Command]
+name = "214_Y"
+command = ~D,DB,$B,y
+time = 10
+buffer.time = 3
+[Command]
+name = "214_Y"
+command = ~D,DB,$B, ~y
+time = 10
+buffer.time = 3
+
+[Command]
+name = "214_Z"
+command = ~D,DB,$B,z
+time = 10
+buffer.time = 3
+[Command]
+name = "214_Z"
+command = ~D,DB,$B, ~z
+time = 10
+buffer.time = 3
+
+;----------------------
+[Command]
+name = "22_X"
+command = ~D,D,x
+time = 10
+buffer.time = 2
+[Command]
+name = "22_X"
+command = ~D,D,~x
+time = 10
+buffer.time = 2
+
+[Command]
+name = "22_Y"
+command = ~D,D,y
+time = 10
+buffer.time = 2
+[Command]
+name = "22_Y"
+command = ~D,D,~y
+time = 10
+buffer.time = 2
+
+[Command]
+name = "22_Z"
+command = ~D,D,z
+time = 10
+buffer.time = 2
+[Command]
+name = "22_Z"
+command = ~D,D,~z
+time = 10
+buffer.time = 2
+
+;-| Directional Attacks |------------------------------------------------------
+[Command]
+name = "Down_y"
+command = /$D,y
+time = 1
+
+[Command]
+name = "Up_y"
+command = /$U,y
+time = 1
+
+[Command]
+name = "Forward_y"
+command = /$F,y
+time = 1
+
+[Command]
+name = "Backward_y"
+command = /$F,y
+time = 1
+
+;-| Double Tap |-----------------------------------------------------------
+[Command]
+name = "FF"     ;Required (do not remove)
+command = F, F
+time = 10
+;buffer.time = 2
+
+[Command]
+name = "BB"     ;Required (do not remove)
+command = B, B
+time = 10
+;buffer.time = 2
+
+[Command]
+name = "UU"     ;Required (do not remove)
+command = U, U
+time = 10
+[Command]
+name = "UU"     ;Required (do not remove)
+command = UB, UB
+time = 10
+[Command]
+name = "UU"     ;Required (do not remove)
+command = UF, UF
+time = 10
+;buffer.time = 2
+
+[Command]
+name = "DD"     ;Required (do not remove)
+command = D, D
+time = 10
+[Command]
+name = "DD"     ;Required (do not remove)
+command = DB, DB
+time = 10
+[Command]
+name = "DD"     ;Required (do not remove)
+command = DF, DF
+time = 10
+;buffer.time = 2
+
+;-| 2/3 Button Combination |-----------------------------------------------
+[Command]
+name = "recovery";Required (do not remove)
+command = x+y
+time = 1
+name = "recovery";Required (do not remove)
+command = x+z
+time = 1
+name = "recovery";Required (do not remove)
+command = y+z
+time = 1
+
+;-| Dir + Button |---------------------------------------------------------
+[Command]
+name = "down_a"
+command = /$D,a
+time = 1
+
+[Command]
+name = "down_b"
+command = /$D,b
+time = 1
+
+;-| Release Dir |-----------------------------------------------------------
+[Command]
+name = "release_fwd"
+command = ~F
+time = 1
+
+[Command]
+name = "release_down"
+command = ~D
+time = 1
+
+[Command]
+name = "release_back"
+command = ~B
+time = 1
+
+[Command]
+name = "release_up"
+command = ~U
+time = 1
+
+;-| Release Button |---------------------------------------------------------
+[Command]
+name = "release_a"
+command = ~a
+time = 1
+
+[Command]
+name = "release_b"
+command = ~b
+time = 1
+
+[Command]
+name = "release_c"
+command = ~c
+time = 1
+
+[Command]
+name = "release_x"
+command = ~x
+time = 1
+
+[Command]
+name = "release_y"
+command = ~y
+time = 1
+
+[Command]
+name = "release_z"
+command = ~z
+time = 1
+
+;---------------------------------------------------------------------------
+; 2. State entry
+; --------------
+; Don't remove the following line. It's required by the CMD standard.
+[Statedef -1]
+[State -1, Negative Edge]; - Reset // Release // Hold
+type = null
+triggerall = !ishelper
+trigger1 = var(40)&4032
+trigger1 = (var(40):= 0)||1
+trigger2 = var(40)
+trigger2 = (var(40):= var(40) +64*(var(40)&1 && command != "holda") +128*(var(40)&2 && command != "holdb") +256*(var(40)&4 && command != "holdc") +512*(var(40)&8 && command != "holdx") +1024*(var(40)&16 && command != "holdy") +2048*(var(40)&32 && command != "holdz")) - var(40)
+trigger3 = var(40):= var(40)-(var(40)&63) + 1*(command = "holda") + 2*(command = "holdb") + 4*(command = "holdc") + 8*(command = "holdx") + 16*(command = "holdy") + 32*(command = "holdz")
+
+
+[State -1, Tick Fix]
+type = CtrlSet
+triggerall = !ishelper
+triggerAll = !ctrl
+trigger1 = (StateNo = 52 || StateNo = 101 || StateNo = 5120 || Stateno = 5201) && !AnimTime
+trigger2 = (StateNo = [200,499]) && !AnimTime
+trigger2 = stateno != 310 && stateno != 315
+;trigger2 = stateno != 225
+trigger3 = ((StateNo = [760,762]) || (StateNo = [700,715]) || (StateNo = [900,905])) && !AnimTime
+trigger4 = StateNo = 811 && !AnimTime
+trigger5 = (StateNo = 5001 || StateNo = 5011 || StateNo = 151 || StateNo = 153) && HitOver
+value = 1
+
+;===========================================================================
+[State -1, Combo condition Reset]
+type = VarSet
+triggerall = !ishelper
+trigger1 = 1
+trigger1 = stateno != 1100
+var(1) = 0
+ignorehitpause = 1
+
+[State -1, Combo condition Check]
+type = VarSet
+triggerall = !ishelper
+trigger1 = statetype != A
+trigger1 = ctrl
+trigger2 = (stateno = [200,299]) || (stateno = [400,499]) || (stateno = [600,699])
+trigger2 = movecontact;||var(1)
+trigger3 = (stateno=1001)||((stateno = 1000)&&(animelemtime(8)>=0))
+trigger4 = (stateno = 1100) && movecontact
+trigger5 = (stateno = 1201) && movecontact
+trigger6 = (stateno = 1300) && animelemtime(6)>=2
+var(1) = 1
+ignorehitpause = 1
+
+;===========================================================================
+;///////////////////////////////////////////////////////////////////////////
+;===========================================================================
+; CPU Controls
+;===========================================================================
+;///////////////////////////////////////////////////////////////////////////
+;===========================================================================
+[State -1, Jump Back AI]
+type = changestate
+value = 1
+triggerall = !ishelper
+triggerall = AILevel > 0
+triggerall = roundstate=2 && statetype != A
+triggerall = ctrl && stateno != 40 && (stateno != [1,2])
+; AI SHIT GOES HERE:
+trigger1 = var(58)=1
+trigger1 = (var(58):=0)||1
+
+[State -1, Jump Fwd AI]
+type = changestate
+value = 2
+triggerall = !ishelper
+triggerall = AILevel > 0
+triggerall = roundstate=2 && statetype != A
+triggerall = ctrl && stateno != 40 && (stateno != [1,2])
+; AI SHIT GOES HERE:
+trigger1 = var(58)=2
+trigger1 = (var(58):=0)||1
+
+[State -1, Jump Neutral AI]
+type = changestate
+value = 3
+triggerall = !ishelper
+triggerall = AILevel > 0
+triggerall = roundstate=2 && statetype != A
+triggerall = ctrl && stateno != 40 && (stateno != [1,2])
+; AI SHIT GOES HERE:
+trigger1 = var(58)=3
+trigger1 = (var(58):=0)||1
+
+[State -1, Guard]
+type=changestate
+value=120
+triggerall = !ishelper
+triggerall = !(stateno = [2000,4200])
+trigger1 = var(58) > 0
+trigger1 = roundstate=2
+trigger1 = inguarddist
+trigger1 = ctrl || (stateno = [100,106])
+trigger1 = (stateno!=[120,155])
+trigger1 = !(enemynear,hitdefattr=SCA,AT) && (enemynear,time<120)
+trigger1 = (random%100)<ifelse((p2stateno=[200,699]), 49, ifelse((p2stateno=[1000,2999]), 49, 100))
+
+[State -1, Recover AI] ; Recover near ground (use ChangeState)
+type = SelfState
+triggerall = !ishelper
+triggerall = !(stateno = [2000,4200])
+triggerall = stateno = 5050;movetype = H
+triggerall = time >= 10
+triggerall = Vel Y > 0
+triggerall = Pos Y >= -20
+triggerall = alive
+triggerall = CanRecover
+trigger1 = var(58) > 0
+trigger1 = (random%100) <= 24
+value = 5200 ;HITFALL_RECOVER
+
+[State -1, Recover AI] ; Recover in mid air (use SelfState)
+type = SelfState
+triggerall = !ishelper
+triggerall = !(stateno = [2000,4200])
+triggerall = stateno = 5050;movetype = H
+triggerall = time >= 10
+triggerall = Vel Y > 0
+triggerall = alive
+triggerall = CanRecover
+trigger1 = var(58) > 0
+trigger1 = (random%100) <= 24
+value = 5210 ;HITFALL_AIRRECOVER
+
+;===========================================================================
+; CPU Ichirin's Basics
+;---------------------------------------------------------------------------
+;Run Fwd
+
+;Run Back
+
+;---------------------------------------------------------------------------
+;Powercharge
+
+;---------------------------------------------------------------------------
+;Stand Light Attack
+
+;---------------------------------------------------------------------------
+;Stand Medium Attack
+
+;---------------------------------------------------------------------------
+;Stand Medium Attack - Dash
+
+;---------------------------------------------------------------------------
+;Grab
+
+;---------------------------------------------------------------------------
+;Stand Strong Attack
+
+;---------------------------------------------------------------------------
+;Crouching Light Attack
+
+;---------------------------------------------------------------------------
+;Crouching Medium Attack
+
+;---------------------------------------------------------------------------
+;Crouching Strong Attack
+
+;---------------------------------------------------------------------------
+;Distance Rift
+
+;---------------------------------------------------------------------------
+;Jump Light Attack
+
+;---------------------------------------------------------------------------
+;Jump Medium Attack
+
+;---------------------------------------------------------------------------
+;Jump Strong Attack
+
+;===========================================================================
+; Level 3 Spellcards
+;===========================================================================
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;===========================================================================
+; Level 2 Spellcards
+;===========================================================================
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;===========================================================================
+; Level 1 Spellcards
+;===========================================================================
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------
+
+;===========================================================================
+;///////////////////////////////////////////////////////////////////////////
+;===========================================================================
+; Human Controls
+;===========================================================================
+;///////////////////////////////////////////////////////////////////////////
+;===========================================================================
+
+;===========================================================================
+; Level 3 Spellcards
+;===========================================================================
+
+[State -1, Twilight Spark]
+type = ChangeState
+value = 4000
+triggerall = !ishelper; && (var(49)!=0)
+triggerall = var(52)=1;Level 3 Spellcard Select
+triggerall = (ctrl)||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316 || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact||var(1))) || var(1)|| (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+triggerall = power >= 3000
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim!=[5,6]),(command="QCFx2_PPP"||(command="QCFx2_PPPR"&&var(40)&3584=3584)),(command="QCBx2_PPP"||(command="QCBx2_PPPR"&&var(40)&3584=3584)))
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 4000
+trigger2 = stateno = [1000,1999]
+trigger2 = var(1)
+trigger2 = (var(58):=0)||1
+
+[State -1, Flare Star]
+type = ChangeState
+value = 4100
+triggerall = !ishelper; && (var(49)!=0)
+triggerall = var(52)=2;Level 3 Spellcard Select
+triggerall = (ctrl)||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316 || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact||var(1))) || var(1)|| (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+triggerall = statetype != A
+triggerall = power >= 3000
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim=[5,6]),(command="QCFx2_C"),(command="QCBx2_C"))
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim=[5,6]),(command="QCFx2_PPP"||(command="QCFx2_PPPR"&&var(40)&3584=3584)),(command="QCBx2_PPP"||(command="QCBx2_PPPR"&&var(40)&3584=3584)))
+trigger2 = (var(10):=2)||1
+;AI
+trigger3 = AILevel > 0
+trigger3 = var(58) = 4100
+trigger3 = stateno = [1000,1999]
+trigger3 = var(1)
+trigger3 = (var(58):=0)||1
+
+;===========================================================================
+; Level 2 Spellcards
+;===========================================================================
+
+
+;===========================================================================
+; Level 1 Spellcards
+;===========================================================================
+
+;---------------------------------------------------------------------------
+;236236xyz: Escape Velocity
+[State -1, 236236xyz: Escape Velocity]
+type = ChangeState
+value = 2100
+triggerall = !ishelper
+;triggerall = statetype != A
+triggerall = power >= 1000
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || (((stateno = [200,629])||(stateno = [1000,1500])) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim!=[5,6]),command="236236_X",command="214214_X")
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim!=[5,6]),command="236236_Y",command="214214_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim!=[5,6]),command="236236_Z",command="214214_Z")
+trigger3 = (var(10):=3)||1
+;AI
+trigger4 = AILevel > 0
+trigger4 = var(58) = 2100
+trigger4 = (stateno = [1000,1999]) || (stateno = [600,625])
+trigger4 = var(1)
+trigger4 = p2bodydist x = [0,50]
+trigger4 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;214214xyz: Orreries Sun
+[State -1, 214214xyz: Orreries Sun]
+type = ChangeState
+value = 2000+10*(var(39)>0) ;SWITCH TO LAUNCHER IF SPELLCARD ALREAD ACTIVE
+triggerall = !ishelper
+;triggerall = var(39)<= 0 ;DISABLE USE OF SPELLCARD IF ALREADY ACTIVE
+;triggerall = statetype != A
+triggerall = (power >= 1000) || (var(39)>0)
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || (((stateno = [200,629])||(stateno = [1000,1500])) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim=[5,6]),command="236236_X",command="214214_X")
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim=[5,6]),command="236236_Y",command="214214_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim=[5,6]),command="236236_Z",command="214214_Z")
+trigger3 = (var(10):=3)||1
+;;AI
+;trigger4 = AILevel > 0
+;trigger4 = var(58) = 2000
+;trigger4 = (stateno = [1000,1999]) || (stateno = [600,625])
+;trigger4 = var(1)
+;trigger4 = p2bodydist x = [0,50]
+;trigger4 = (var(58):=0)||1
+
+;===========================================================================
+; Specials
+;===========================================================================
+
+;---------------------------------------------------------------------------
+;421xyz: Meteor Strike
+[State -1, 421xyz: Meteor Strike]
+type = ChangeState
+value = 1200
+triggerall = !ishelper
+;triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim=[5,6]),command="623_X",command="421_X");||command="b"
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim=[5,6]),command="623_Y",command="421_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim=[5,6]),command="623_Z",command="421_Z")
+trigger3 = (var(10):=3)||1
+;AI
+trigger4 = AILevel > 0
+trigger4 = var(58) = 1201
+trigger4 = var(1)
+trigger4 = (var(10):=1)||1
+trigger4 = (var(58):=0)||1
+;AI
+trigger5 = AILevel > 0
+trigger5 = var(58) = 1202
+trigger5 = var(1)
+trigger5 = (var(10):=2)||1
+trigger5 = (var(58):=0)||1
+;AI
+trigger6 = AILevel > 0
+trigger6 = var(58) = 1203
+trigger6 = var(1)
+trigger6 = (var(10):=3)||1
+trigger6 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;623xyz: Sweep Away
+[State -1, 623xyz: Sweep Away]
+type = ChangeState
+value = 1100
+triggerall = !ishelper
+;triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim!=[5,6]),command="623_X",command="421_X");||command="b"
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim!=[5,6]),command="623_Y",command="421_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim!=[5,6]),command="623_Z",command="421_Z")
+trigger3 = (var(10):=3)||1
+;AI
+trigger4 = AILevel > 0
+trigger4 = var(58) = 1101
+trigger4 = var(1)
+trigger4 = (var(10):=1)||1
+trigger4 = (var(58):=0)||1
+;AI
+trigger5 = AILevel > 0
+trigger5 = var(58) = 1102
+trigger5 = var(1)
+trigger5 = (var(10):=2)||1
+trigger5 = (var(58):=0)||1
+;AI
+trigger6 = AILevel > 0
+trigger6 = var(58) = 1103
+trigger6 = var(1)
+trigger6 = (var(10):=3)||1
+trigger6 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;236xyz: Green Spread
+[State -1, 236xyz: Green Spread]
+type = ChangeState
+value = 1000
+triggerall = !ishelper
+;triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim!=[5,6]),command="236_X",command="214_X");||command="b"
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim!=[5,6]),command="236_Y",command="214_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim!=[5,6]),command="236_Z",command="214_Z")
+trigger3 = (var(10):=3)||1
+;AI
+trigger4 = AILevel > 0
+trigger4 = var(58) = 1001
+trigger4 = var(1)
+trigger4 = (var(10):=1)||1
+trigger4 = (var(58):=0)||1
+;AI
+trigger5 = AILevel > 0
+trigger5 = var(58) = 1002
+trigger5 = var(1)
+trigger5 = (var(10):=2)||1
+trigger5 = (var(58):=0)||1
+;AI
+trigger6 = AILevel > 0
+trigger6 = var(58) = 1003
+trigger6 = var(1)
+trigger6 = (var(10):=3)||1
+trigger6 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;214xyz: Stellar Missile
+[State -1, 214xyz: Stellar Missile]
+type = ChangeState
+value = 1300
+triggerall = !ishelper
+;triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316  || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || ((stateno = [200,629]) && (movecontact || var(1))) || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = ifelse((anim=[5,6]),command="236_X",command="214_X");||command="b"
+trigger1 = (var(10):=1)||1
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = ifelse((anim=[5,6]),command="236_Y",command="214_Y")
+trigger2 = (var(10):=2)||1
+trigger3 = AILevel <= 0 ;AI Off
+trigger3 = ifelse((anim=[5,6]),command="236_Z",command="214_Z")
+trigger3 = (var(10):=3)||1
+;AI
+trigger4 = AILevel > 0
+trigger4 = var(58) = 1301
+trigger4 = var(1)
+trigger4 = (var(10):=1)||1
+trigger4 = (var(58):=0)||1
+;AI
+trigger5 = AILevel > 0
+trigger5 = var(58) = 1302
+trigger5 = var(1)
+trigger5 = (var(10):=2)||1
+trigger5 = (var(58):=0)||1
+;AI
+trigger6 = AILevel > 0
+trigger6 = var(58) = 1303
+trigger6 = var(1)
+trigger6 = (var(10):=3)||1
+trigger6 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;5xyz: Flight Mode
+[State -1, 5xyz: Flight Mode]
+type = ChangeState
+value = 300
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = var(24)<=0
+triggerall = stateno != [300,316]
+triggerall = ctrl || ((stateno = [200,429]) && (movehit)) || stateno = 40 || (stateno=101) || (stateno=106) || stateno = 52 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command="c"
+trigger2 = AILevel <= 0 ;AI Off
+trigger2 = command="x"&&command="y"&&command="z"
+;AI
+trigger3 = AILevel > 0
+trigger3 = var(58) = 300
+trigger3 = var(1)
+trigger3 = (var(10):=1)||1
+trigger3 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+; Run Fwd
+[State -1, Run Fwd]
+type = ChangeState
+value = 100+cond(var(24)>0,210,10)*(statetype=A)
+triggerall = !ishelper
+triggerall = (stateno != [100,101]) && (stateno != [310,316])
+triggerall = ctrl; || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+triggerall = var(8) = 0
+trigger1 = command = "FF" || (command = "holdfwd" && command!="holdback" && (command="a"))
+;trigger1 = numhelper(20020)
+;trigger1 = (helper(20020),var(55) = [1,3])
+trigger1 = var(8) := var(8)+1;1
+;
+trigger2 = numhelper(20020)
+trigger2 = command="holdfwd";((helper(20020),var(16)=[1,9])&&!(helper(20020), Var(18) > helper(20020), Var(16)))||(helper(20020),var(16)=-1)
+trigger2 = (helper(20020),var(3)=[1,2]);||(helper(20020),var(10)=[1,2])
+trigger2 = var(8) := var(8)+1;1
+;AI
+trigger3 = AILevel > 0
+trigger3 = statetype != A
+trigger3 = var(58) = 100
+trigger3 = (var(58):=0)||1
+trigger3 = var(8) := var(8)+1;1
+trigger4 = AILevel > 0
+trigger4 = statetype = A
+trigger4 = var(58) = 110
+trigger4 = (var(58):=0)||1
+trigger4 = var(8) := var(8)+1;1
+
+; Run Back
+[State -1, Run Back]
+type = ChangeState
+value = 105+cond(var(24)>0,210,10)*(statetype=A)
+triggerall = !ishelper
+triggerall = (stateno != [105,106]) && (stateno != [310,316])
+triggerall = ctrl; || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+triggerall = var(8) = 0
+trigger1 = command = "BB" || (command = "holdback" && command!="holdfwd" && (command="a"))
+;trigger1 = (helper(20020),var(56) = [1,3])
+trigger1 = var(8) := var(8)+1;1
+;
+trigger2 = numhelper(20020)
+trigger2 = command="holdback";((helper(20020),var(17)=[1,9])&&!(helper(20020), Var(19) > helper(20020), Var(17)))||(helper(20020),var(17)=-1)
+trigger2 = (helper(20020),var(3)=[1,2]);||(helper(20020),var(10)=[1,2])
+trigger2 = var(8) := var(8)+1;1
+;AI
+trigger3 = AILevel > 0
+trigger3 = statetype != A
+trigger3 = var(58) = 105
+trigger3 = (var(58):=0)||1
+trigger3 = var(8) := var(8)+1;1
+trigger4 = AILevel > 0
+trigger4 = statetype = A
+trigger4 = var(58) = 115
+trigger4 = (var(58):=0)||1
+trigger4 = var(8) := var(8)+1;1
+
+;---------------------------------------------------------------------------
+;Unzan Activate/Deactivate
+;[State -1, Unzan Activate/Deactivate]
+;type = ChangeState
+;value = 900
+;triggerall = !ishelper
+;triggerall = statetype != A
+;triggerall = stateno != 900
+;triggerall = var(50)>0 && var(48)=0;Unzan can't be ded
+;triggerall = ctrl || stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1) 
+;trigger1 = AILevel <= 0 ;AI Off
+;trigger1 = command = "c"
+;;AI
+;trigger2 = AILevel > 0
+;trigger2 = var(58) = 900
+;trigger2 = p2bodydist x = [0,50]
+;trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Grab
+[State -1, Air Grab]
+type = ChangeState
+value = 820
+triggerall = !ishelper
+triggerall = statetype = A
+;triggerall = ctrl || stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = (command = "y" && command = "z") || command="b" || command="b"  || cond((AILevel > 0 && var(58) = 800),((var(58):=0)||1),0)
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 800
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Grab
+[State -1, Grab]
+type = ChangeState
+value = 800
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316 || stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = (command = "y" && command = "z") || command="b" || command="b"  || cond((AILevel > 0 && var(58) = 800),((var(58):=0)||1),0)
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 800
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Taunt
+[State -1, Taunt]
+type = ChangeState
+value = 195
+triggerall = !ishelper
+triggerall = AILevel <= 0 ;AI Off
+triggerall = command = "start"
+trigger1 = statetype != A
+trigger1 = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316 || (stateno=100 && animelemtime(2)>1) || (stateno=101) || (stateno=106) || stateno = 52
+
+;---------------------------------------------------------------------------
+;Stand Light Attack
+[State -1, Stand Light Attack]
+type = ChangeState
+value = 200
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||(stateno = 200 && movecontact) || stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1) 
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "x"
+trigger1 = command != "holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 200
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Stand Strong Attack
+[State -1, Stand Medium Attack]
+type = ChangeState
+value = 215
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((stateno=200||stateno=200||stateno=400||stateno=400) && (movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command="y"
+trigger1 = ifelse((anim!=[5,6]),command="holdfwd",command="holdback")
+trigger1 = command!="holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 215
+trigger2 = p2bodydist x = [0,70]
+trigger2 = (var(58):=0)||1
+
+;Stand Medium Attack
+[State -1, Stand Medium Attack]
+type = ChangeState
+value = 210
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316 ||((movecontact||var(1)) && ((stateno = 200)||stateno = 400))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "y"
+trigger1 = command != "holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 210
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+
+;---------------------------------------------------------------------------
+;Stand Strong Attack
+[State -1, Stand Strong Attack]
+type = ChangeState
+value = 220
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((stateno=200||stateno=210||stateno=400||stateno=410) && (movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command="z"
+trigger1 = command!="holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 220
+trigger2 = p2bodydist x = [0,70]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Crouching Light Attack
+[State -1, Crouching Light Attack]
+type = ChangeState
+value = 400
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||(stateno = 400 && movecontact)|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "x"
+trigger1 = command = "holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 400
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Crouching Medium Attack
+[State -1, Crouching Medium Attack]
+type = ChangeState
+value = 410
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((movecontact||var(1)) && ((stateno = 200)||stateno = 400))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "y"
+trigger1 = command = "holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 410
+trigger2 = p2bodydist x = [0,70]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Stand Strong Attack
+[State -1, Stand Strong Attack]
+type = ChangeState
+value = 225
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((stateno=200||stateno=210||stateno=400||stateno=410) && (movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command="z"
+trigger1 = cond((anim!=[5,6]),command="holdfwd",command="holdback")
+trigger1 = command="holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 225
+trigger2 = p2bodydist x = [0,70]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Crouching Strong
+[State -1, Crouching Strong Attack]
+type = ChangeState
+value = 420
+triggerall = !ishelper
+triggerall = statetype != A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((stateno=200||stateno=210||stateno=400||stateno=410) && (movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "z"
+trigger1 = command="holddown"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 420
+trigger2 = p2bodydist x = [30,70]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Jump Light Attack
+[State -1, Jump Light]
+type = ChangeState
+value = 600
+triggerall = !ishelper
+triggerall = statetype = A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "x"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 600
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Jump Medium Attack
+[State -1, Jump Medium]
+type = ChangeState
+value = 610
+triggerall = !ishelper
+triggerall = statetype = A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||(stateno = 600 && (movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "y"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 610
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1
+
+;---------------------------------------------------------------------------
+;Jump Strong Attack
+[State -1, Jump Strong]
+type = ChangeState
+value = 620
+triggerall = !ishelper
+triggerall = statetype = A
+triggerall = ctrl||(stateno=310&&animelemtime(3)>1)||stateno=311||(stateno=315&&animelemtime(3)>1)||stateno=316||((stateno = [600,610])&&(movecontact||var(1)))|| stateno = 52 || stateno = 101 || stateno = 106 || (stateno=110 && animelemtime(3)>1) || (stateno=115 && animelemtime(3)>1) || (stateno=100 && animelemtime(3)>1)|| (stateno=105 && animelemtime(3)>1)
+trigger1 = AILevel <= 0 ;AI Off
+trigger1 = command = "z"
+;AI
+trigger2 = AILevel > 0
+trigger2 = var(58) = 620
+trigger2 = p2bodydist x = [0,50]
+trigger2 = (var(58):=0)||1

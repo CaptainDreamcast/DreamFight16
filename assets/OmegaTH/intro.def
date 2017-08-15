@@ -1,0 +1,90 @@
+; Introduction cutscene for OmegaTH's story.
+
+
+[SceneDef]
+spr = intro.sff
+startscene = 0         ;Starting scene number (for debugging)
+
+;------------------------------------
+[Scene 0]
+; Fade
+fadein.time = 120       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 180
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  1       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+; Music
+bgm = Opening.mp3        ;Name of music file to play
+bgm.loop = 0
+; Total time
+end.time = 300
+
+[Scene 1]
+; Fade
+fadein.time = 120       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 0
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  2       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+layer1.anim =  3       ;Anim action number
+layer1.offset = 0,32   ;Position offset
+layer1.starttime = 210   ;Time to start display
+end.time = 245
+
+[Scene 2]
+; Fade
+fadein.time = 0       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 180
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  10       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+layer1.anim =  11       ;Anim action number
+layer1.offset = 0,32   ;Position offset
+layer1.starttime = 60   ;Time to start display
+layer2.anim =  12       ;Anim action number
+layer2.offset = 0,32   ;Position offset
+layer2.starttime = 180   ;Time to start display
+end.time = 420
+
+[Begin Action 1]
+1,0, 0,0, -1
+
+[Begin Action 2]
+2,0, 0,0, -1
+
+[Begin Action 3]
+3,0, 0,0, 5
+4,0, 0,0, 5
+5,0, 0,0, 5
+6,0, 0,0, 5
+7,0, 0,0, 5
+8,0, 0,0, 5
+9,0, 0,0, -1
+
+[Begin Action 10]
+10,0, 0,0, -1
+
+[Begin Action 11]
+11,0, 0,0, 60
+
+[Begin Action 12]
+12,0, 0,0, -1
+

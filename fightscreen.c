@@ -4,43 +4,66 @@
 
 #include <tari/input.h>
 #include <tari/stagehandler.h>
+#include <tari/collisionhandler.h>
 
 #include "stage.h"
 #include "mugenanimationreader.h"
 #include "mugencommandreader.h"
+#include "mugenstatereader.h"
+#include "playerdefinition.h"
+#include "mugenanimationhandler.h"
+#include "mugencommandhandler.h"
+#include "mugenstatehandler.h"
+#include "collision.h"
+#include "fightui.h"
+#include "mugenexplod.h"
+#include "gamelogic.h"
+#include "config.h"
+#include "playerhitdata.h"
 
 static Screen* getNextFightScreenScreen() {
-	
 	if (hasPressedAbortFlank()) {
 		abortScreenHandling();
 	}
 
-	if (hasPressedA()) {
-		return &FightScreen;
-	}
-
-	if (hasPressedLeft()) {
-		scrollBackgroundRight(-1);
-	} else if (hasPressedRight()) {
-		scrollBackgroundRight(1);
-	}
-	
-	if (hasPressedUp()) {
-		scrollBackgroundDown(-1);
-	}
-	else if (hasPressedDown()) {
-		scrollBackgroundDown(1);
-	}
 	return NULL;
 }
 
 static void loadFightScreen() {
-	loadStageFromMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
-	loadMugenAnimationFile("assets/kfm.air");
-	loadMugenCommandFile("assets/kfm.cmd");
+	setupGameCollisions();
+	
+	instantiateActor(MugenConfig);
+	instantiateActor(HitDataHandler);
+	instantiateActor(MugenAnimationHandler);
+	instantiateActor(MugenCommandHandler);
+	instantiateActor(MugenStateHandler);
+	instantiateActor(ExplodHandler);
+	
+	setStageMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
+	instantiateActor(StageBP);
+
+	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
+	setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
+	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
+
+	setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
+	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");
+	//setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
+	loadPlayers();
+
+	instantiateActor(FightUIBP);
+	instantiateActor(GameLogic);
+	
+	// activateCollisionHandlerDebugMode();
+
+}
+
+static void updateFightScreen() {
+	updatePlayers();
 }
 
 Screen FightScreen = {
 	.mLoad = loadFightScreen,
 	.mGetNextScreen = getNextFightScreenScreen,
+	.mUpdate = updateFightScreen,
 };

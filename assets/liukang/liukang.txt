@@ -1,0 +1,51 @@
+-Kazmer13
+-MugentomB
+-http://mugentomb.cjb.net
+-Kazmer13@aol.com
+
+---------------------------------------------------------------------------
+Liu Kang (v1.0) - Original Liu Kang created by Ed Boon & John Tobias (gods)
+--------------------------------------------------------------------------
+
+*WHAT'S NEW*
+======v1.0=========
+-Everything - First Release!
+
+
+
+---------------------------------------------------------------------------
+
+
+=========================================
+-MOVES-
+Fireball - F, F, HP (in air also) 
+Low Fireball - F, F, LP
+Flying Kick - F, F, HK
+Bicycle Kick - Hold LK...release LK
+Cartwheel Kick - Hold HK...release HK (close)
+
+-SUPER MOVES-
+Super Fire Blast - Hold LP...release LP
+Super Kombo - D, F, D, F, LK
+Super Angled Kick - D, F, D, F, c
+
+-FATLITIES-
+Dragon - HK (mid-screen)
+Kombo Blast - HP (mid-screen)
+Fire Dragon - LP (far)
+Brutality - LK (mid-screen)
+Statue Crush - C (mid-screen)
+Spike Uppercut - z (anywhere)
+
+
+=========================================
+*NOTE: To make Liu Kang the typical MUGEN character size, open his
+.CNS file and scroll to where it says:
+
+[Size]
+xscale = 1   
+yscale = 1
+
+Replaces the 1's with .9, then SAVE!
+=========================================
+Thanks to Willouby Jackson and Cipher for help with coding and sprites.

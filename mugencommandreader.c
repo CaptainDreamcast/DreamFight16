@@ -147,13 +147,13 @@ static MugenCommandInputStepTarget extractTargetFromInputStep(char* tInputStep) 
 	else if (mask == 1 << 1) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_UP;
 	else if (mask == 1 << 2) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_FORWARD;
 	else if (mask == 1 << 3) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_BACKWARD;
-	else if (mask == 1 << 4) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_A;
-	else if (mask == 1 << 5) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_B;
-	else if (mask == 1 << 6) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_C;
-	else if (mask == 1 << 7) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_X;
-	else if (mask == 1 << 8) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_Y;
-	else if (mask == 1 << 9) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_Z;
-	else if (mask == 1 << 10) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_START;
+	else if (mask & (1 << 4)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_A;
+	else if (mask & (1 << 5)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_B;
+	else if (mask & (1 << 6)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_C;
+	else if (mask & (1 << 7)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_X;
+	else if (mask & (1 << 8)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_Y;
+	else if (mask & (1 << 9)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_Z;
+	else if (mask & (1 << 10)) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_START;
 	else if (mask == ((1 << 0) | (1 << 2))) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_DOWN_FORWARD;
 	else if (mask == ((1 << 0) | (1 << 3))) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_DOWN_BACKWARD;
 	else if (mask == ((1 << 1) | (1 << 2))) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_UP_FORWARD;
@@ -164,6 +164,7 @@ static MugenCommandInputStepTarget extractTargetFromInputStep(char* tInputStep) 
 	else if (mask == ((1 << 3) | (1 << 11))) ret = MUGEN_COMMAND_INPUT_STEP_TARGET_MULTI_BACKWARD;
 	else {
 		logError("Unable to determine target.");
+		printf("%X\n", mask);
 		logErrorString(tInputStep);
 		abortSystem();
 		ret = -1;
@@ -264,6 +265,7 @@ static void handleCommandInputEntryAsVector(CommandCaller* tCaller, MugenDefScri
 static void handleCommandInputEntryAsString(CommandCaller* tCaller, MugenDefScriptGroupElement* tElement) {
 	assert(isMugenDefStringVariableAsElement(tElement));
 
+	tCaller->mInput.mInputSteps = new_vector();
 	char* command = getAllocatedMugenDefStringVariableAsElement(tElement);
 	parseSingleInputStepAndAddItToInput(&tCaller->mInput.mInputSteps, command, 0);
 	freeMemory(command);
@@ -404,6 +406,7 @@ MugenCommands loadMugenCommandFile(char * tPath)
 
     loadMugenCommandsFromDefScript(&ret, &script);
 
+	unloadMugenDefScript(script);
 
 	return ret;
 }

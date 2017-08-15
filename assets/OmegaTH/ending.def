@@ -1,0 +1,74 @@
+; Ending cutscene for OmegaTH's story.
+
+
+[SceneDef]
+spr = ending.sff
+startscene = 0         ;Starting scene number (for debugging)
+
+;------------------------------------
+[Scene 0]
+; Fade
+fadein.time = 120       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 120
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  1       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+; Music
+bgm = Ending.mp3        ;Name of music file to play
+bgm.loop = 1
+; Total time
+end.time = 870
+
+[Scene 1]
+; Fade
+fadein.time = 120       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 120
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  2       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+end.time = 1980
+
+[Scene 2]
+; Fade
+fadein.time = 120       ;Time to take for fading in
+fadein.col = 0,0,0     ;Use 255,255,255 for white-fade
+fadeout.time = 180
+fadeout.col = 0,0,0
+; Screen color
+clearcolor = 0,0,0
+; Overlay Anims (from 0 to 9)
+layerall.pos = 160,0   ;Default position for all layers
+layer0.anim =  3       ;Anim action number
+layer0.offset = 0,32   ;Position offset
+layer0.starttime = 0   ;Time to start display
+end.time = 805
+
+[Begin Action 1]
+1,0, 0,0, 240
+2,0, 0,0, 210
+1,0, 0,0, 60
+3,0, 0,0, -1
+
+[Begin Action 2]
+4,0, 0,0, 360
+5,0, 0,0, 300
+6,0, 0,0, 300
+7,0, 0,0, 300
+8,0, 0,0, 300
+9,0, 0,0, 420
+
+[Begin Action 3]
+10,0, 0,0, 805
+

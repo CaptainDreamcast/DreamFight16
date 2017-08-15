@@ -51,7 +51,7 @@ typedef struct {
 } MugenFloatAssignment;
 
 typedef struct {
-	char mValue[100];
+	char* mValue;
 } MugenStringAssignment;
 
 typedef struct {

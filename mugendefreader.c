@@ -3,8 +3,6 @@
 #include <assert.h>
 #include <ctype.h>
 
-#define DEBUG
-
 #include <tari/file.h>
 #include <tari/memoryhandler.h>
 #include <tari/log.h>
@@ -12,14 +10,14 @@
 #include <tari/math.h>
 
 typedef struct MugenDefToken_t {
-	char mValue[MUGEN_DEF_STRING_LENGTH];
+	char* mValue;
 	struct MugenDefToken_t* mNext;
 
 } MugenDefToken;
 
 static MugenDefToken* makeMugenDefToken(char* tValue) {
 	MugenDefToken* e = allocMemory(sizeof(MugenDefToken));
-	assert(strlen(tValue) < MUGEN_DEF_STRING_LENGTH);
+	e->mValue = allocMemory(strlen(tValue) + 10);
 	strcpy(e->mValue, tValue);
 	e->mNext = NULL;
 
@@ -35,9 +33,9 @@ static int increaseAndCheckIfOver(Buffer* b, BufferPointer* p) {
 	return ((uint32_t)*p == (uint32_t)b->mData + b->mLength);
 }
 
-static int decreaseAndCheckIfOver(BufferPointer* p) {
+static int decreaseAndCheckIfOver(Buffer* b, BufferPointer* p) {
 	(*p)--;
-	return (int32_t)*p < 0;
+	return (int32_t)(*p) < (int32_t)b->mData;
 }
 
 static int isComment(BufferPointer p) {
@@ -117,14 +115,14 @@ static void moveBufferPointerForward(Buffer* b, BufferPointer* p) {
 	}
 }
 
-static void moveBufferPointerBack(BufferPointer* p) {
+static void moveBufferPointerBack(Buffer* b, BufferPointer* p) {
 	while (isEmpty(*p)) {
-		if(!decreaseAndCheckIfOver(p)) {
+		if(decreaseAndCheckIfOver(b, p)) {
 			(*p)[100] = '\0';
-			printf("test: %s\n", *p);
+			logError("Invalid parsing.");
+			logErrorString(*p);
 			abortSystem();
 		}
-		//assert(!decreaseAndCheckIfOver(p));
 	}
 }
 
@@ -143,10 +141,11 @@ static MugenDefToken* parseAssignment(Buffer* b, BufferPointer p, char tAssignme
 	BufferPointer equal = getNextDefCharPosition(b, p, tAssignmentToken);
 	MugenDefToken* equalToken = makeMugenDefToken("=");
 
+
 	BufferPointer start = p;
 	BufferPointer end = equal - 1;
 	moveBufferPointerForward(b, &start);
-	moveBufferPointerBack(&end);
+	moveBufferPointerBack(b, &end);
 	char* text = makeMugenDefStringFromEndPoint(start, end);
 	MugenDefToken* variableToken = makeMugenDefToken(text);
 	destroyMugenDefString(text);
@@ -155,13 +154,13 @@ static MugenDefToken* parseAssignment(Buffer* b, BufferPointer p, char tAssignme
 	end = equal;
 	if (increasePointerToNextLine(b, &end)) end = ((char*)b->mData) + b->mLength - 1;
 	else {
-		decreaseAndCheckIfOver(&end);
+		decreaseAndCheckIfOver(b, &end);
 	}
-	while (isLinebreak(end)) decreaseAndCheckIfOver(&end);
+	while (isLinebreak(end)) decreaseAndCheckIfOver(b, &end);
 
 	moveBufferPointerForward(b, &start);
 	end = removeCommentFromToken(start, end);
-	moveBufferPointerBack(&end);
+	moveBufferPointerBack(b, &end);
 	text = makeMugenDefStringFromEndPoint(start, end);
 	MugenDefToken* valueToken = makeMugenDefToken(text);
 	destroyMugenDefString(text);
@@ -183,11 +182,11 @@ char* getLineAsAllocatedString(Buffer* b, BufferPointer p) {
 	BufferPointer end = p;
 	if (increasePointerToNextLine(b, &end)) end = ((char*)b->mData) + b->mLength - 1;
 	else {
-		decreaseAndCheckIfOver(&end);
+		decreaseAndCheckIfOver(b, &end);
 	}
-	while (isLinebreak(end)) decreaseAndCheckIfOver(&end);
+	while (isLinebreak(end)) decreaseAndCheckIfOver(b, &end);
 	end = removeCommentFromToken(start, end);
-	moveBufferPointerBack(&end);
+	moveBufferPointerBack(b, &end);
 	char* text = makeMugenDefStringFromEndPoint(start, end);
 	return text;
 }
@@ -357,7 +356,7 @@ static void setGroup(MugenDefScript* tScript, MugenDefToken* t) {
 	}
 
 	assert(!string_map_contains(&tScript->mGroups, gScriptMaker.mGroup));
-	string_map_push_owned(&tScript->mGroups, gScriptMaker.mGroup, e);
+	string_map_push(&tScript->mGroups, gScriptMaker.mGroup, e);
 
 	if (prev != NULL) {
 		prev->mNext = e;
@@ -428,7 +427,7 @@ static void setStringElement(MugenDefScriptGroupElement* element, MugenDefToken*
 	element->mType = MUGEN_DEF_SCRIPT_GROUP_STRING_ELEMENT;
 	
 	MugenDefScriptStringElement* e = allocMemory(sizeof(MugenDefScriptStringElement));
-	assert(strlen(t->mValue + 1) < MUGEN_DEF_STRING_LENGTH);
+	e->mString = allocMemory(strlen(t->mValue + 1) + 10);
 	strcpy(e->mString, t->mValue + 1);
 	e->mString[strlen(e->mString) - 1] = '\0';
 	element->mData = e;
@@ -486,7 +485,7 @@ static void setRawElement(MugenDefScriptGroupElement* element, MugenDefToken* t)
 	element->mType = MUGEN_DEF_SCRIPT_GROUP_STRING_ELEMENT;
 
 	MugenDefScriptStringElement* e = allocMemory(sizeof(MugenDefScriptStringElement));
-	assert(strlen(t->mValue) < MUGEN_DEF_STRING_LENGTH);
+	e->mString = allocMemory(strlen(t->mValue) + 10);
 	strcpy(e->mString, t->mValue);
 	element->mData = e;
 
@@ -509,7 +508,7 @@ static void addGroupElementToGroup(MugenDefScript* tScript, MugenDefScriptGroupE
 	}
 	assert(!string_map_contains(&e->mElements, variableName));
 
-	string_map_push_owned(&e->mElements, variableName, tElement);
+	string_map_push(&e->mElements, variableName, tElement);
 	list_push_back(&e->mOrderedElementList, tElement);
 }
 
@@ -661,14 +660,17 @@ static void tokensToDefScript(MugenDefScript* tScript, MugenDefToken* tToken) {
 }
 
 static void deleteTokens(MugenDefToken* t) {
-	if (t == NULL) return;
-	deleteTokens(t->mNext);
-	freeMemory(t);
+	MugenDefToken* cur = t;
+	while (cur != NULL) {
+		MugenDefToken* next = cur->mNext;
+		freeMemory(cur->mValue);
+		freeMemory(cur);
+		cur = next;
+	}
 }
 
 MugenDefScript loadMugenDefScript(char * tPath)
 {
-	printf("load %s\n", tPath);
 	debugLog("Start loading script.");
 	debugString(tPath);
 
@@ -683,13 +685,69 @@ MugenDefScript loadMugenDefScript(char * tPath)
 	tokensToDefScript(&d, root);
 	deleteTokens(root);
 
-	printf("Finished loading\n");
 	return d;
+}
+
+static void unloadMugenDefScriptFloatElement(MugenDefScriptFloatElement* e) {
+	(void)e;
+}
+
+static void unloadMugenDefScriptNumberElement(MugenDefScriptNumberElement* e) {
+	(void)e;
+}
+
+static void unloadMugenDefScriptVectorElement(MugenDefScriptVectorElement* e) {
+	(void)e;
+}
+
+static void unloadMugenDefScriptStringElement(MugenDefScriptStringElement* e) {
+	freeMemory(e->mString);
+}
+
+static void unloadMugenDefElement(void* tCaller, void* tData) {
+	(void)tCaller;
+	MugenDefScriptGroupElement* e = tData;
+
+	if (e->mType == MUGEN_DEF_SCRIPT_GROUP_FLOAT_ELEMENT) {
+		unloadMugenDefScriptFloatElement(e->mData);
+	}
+	else if (e->mType == MUGEN_DEF_SCRIPT_GROUP_NUMBER_ELEMENT) {
+		unloadMugenDefScriptNumberElement(e->mData);
+	}
+	else if (e->mType == MUGEN_DEF_SCRIPT_GROUP_VECTOR_ELEMENT) {
+		unloadMugenDefScriptVectorElement(e->mData);
+	}
+	else if (e->mType == MUGEN_DEF_SCRIPT_GROUP_STRING_ELEMENT) {
+		unloadMugenDefScriptStringElement(e->mData);
+	}
+	else {
+		logError("Unknoown element type.");
+		logErrorInteger(e->mType);
+		abortSystem();
+	}
+
+	freeMemory(e->mData);
+}
+
+static void unloadMugenDefScriptGroup(MugenDefScriptGroup* tGroup) {
+	list_map(&tGroup->mOrderedElementList, unloadMugenDefElement, NULL);
+
+	delete_string_map(&tGroup->mElements);
+	delete_list(&tGroup->mOrderedElementList);
+	freeMemory(tGroup);
 }
 
 void unloadMugenDefScript(MugenDefScript tScript)
 {
-	// TODO
+	MugenDefScriptGroup* group = tScript.mFirstGroup;
+	while (group != NULL) {
+		MugenDefScriptGroup* next = group->mNext;
+		unloadMugenDefScriptGroup(group);
+
+		group = next;
+	}
+
+	delete_string_map(&tScript.mGroups);
 }
 
 int isMugenDefStringVariable(MugenDefScript* tScript, char * tGroupName, char * tVariableName)

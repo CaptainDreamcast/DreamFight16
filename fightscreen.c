@@ -39,11 +39,6 @@ static void loadFightScreen() {
 	instantiateActor(MugenCommandHandler);
 	instantiateActor(MugenStateHandler);
 	instantiateActor(ExplodHandler);
-	
-	loadMugenConstantsFile("assets/kfm/kfm.cns");
-	printf("asdds 1\n");
-	loadMugenConstantsFile("assets/kfm/kfm.cns");
-	abortSystem();
 
 	setStageMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
 	instantiateActor(StageBP);

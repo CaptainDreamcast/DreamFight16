@@ -284,8 +284,6 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 	int finalHeight = getFinalImageSize(h);
 	int32_t pcxImageSize = bytesPerPixel*w*h;
 
-	printf("load sprite1: %d/%d %d/%d\n", w, finalWidth, h, finalHeight);
-
 	assert(header.mBitsPerPixel == 8);
 	assert(header.mEncoding == 1);
 	assert(header.mPlaneAmount == 1);

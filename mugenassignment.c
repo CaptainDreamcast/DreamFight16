@@ -87,6 +87,7 @@ MugenAssignment * makeFloatMugenAssignment(double tVal)
 MugenAssignment * makeStringMugenAssignment(char * tVal)
 {
 	MugenStringAssignment* s = allocMemory(sizeof(MugenStringAssignment));
+	s->mValue = allocMemory(strlen(tVal) + 10);
 	strcpy(s->mValue, tVal);
 
 	return makeMugenAssignment(MUGEN_ASSIGNMENT_TYPE_STRING, s);
@@ -534,6 +535,7 @@ static int isStringConstant(char* tText) {
 
 static MugenAssignment* parseStringConstantFromString(char* tText) {
 	MugenStringAssignment* s = allocMemory(sizeof(MugenStringAssignment));
+	s->mValue = allocMemory(strlen(tText + 1) + 10);
 	strcpy(s->mValue, tText+1);
 	s->mValue[strlen(s->mValue) - 1] = '\0';
 

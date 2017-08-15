@@ -22,7 +22,7 @@ typedef struct {
 } MugenDefScriptVectorElement;
 
 typedef struct {
-	char mString[MUGEN_DEF_STRING_LENGTH];
+	char* mString;
 
 } MugenDefScriptStringElement;
 

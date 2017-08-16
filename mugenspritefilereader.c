@@ -157,6 +157,7 @@ static int getFinalImageSize(int w) {
 		s *= 2;
 	}
 
+	s = max(8, s);
 	return s;
 }
 

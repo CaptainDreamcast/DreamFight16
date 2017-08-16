@@ -374,7 +374,7 @@ static void loadStage(void* tData)
 	loadStageMusic(&s);
 	setMugenStageHandlerCameraCoordinates(makeVector3DI(320, 240, 0)); // TODO
 
-	// loadStageBackgroundElements(gData.mDefinitionPath, &s);
+	loadStageBackgroundElements(gData.mDefinitionPath, &s);
 
 	setStageCamera();
 

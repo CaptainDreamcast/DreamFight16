@@ -129,6 +129,36 @@ typedef struct {
 } FightDisplay;
 
 typedef struct {
+	Position mPosition;
+	MugenAnimation* mAnimation;
+	int mFaceDirection;
+
+	int mIsDisplaying;
+
+	int mAnimationID;
+
+	void(*mCB)();
+
+} KO;
+
+typedef struct {
+	int mTextID;
+	
+	Position mDisplayPosition;
+	Position mPosition;
+	char mText[1024];
+	char mDisplayedText[1024];
+	int mNow;
+	int mDisplayTime;
+
+	int mTextSize;
+	int mBreakSize;
+
+	int mIsDisplaying;
+	void(*mCB)();
+} WinDisplay;
+
+typedef struct {
 	int mIsCountingDownControl;
 	int mControlReturnTime;
 	int mNow;
@@ -148,6 +178,9 @@ static struct {
 	TimeCounter mTime;
 	Round mRound;
 	FightDisplay mFight;
+	KO mKO;
+	WinDisplay mWin;
+
 	ControlCountdown mControl;
 
 
@@ -440,8 +473,31 @@ static void loadFight(MugenDefScript* tScript) {
 
 	assert(loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(tScript, &gData.mFightAnimations, basePosition, "Round", "fight", 1, &gData.mFight.mAnimation, &gData.mFight.mPosition, &gData.mFight.mFaceDirection));
 
-
 	gData.mFight.mIsDisplayingFight = 0;
+}
+
+static void loadKO(MugenDefScript* tScript) {
+	Position basePosition;
+	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
+	basePosition.z = 20;
+
+	assert(loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(tScript, &gData.mFightAnimations, basePosition, "Round", "ko", 1, &gData.mKO.mAnimation, &gData.mKO.mPosition, &gData.mKO.mFaceDirection));
+
+	gData.mKO.mIsDisplaying = 0;
+}
+
+static void loadWinDisplay(MugenDefScript* tScript) {
+	Position basePosition;
+	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
+	basePosition.z = 20;
+
+	gData.mWin.mTextSize = 20;
+	gData.mWin.mBreakSize = -5;
+	loadSingleUITextWithFullComponentNameForStorage(tScript, basePosition, "Round", "win", 1, &gData.mWin.mPosition, 1, gData.mWin.mText, gData.mWin.mTextSize, gData.mWin.mBreakSize);
+
+	loadIntegerOrDefault(&gData.mWin.mDisplayTime, tScript, "Round", "win.displaytime", 0);
+
+	gData.mWin.mIsDisplaying = 0;
 }
 
 static void loadControl(MugenDefScript* tScript) {
@@ -466,6 +522,8 @@ static void loadFightUI(void* tData) {
 	loadTimer(&script);
 	loadRound(&script);
 	loadFight(&script);
+	loadKO(&script);
+	loadWinDisplay(&script);
 	loadControl(&script);
 	unloadMugenDefScript(script);
 
@@ -583,6 +641,29 @@ static void updateFightDisplay() {
 	}
 }
 
+static void updateKODisplay() {
+	if (!gData.mKO.mIsDisplaying) return;
+
+	if (!getRegisteredAnimationRemainingAnimationTime(gData.mKO.mAnimationID)) {
+		removeDisplayedAnimation(gData.mKO.mAnimationID);
+		gData.mKO.mCB();
+		gData.mKO.mIsDisplaying = 0;
+	}
+}
+
+
+static void updateWinDisplay() {
+	if (!gData.mWin.mIsDisplaying) return;
+
+	gData.mWin.mNow++;
+	if (gData.mWin.mNow >= gData.mWin.mDisplayTime) {
+		removeDisplayedText(gData.mWin.mTextID);
+		gData.mWin.mCB();
+		gData.mWin.mIsDisplaying = 0;
+	}
+}
+
+
 static void updateControlCountdown() {
 	if (!gData.mControl.mIsCountingDownControl) return;
 
@@ -600,6 +681,8 @@ static void updateFightUI(void* tData) {
 	updateHealthBars();
 	updateRoundDisplay();
 	updateFightDisplay();
+	updateKODisplay();
+	updateWinDisplay();
 	updateControlCountdown();
 }
 
@@ -713,6 +796,46 @@ void playFightAnimation(void(*tFunc)())
 
 	gData.mFight.mCB = tFunc;
 	gData.mFight.mIsDisplayingFight = 1;
+}
+
+void playKOAnimation(void(*tFunc)())
+{
+	playDisplayAnimation(&gData.mKO.mAnimationID, gData.mKO.mAnimation, &gData.mKO.mPosition, gData.mKO.mFaceDirection);
+
+	gData.mKO.mCB = tFunc;
+	gData.mKO.mIsDisplaying = 1;
+}
+
+static void parseWinText(char* tDst, char* tSrc, char* tName, Position* oDisplayPosition, Position tPosition, int tSize, int tBreakSize) {
+	int i, o = 0;
+	int bonus = 0;
+	int n = strlen(tSrc);
+	for (i = 0; i < n; i++) {
+		if (tSrc[i] == '%' && i < n - 1 && tSrc[i + 1] == 's') {
+			int len = sprintf(&tDst[o], "%s", tName);
+			bonus += len - 1;
+			o += len;
+			i++;
+		}
+		else {
+			tDst[o] = tSrc[i];
+			o++;
+		}
+	}
+	tDst = '\0';
+
+	*oDisplayPosition = tPosition;
+	oDisplayPosition->x -= (bonus * (double)(tSize + tBreakSize)) / 2;
+}
+
+void playWinAnimation(char * tName, void(*tFunc)())
+{
+	parseWinText(gData.mWin.mDisplayedText, gData.mWin.mText, tName, &gData.mWin.mDisplayPosition, gData.mWin.mPosition, gData.mWin.mTextSize, gData.mWin.mBreakSize);
+	playDisplayText(&gData.mWin.mTextID, gData.mWin.mDisplayedText, gData.mWin.mDisplayPosition, gData.mWin.mTextSize, gData.mWin.mBreakSize);
+	
+	gData.mWin.mNow = 0;
+	gData.mWin.mCB = tFunc;
+	gData.mWin.mIsDisplaying = 1;
 }
 
 static void setSingleUIComponentInvisibleForOneFrame(int tAnimationID) {

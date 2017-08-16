@@ -40,12 +40,12 @@ static void loadFightScreen() {
 	instantiateActor(MugenStateHandler);
 	instantiateActor(ExplodHandler);
 
-	setStageMugenDefinition("assets/XX'PYRAMID'SUNSET'XX.def");
+	setStageMugenDefinition("assets/stages/greenhill.def");
 	instantiateActor(StageBP);
 
 	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
-	//setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
-	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
+	setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
+	//setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
 
 	//setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
 	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");

@@ -44,15 +44,20 @@ static void loadMugenStageHandler(void* tData) {
 
 }
 
+static int getCameraCoordP() {
+	return gData.mCameraCoordinates.y;
+}
+
 static void updateSingleStaticStageElement(StaticStageHandlerElement* e) {
 	double scale = e->mCoordinates.y / (double)gData.mCameraCoordinates.y;
-	Vector3D deltaInCameraSpace = vecSub(vecScale(gData.mCameraPosition, -1), vecScale(e->mStart, 1 / scale));
+
+	Vector3D deltaInCameraSpace = makePosition(getCameraPositionX(getCameraCoordP()), getCameraPositionY(getCameraCoordP()), 0);
 	deltaInCameraSpace = vecScale3D(deltaInCameraSpace, e->mDelta);
 	deltaInCameraSpace.z = 0;
 
-	Vector3D deltaInElementSpace = vecScale(deltaInCameraSpace, 1 / scale); // TODO: fix
+	Vector3D deltaInElementSpace = vecScale(deltaInCameraSpace, scale); // TODO: fix
 	e->mReferencePosition = vecAdd(e->mStart, deltaInElementSpace);
-	e->mReferencePosition = vecSub(e->mReferencePosition, getStageCoordinateSystemOffset(e->mCoordinates.y)); // TODO: properly
+	e->mReferencePosition = vecSub(e->mReferencePosition, vecScale(getStageCoordinateSystemOffset(getCameraCoordP()), 1)); // TODO: properly
 	e->mReferencePosition = vecSub(e->mReferencePosition, makePosition(-e->mCoordinates.x / 2, 0, 0));
 }
 
@@ -133,20 +138,29 @@ void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitud
 	// TODO;
 }
 
-void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta)
-{
+static void addMugenStageHandlerBackgroundElement(Position tStart, MugenAnimation* tAnimation, MugenSpriteFile * tSprites, Position tDelta) {
 	StaticStageHandlerElement* e = allocMemory(sizeof(StaticStageHandlerElement));
 	e->mStart = tStart;
 	e->mDelta = tDelta;
-	e->mCoordinates = makeVector3DI(640, 480, 0);
+	e->mCoordinates = makeVector3DI(320, 240, 0);
 
-	e->mAnimation = createOneFrameMugenAnimationForSprite(tSpriteGroup, tSpriteItem);
+	e->mAnimation = tAnimation;
 	e->mAnimationID = addMugenAnimation(NULL, e->mAnimation, tSprites, &e->mReferencePosition, e->mCoordinates.y, e->mCoordinates.y);
 	setRegisteredAnimationToUseFixedZ(e->mAnimationID);
 
 	updateSingleStaticStageElement(e);
 
 	vector_push_back_owned(&gData.mStaticElements, e);
+}
+
+void addMugenStageHandlerAnimatedBackgroundElement(Position tStart, int tAnimationID, MugenAnimations* tAnimations, MugenSpriteFile * tSprites, Position tDelta)
+{
+	addMugenStageHandlerBackgroundElement(tStart, getMugenAnimation(tAnimations, tAnimationID), tSprites, tDelta);
+}
+
+void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta)
+{
+	addMugenStageHandlerBackgroundElement(tStart, createOneFrameMugenAnimationForSprite(tSpriteGroup, tSpriteItem), tSprites, tDelta);	
 }
 
 Position * getMugenStageHandlerCameraPositionReference()

@@ -130,10 +130,13 @@ typedef struct Player_t{
 	int mRoundsExisted;
 	int mComboCounter;
 
+	int mRoundsWon;
+
 	HitDefAttributeSlot mNotHitBy[2];
 } Player;
 
 void loadPlayers();
+void resetPlayers();
 void updatePlayers();
 
 void playerHitCB(Player* p, void* tHitData);
@@ -234,6 +237,7 @@ void addPlayerPositionY(Player* p, double y, int tCoordinateP);
 
 int isPlayerCommandActive(Player* p, char* tCommandName);
 
+int hasPlayerStateSelf(Player* p, int mNewState);
 void changePlayerState(Player* p, int mNewState);
 void changePlayerStateToOtherPlayerStateMachine(Player* p, Player* tOtherPlayer, int mNewState);
 void changePlayerStateBeforeImmediatelyEvaluatingIt(Player* p, int mNewState);
@@ -330,6 +334,8 @@ void setPlayerAirSizeBack(Player* p, int tAirSizeBack);
 int getPlayerHeight(Player* p);
 void setPlayerHeight(Player* p, int tHeight);
 
+void increasePlayerRoundsExisted();
+void increasePlayerRoundsWon(Player* p);
 int hasPlayerWonByKO(Player* p);
 int hasPlayerWonPerfectly(Player* p);
 int hasPlayerWon(Player* p);

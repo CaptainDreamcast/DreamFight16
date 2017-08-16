@@ -465,17 +465,33 @@ static void setVectorElement(MugenDefScriptGroupElement* element, MugenDefToken*
 
 	MugenDefScriptVectorElement* e = allocMemory(sizeof(MugenDefScriptVectorElement));
 	
-	memset(e->mVector.mElement, 0, sizeof e->mVector.mElement);
-
 	char* comma = t->mValue - 1;
+	e->mVector.mSize = 0;
+	while (comma != NULL) {
+		e->mVector.mSize++;
+		comma = strchr(comma + 1, ',');
+	}
+
+	e->mVector.mElement = allocMemory(sizeof(char*)*e->mVector.mSize);
+	
+	comma = t->mValue - 1;
 	int i = 0;
 	while (comma != NULL) {
+		char temp[MUGEN_DEF_STRING_LENGTH];
 		assert(strlen(comma + 1) < MUGEN_DEF_STRING_LENGTH);
-		strcpy(e->mVector.mElement[i], comma+1);
-		comma = strchr(e->mVector.mElement[i], ',');
-		if (comma != NULL) *comma = '\0';
+		strcpy(temp, comma+1);
+		char* tempComma = strchr(temp, ',');
+		if (tempComma != NULL) *tempComma = '\0';
+		comma = strchr(comma + 1, ',');
+
+		e->mVector.mElement[i] = allocMemory(strlen(temp) + 10);
+		strcpy(e->mVector.mElement[i], temp);
+		if(e->mVector.mElement[i][0] == '[') printf("%s\n", e->mVector.mElement[i]);
+
 		i++;
 	}
+
+	assert(i == e->mVector.mSize);
 
 	element->mData = e;
 }
@@ -697,7 +713,12 @@ static void unloadMugenDefScriptNumberElement(MugenDefScriptNumberElement* e) {
 }
 
 static void unloadMugenDefScriptVectorElement(MugenDefScriptVectorElement* e) {
-	(void)e;
+	int i;
+	for (i = 0; i < e->mVector.mSize; i++) {
+		freeMemory(e->mVector.mElement[i]);
+	}
+
+	freeMemory(e->mVector.mElement);
 }
 
 static void unloadMugenDefScriptStringElement(MugenDefScriptStringElement* e) {
@@ -785,12 +806,9 @@ static void turnMugenDefVectorToString(char* tDst, MugenDefScriptVectorElement* 
 	int i = 0;
 	char* pos = tDst;
 	*pos = '\0';
-	while (i < 100) {
-		if (!strcmp("", tVectorElement->mVector.mElement[i])) break;
+	for (i = 0; i < tVectorElement->mVector.mSize; i++) {
 		if (i > 0) pos += sprintf(pos, ",");
 		pos += sprintf(pos, "%s", tVectorElement->mVector.mElement[i]);
-
-		i++;
 	}
 }
 
@@ -974,8 +992,8 @@ Vector3D getMugenDefVectorVariableAsElement(MugenDefScriptGroupElement * tElemen
 	if (tElement->mType == MUGEN_DEF_SCRIPT_GROUP_VECTOR_ELEMENT) {
 		MugenDefScriptVectorElement* vectorElement = tElement->mData;
 		double x = atof(vectorElement->mVector.mElement[0]);
-		double y = atof(vectorElement->mVector.mElement[1]);
-		double z = atof(vectorElement->mVector.mElement[2]);
+		double y = vectorElement->mVector.mSize >= 2 ? atof(vectorElement->mVector.mElement[1]) : 0;
+		double z = vectorElement->mVector.mSize >= 3 ? atof(vectorElement->mVector.mElement[2]) : 0;
 		ret = makePosition(x, y, z);
 	}
 	else {
@@ -1020,8 +1038,8 @@ Vector3DI getMugenDefVectorIVariable(MugenDefScript * tScript, char * tGroupName
 	if (element->mType == MUGEN_DEF_SCRIPT_GROUP_VECTOR_ELEMENT) {
 		MugenDefScriptVectorElement* vectorElement = element->mData;
 		int x = atoi(vectorElement->mVector.mElement[0]);
-		int y = atoi(vectorElement->mVector.mElement[1]);
-		int z = atoi(vectorElement->mVector.mElement[2]);
+		int y = vectorElement->mVector.mSize >= 2 ? atoi(vectorElement->mVector.mElement[1]) : 0;
+		int z = vectorElement->mVector.mSize >= 3 ? atoi(vectorElement->mVector.mElement[2]) : 0;
 		ret = makeVector3DI(x, y, z);
 	}
 	else {
@@ -1044,6 +1062,24 @@ MugenStringVector getMugenDefStringVectorVariableAsElement(MugenDefScriptGroupEl
 	assert(tElement->mType == MUGEN_DEF_SCRIPT_GROUP_VECTOR_ELEMENT);
 	MugenDefScriptVectorElement* vectorElement = tElement->mData;
 	return vectorElement->mVector;
+}
+
+MugenStringVector copyMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement * tElement)
+{
+	assert(tElement->mType == MUGEN_DEF_SCRIPT_GROUP_VECTOR_ELEMENT);
+	MugenDefScriptVectorElement* vectorElement = tElement->mData;
+
+	MugenDefScriptVectorElement ret;
+	ret.mVector.mSize = vectorElement->mVector.mSize;
+	ret.mVector.mElement = allocMemory(sizeof(char*)*ret.mVector.mSize);
+
+	int i;
+	for (i = 0; i < ret.mVector.mSize; i++) {
+		ret.mVector.mElement[i] = allocMemory(strlen(vectorElement->mVector.mElement[i]) + 10);
+		strcpy(ret.mVector.mElement[i], vectorElement->mVector.mElement[i]);
+	}
+
+	return ret.mVector;
 }
 
 void loadStringOrDefault(char* tDst, MugenDefScript* s, char* tGroup, char* tVariable, char* tDefault) {

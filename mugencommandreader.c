@@ -255,10 +255,9 @@ static void handleCommandInputEntryAsVector(CommandCaller* tCaller, MugenDefScri
 
 	MugenStringVector input = getMugenDefStringVectorVariableAsElement(tElement);
 	tCaller->mInput.mInputSteps = new_vector();
-	int i = 0;
-	while (strcmp("", input.mElement[i])) {
+	int i;
+	for (i = 0; i < input.mSize; i++) {
 		parseSingleInputStepAndAddItToInput(&tCaller->mInput.mInputSteps, input.mElement[i], 0);
-		i++;
 	}
 }
 

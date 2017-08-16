@@ -1124,6 +1124,15 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 	else if (!strcmp("name", testString)) {
 		return makeStringAssignmentReturn(getPlayerName(tPlayer));
 	}
+	else if (!strcmp("p2name", testString)) {
+		return makeStringAssignmentReturn(getPlayerName(getPlayerOtherPlayer(tPlayer)));
+	}
+	else if (!strcmp("p3name", testString)) {
+		return makeStringAssignmentReturn(""); // TODO
+	}
+	else if (!strcmp("p4name", testString)) {
+		return makeStringAssignmentReturn(""); // TODO
+	}
 	else if (!strcmp("authorname", testString)) {
 		return makeStringAssignmentReturn(getPlayerAuthorName(tPlayer));
 	}
@@ -1239,7 +1248,7 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 		return makeStringAssignmentReturn("velocity.airjump.y");
 	}
 	// TODO: move somewhere else
-	else if (!strcmp("isbound", testString) || !strcmp("ctrltime", testString) || !strcmp("addalpha", testString) || !strcmp("diagup", testString) || !strcmp("turns", testString) || !strcmp("single", testString) || !strcmp("simul", testString) || !strcmp("right", testString) || !strcmp("left", testString) || !strcmp("invisible", testString) || !strcmp("back", testString) || !strcmp("<=", testString) || !strcmp(">=", testString) || !strcmp("up", testString) || !strcmp("hard", testString) || !strcmp("fall.recover", testString) || !strcmp("xvel", testString) || !strcmp("hitshaketime", testString) || !strcmp("airtype", testString) || !strcmp("facing", testString) || !strcmp("none", testString) || !strcmp("fall.yvel", testString) || !strcmp("slidetime", testString) || !strcmp("yaccel", testString) || !strcmp("fall", testString) || !strcmp("yvel", testString) || !strcmp("groundtype", testString) || !strcmp("animtype", testString)) {
+	else if (!strcmp("roundnotover", testString) || !strcmp("isbound", testString) || !strcmp("ctrltime", testString) || !strcmp("addalpha", testString) || !strcmp("diagup", testString) || !strcmp("turns", testString) || !strcmp("single", testString) || !strcmp("simul", testString) || !strcmp("right", testString) || !strcmp("left", testString) || !strcmp("invisible", testString) || !strcmp("back", testString) || !strcmp("<=", testString) || !strcmp(">=", testString) || !strcmp("up", testString) || !strcmp("hard", testString) || !strcmp("fall.recover", testString) || !strcmp("xvel", testString) || !strcmp("hitshaketime", testString) || !strcmp("airtype", testString) || !strcmp("facing", testString) || !strcmp("none", testString) || !strcmp("fall.yvel", testString) || !strcmp("slidetime", testString) || !strcmp("yaccel", testString) || !strcmp("fall", testString) || !strcmp("yvel", testString) || !strcmp("groundtype", testString) || !strcmp("animtype", testString)) {
 		return makeStringAssignmentReturn(variable->mName);
 	}
 	else if (testString[0] == 's' || testString[0] == 'f') { // TODO: fix

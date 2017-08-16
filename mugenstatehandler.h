@@ -19,6 +19,7 @@ void setRegisteredStateTimeInState(int tID, int tTime);
 void setRegisteredStateToHelperMode(int tID);
 void setRegisteredStateDisableCommandState(int tID);
 
+int hasHandledStateMachineStateSelf(int tID, int tNewState);
 void changeHandledStateMachineState(int tID, int tNewState);
 void changeHandledStateMachineStateToOtherPlayerStateMachine(int tID, int tTemporaryID, int tNewState);
 void changeHandledStateMachineStateToOwnStateMachine(int tID, int tNewState);

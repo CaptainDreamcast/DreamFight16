@@ -11,3 +11,4 @@ int getRoundStateNumber();
 int getMatchNumber();
 
 int isMatchOver();
+void setRoundNotOverFlag();

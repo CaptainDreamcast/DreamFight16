@@ -13,7 +13,8 @@ typedef enum {
 } MugenDefScriptGroupElementType;
 
 typedef struct {
-	char mElement[20][MUGEN_DEF_STRING_LENGTH];
+	int mSize;
+	char** mElement;
 
 } MugenStringVector;
 
@@ -83,6 +84,7 @@ Vector3DI getMugenDefVectorIVariable(MugenDefScript* tScript, char* tGroupName, 
 
 int isMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement* tElement);
 MugenStringVector getMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement* tElement);
+MugenStringVector copyMugenDefStringVectorVariableAsElement(MugenDefScriptGroupElement * tElement);
 
 void loadStringOrDefault(char* tDst, MugenDefScript* s, char* tGroup, char* tVariable, char* tDefault);
 

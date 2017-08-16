@@ -197,6 +197,7 @@ static void loadPlayerState(Player* p) {
 
 	p->mIsInControl = 1;
 	p->mIsAlive = 1;
+	p->mRoundsWon = 0;
 
 	resetHelperState(p);
 	p->mIsHelper = 0;
@@ -208,7 +209,7 @@ static void loadPlayerState(Player* p) {
 
 static void loadPlayerStateWithConstantsLoaded(Player* p) {
 	p->mLife = p->mConstants.mHeader.mLife; 
-	//p->mLife = 100; // TODO: fix
+	p->mLife = 100; // TODO: fix
 }
 
 static void loadSinglePlayerFromMugenDefinition(Player* p)
@@ -234,6 +235,30 @@ void loadPlayers() {
 		gData.mPlayers[i].mControllerID = i; // TODO: remove
 		loadSinglePlayerFromMugenDefinition(&gData.mPlayers[i]);
 	}
+}
+
+static void resetSinglePlayer(Player* p) {
+	p->mIsAlive = 1;
+
+	p->mLife = p->mConstants.mHeader.mLife;
+	setLifeBarPercentage(p, 1);
+
+	setPlayerPosition(p, getPlayerStartingPosition(p->mRootID, getPlayerCoordinateP(p)), getPlayerCoordinateP(p));
+	
+	if (doesPlayerStartFacingLeft(p->mRootID)) {
+		setPlayerFaceDirection(p, FACE_DIRECTION_LEFT);
+	}
+	else {
+		setPlayerFaceDirection(p, FACE_DIRECTION_RIGHT);
+	}
+}
+
+void resetPlayers()
+{
+	resetSinglePlayer(&gData.mPlayers[0]);
+	resetSinglePlayer(&gData.mPlayers[1]);
+
+
 }
 
 
@@ -827,8 +852,6 @@ void playerHitCB(Player* p, void* tHitData)
 	setReceivedHitDataInactive(tHitData);
 	
 	if (isPlayerGuarding(p)) {
-		printf("%d %d other guard spark: %d\n", otherPlayer->mRootID, otherPlayer->mID, getHitDataGuardSparkNumber(otherPlayer));
-		printf("%d %d guard spark: %d\n", p->mRootID, p->mID, getActiveHitDataGuardSparkNumber(p));
 		playPlayerHitSpark(p, otherPlayer, isActiveHitDataGuardSparkInPlayerFile(p), getActiveHitDataGuardSparkNumber(p), getActiveHitDataSparkXY(p));
 	}
 	else {
@@ -1370,6 +1393,11 @@ int isPlayerCommandActive(Player* p, char * tCommandName)
 	return isCommandActive(p->mCommandID, tCommandName);
 }
 
+int hasPlayerStateSelf(Player * p, int mNewState)
+{
+	return hasHandledStateMachineStateSelf(p->mStateMachineID, mNewState);
+}
+
 void changePlayerState(Player* p, int mNewState)
 {
 	changeHandledStateMachineState(p->mStateMachineID, mNewState);
@@ -1872,6 +1900,31 @@ void setPlayerHeight(Player * p, int tHeight)
 	p->mConstants.mSizeData.mHeight = tHeight;
 }
 
+static void increaseSinglePlayerRoundsExisted(Player * p);
+static void increasePlayerRoundsExistedCB(void* tCaller, void* tData) {
+	(void)tCaller;
+	Player* p = tData;
+	increaseSinglePlayerRoundsExisted(p);
+}
+
+static void increaseSinglePlayerRoundsExisted(Player * p)
+{
+	p->mRoundsExisted++;
+	list_map(&p->mHelpers, increasePlayerRoundsExistedCB, NULL);
+}
+
+void increasePlayerRoundsExisted()
+{
+	increaseSinglePlayerRoundsExisted(&gData.mPlayers[0]);
+	increaseSinglePlayerRoundsExisted(&gData.mPlayers[1]);
+}
+
+
+void increasePlayerRoundsWon(Player * p)
+{
+	p->mRoundsWon++;
+}
+
 int hasPlayerWonByKO(Player* p)
 {
 	(void)p;
@@ -1880,20 +1933,18 @@ int hasPlayerWonByKO(Player* p)
 
 int hasPlayerWonPerfectly(Player* p)
 {
-	(void)p;
-	return 0; // TODO
+	return hasPlayerWon(p) && p->mLife == p->mConstants.mHeader.mLife;
 }
 
 int hasPlayerWon(Player* p)
 {
-	(void)p;
-	return 0; // TODO
+	return p->mRoundsWon == 2; // TODO: getRoundNumber
 }
 
 int hasPlayerLost(Player* p)
 {
-	(void)p;
-	return 0; // TODO
+	Player* otherPlayer = getPlayerOtherPlayer(p);
+	return hasPlayerWon(otherPlayer); 
 }
 
 int hasPlayerMoveHitOtherPlayer(Player* p)
@@ -2140,6 +2191,7 @@ Player * clonePlayerAsHelper(Player * p)
 	setPlayerExternalDependencies(helper);
 	setRegisteredStateToHelperMode(helper->mStateMachineID);
 
+	helper->mParent = p;
 	helper->mIsHelper = 1;
 
 	return helper;
@@ -2155,7 +2207,7 @@ static int moveSinglePlayerHelper(void* tCaller, void* tData) {
 	Player* helper = tData;
 	Player* parent = caller->mParent;
 	Player* parentParent = parent->mParent;
-
+	
 	addHelperToPlayer(parentParent, helper);
 
 	return 1;
@@ -2201,6 +2253,7 @@ void destroyPlayer(Player * p)
 
 void addHelperToPlayer(Player * p, Player * tHelper)
 {
+	
 	tHelper->mHelperIDInParent = list_push_back(&p->mHelpers, tHelper);
 	tHelper->mParent = p;
 }
@@ -2492,5 +2545,3 @@ int getDefaultPlayerGuardSparkNumber(Player * p)
 {
 	return p->mConstants.mHeader.mGuardSparkNo;
 }
-
-

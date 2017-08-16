@@ -16,6 +16,8 @@ MugenSpriteFile* getFightEffectSprites();
 
 void playRoundAnimation(int tRound, void(*tFunc)());
 void playFightAnimation(void(*tFunc)());
+void playKOAnimation(void(*tFunc)());
+void playWinAnimation(char* tName, void(*tFunc)());
 
 void setBarInvisibleForOneFrame();
 

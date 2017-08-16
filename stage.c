@@ -9,6 +9,7 @@
 #include <tari/animation.h>
 #include <tari/stagehandler.h>
 #include <tari/math.h>
+#include <tari/input.h>
 
 #include "mugendefreader.h"
 #include "mugenspritefilereader.h"
@@ -114,6 +115,8 @@ typedef struct {
 	Vector3DI mTile;
 	Vector3DI mTileSpacing;
 	int mListPosition;
+
+	int mActionNumber;
 } StageBackgroundElement;
 
 static struct {
@@ -130,6 +133,7 @@ static struct {
 	List mBackgroundElements;
 
 	MugenSpriteFile mSprites;
+	MugenAnimations mAnimations;
 
 	char mDefinitionPath[1024];
 } gData;
@@ -241,9 +245,28 @@ static int isBackgroundElementGroup(MugenDefScriptGroup* tGroup) {
 	return tGroup->mName[0] == 'B' && tGroup->mName[1] == 'G';
 }
 
+static int isActionGroup(MugenDefScriptGroup* tGroup) {
+	char firstW[100], secondW[100];
+	int items = sscanf(tGroup->mName, "%s %s", firstW, secondW);
+	if (items < 2) return 0;
+
+	turnStringLowercase(firstW);
+	turnStringLowercase(secondW);
+	return !strcmp("begin", firstW) && !strcmp("action", secondW);
+}
+
 static void addBackgroundElementToStageHandler(StageBackgroundElement* e) {
-	e->mStart.z = e->mListPosition;
-	addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta);
+	e->mStart.z = e->mListPosition + e->mLayerNo * 30; // TODO
+	if (e->mType == STAGE_BACKGROUND_STATIC) {
+		addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta);
+	} else if (e->mType == STAGE_BACKGROUND_ANIMATED) {
+		addMugenStageHandlerAnimatedBackgroundElement(e->mStart, e->mActionNumber, &gData.mAnimations, &gData.mSprites, e->mDelta);
+	}
+	else {
+		logError("Unable to determine bg element type");
+		logErrorInteger(e->mType);
+		abortSystem();
+	}
 }
 
 static void loadBackgroundElement(MugenDefScript* s, char* tName, int i) {
@@ -254,10 +277,11 @@ static void loadBackgroundElement(MugenDefScript* s, char* tName, int i) {
 
 	char type[100];
 	loadStringOrDefault(type, s, tName, "type", "normal");
-	if (strcmp("normal", type)) {
+	if (!strcmp("normal", type)) {
 		e->mType = STAGE_BACKGROUND_STATIC;
-	} else if (strcmp("anim", type)) {
+	} else if (!strcmp("anim", type)) {
 		e->mType = STAGE_BACKGROUND_ANIMATED;
+		loadIntegerOrDefault(&e->mActionNumber, s, tName, "actionno", -1);
 	}
 	else {
 		logError("Unknown type.");
@@ -283,6 +307,9 @@ static void loadBackgroundDefinitionGroup(MugenDefScript* s, MugenDefScriptGroup
 	if (isBackgroundElementGroup(tGroup)) {
 		loadBackgroundElement(s, tGroup->mName, i);
 	}
+	else if (isActionGroup(tGroup)) {
+		// TODO: ignore properly
+	}
 	else {
 		logError("Unknown background definition group.");
 		logErrorString(tGroup->mName);
@@ -295,6 +322,14 @@ static void loadStageTextures(char* tPath) {
 	getPathToFile(path, tPath);
 	char sffFile[1024];
 	sprintf(sffFile, "%s%s", path, gData.mBackgroundDefinition.mSpritePath);
+	if (!isFile(sffFile)) {
+		sprintf(sffFile, "assets/%s", gData.mBackgroundDefinition.mSpritePath);
+		if (!isFile(sffFile)) {
+			logError("Unable to locate sff file.");
+			logErrorString(gData.mBackgroundDefinition.mSpritePath);
+			abortSystem();
+		}
+	}
 	gData.mSprites = loadMugenSpriteFileWithoutPalette(sffFile);
 }
 
@@ -325,6 +360,8 @@ static void loadStage(void* tData)
 	(void)tData;
 	instantiateActor(MugenStageHandler);
 
+	gData.mAnimations = loadMugenAnimationFile(gData.mDefinitionPath);
+
 	MugenDefScript s = loadMugenDefScript(gData.mDefinitionPath);
 
 	loadStageInfo(&s);
@@ -337,8 +374,7 @@ static void loadStage(void* tData)
 	loadStageMusic(&s);
 	setMugenStageHandlerCameraCoordinates(makeVector3DI(320, 240, 0)); // TODO
 
-	int isEval = 0;		
-	if(isEval) loadStageBackgroundElements(gData.mDefinitionPath, &s);
+	// loadStageBackgroundElements(gData.mDefinitionPath, &s);
 
 	setStageCamera();
 

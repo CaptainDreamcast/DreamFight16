@@ -156,18 +156,29 @@ static void handleNewAnimationStep(MugenAnimations* tAnimations, int tGroupID, M
 		e->mPassiveHitboxes = gMugenAnimationState.mDefaultHitboxes2;
 	}
 
+	assert(vectorElement->mVector.mSize >= 2);
+
 	e->mGroupNumber = atoi(vectorElement->mVector.mElement[0]);
 	e->mSpriteNumber = atoi(vectorElement->mVector.mElement[1]);
-	e->mDelta.x = atof(vectorElement->mVector.mElement[2]);
-	e->mDelta.y = atof(vectorElement->mVector.mElement[3]);
-	e->mDuration = atoi(vectorElement->mVector.mElement[4]);
+	e->mDelta.x = vectorElement->mVector.mSize >= 3 ? atof(vectorElement->mVector.mElement[2]) : 0;
+	e->mDelta.y = vectorElement->mVector.mSize >= 4 ? atof(vectorElement->mVector.mElement[3]) : 0;
+	e->mDuration = vectorElement->mVector.mSize >= 5 ? atoi(vectorElement->mVector.mElement[4]) : 1;
 
-	char* flipFlags = vectorElement->mVector.mElement[5];
-	e->mIsFlippingHorizontally = strchr(flipFlags, 'H') != NULL;
-	e->mIsFlippingVertically = strchr(flipFlags, 'V') != NULL;
-	
-	char* blendFlags = vectorElement->mVector.mElement[6];
-	handleNewAnimationStepBlendFlags(e, blendFlags);
+	if (vectorElement->mVector.mSize >= 6) {
+		e->mIsFlippingHorizontally = strchr(vectorElement->mVector.mElement[5], 'H') != NULL;
+		e->mIsFlippingVertically = strchr(vectorElement->mVector.mElement[5], 'V') != NULL;
+	}
+	else {
+		e->mIsFlippingHorizontally = 0;
+		e->mIsFlippingVertically = 0;
+	}
+
+	if (vectorElement->mVector.mSize >= 7) {
+		handleNewAnimationStepBlendFlags(e, vectorElement->mVector.mElement[6]);
+	}
+	else {
+		handleNewAnimationStepBlendFlags(e, "");
+	}
 
 	e->mInterpolateOffset = 0;
 	e->mInterpolateBlend = 0;
@@ -401,8 +412,6 @@ static void loadSingleAnimationGroup(MugenAnimations* tAnimations, MugenDefScrip
 
 	unsetSingleAnimationState();
 	unsetGlobalAnimationState();
-
-	
 }
 
 static void loadAnimationFileFromDefScript(MugenAnimations* tAnimations, MugenDefScript* tScript) {

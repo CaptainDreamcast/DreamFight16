@@ -16,6 +16,7 @@
 #include "pausecontrollers.h"
 #include "mugenassignmentevaluator.h"
 #include "fightui.h"
+#include "gamelogic.h"
 
 typedef struct {
 
@@ -794,12 +795,14 @@ static void readMugenDefStringVector(MugenStringVector* tDst, MugenDefScriptGrou
 		MugenDefScriptGroupElement* elem = string_map_get(&tGroup->mElements, tName);
 		*oHasValue = 1;
 		if (isMugenDefStringVectorVariableAsElement(elem)) {
-			*tDst = getMugenDefStringVectorVariableAsElement(elem);
+			*tDst = copyMugenDefStringVectorVariableAsElement(elem);
 		}
 		else {
 			char* text = getAllocatedMugenDefStringVariableAsElement(elem);
+			tDst->mSize = 1;
+			tDst->mElement = allocMemory(sizeof(char*));
+			tDst->mElement[0] = allocMemory(strlen(text) + 10);
 			strcpy(tDst->mElement[0], text);
-			strcpy(tDst->mElement[1], "");
 			freeMemory(text);
 		}
 	}
@@ -1335,6 +1338,7 @@ void parseStateControllerType(MugenStateController* tController, MugenDefScriptG
 	}
 	else if (!strcmp("victoryquote", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_VICTORY_QUOTE;
+		parseNullController(tController); // TODO
 	}
 	else if (!strcmp("attackmulset", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_SET_ATTACK_MULTIPLIER;
@@ -2186,6 +2190,9 @@ static void handleSingleSpecialAssert(MugenAssignment* tAssignment, Player* tPla
 	else if (!strcmp("nobardisplay", flag)) {
 		setBarInvisibleForOneFrame();
 	}
+	else if (!strcmp("roundnotover", flag)) {
+		setRoundNotOverFlag();
+	}
 	else {
 		logError("Unrecognized special assert flag.");
 		logErrorString(flag);
@@ -2539,14 +2546,11 @@ static void handleSingleNotHitBy(int tSlot, int tHasValue, MugenStringVector tVa
 	if (!tHasValue) return;
 	tResetFunc(tPlayer, tSlot);
 
-	int position = 0;
-	char* flag1 = tValue.mElement[position++];
+	char* flag1 = tValue.mElement[0];
 	setPlayerNotHitByFlag1(tPlayer, tSlot, flag1);
-	int isRunning = 1;
-	while (isRunning) {
-		if (!strcmp("", tValue.mElement[position])) break;
-
-		char* flag2 = tValue.mElement[position++];
+	int i;
+	for (i = 1; i < tValue.mSize; i++) {
+		char* flag2 = tValue.mElement[i];
 		addPlayerNotHitByFlag2(tPlayer, tSlot, flag2);
 	}
 
@@ -2556,14 +2560,11 @@ static void handleSingleNotHitBy(int tSlot, int tHasValue, MugenStringVector tVa
 static void handleReversalDefinitionEntry(MugenStringVector tValue, Player* tPlayer) {
 	resetHitDataReversalDef(tPlayer);
 	
-	int position = 0;
-	char* flag1 = tValue.mElement[position++];
+	char* flag1 = tValue.mElement[0];
 	setHitDataReversalDefFlag1(tPlayer, flag1);
-	int isRunning = 1;
-	while (isRunning) {
-		if (!strcmp("", tValue.mElement[position])) break;
-
-		char* flag2 = tValue.mElement[position++];
+	int i;
+	for (i = 1; i < tValue.mSize; i++) {
+		char* flag2 = tValue.mElement[i];
 		addHitDataReversalDefFlag2(tPlayer, flag2);
 	}
 }
@@ -3292,6 +3293,9 @@ int handleMugenStateControllerAndReturnWhetherStateChanged(MugenStateController 
 	}
 	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_REVERSAL_DEFINITION) {
 		handleReversalDefinition(tController, tPlayer);
+	}
+	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_VICTORY_QUOTE) {
+		handleNull(); // TODO
 	}
 	else {
 		logError("Unrecognized state controller.");

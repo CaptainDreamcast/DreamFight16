@@ -1,7 +1,7 @@
 TARGET = 1ST_READ
 include Makefile.common
 OBJS += romdisk.o 
-OPTFLAGS=-O3 -fomit-frame-pointer -fno-delayed-branch -DDREAMCAST -Wall -Werror
+OPTFLAGS=-O3 -fomit-frame-pointer -fno-delayed-branch -DDREAMCAST -Wall #-Werror
 KOS_CFLAGS+= $(OPTFLAGS) 
 KOS_ROMDISK_DIR = romdisk_boot
 

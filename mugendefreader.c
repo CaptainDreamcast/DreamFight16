@@ -689,6 +689,7 @@ MugenDefScript loadMugenDefScript(char * tPath)
 {
 	debugLog("Start loading script.");
 	debugString(tPath);
+	printf("load: %s\n", tPath);
 
 	Buffer b = fileToBuffer(tPath);
 	BufferPointer p = getBufferPointer(b);

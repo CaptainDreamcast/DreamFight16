@@ -43,7 +43,7 @@ static void loadFightScreen() {
 	setStageMugenDefinition("assets/stages/stage0.def");
 	instantiateActor(StageBP);
 
-	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
+	setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
 	//setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
 	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
 

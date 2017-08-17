@@ -128,39 +128,6 @@ static uint32_t get2DBufferIndex(uint32_t i, uint32_t j, uint32_t w) {
 	return j * w + i;
 }
 
-static Buffer makeBufferWithCorrectImageSize(Buffer b, int w, int h, int fw, int fh) {
-	char* output = allocMemory(fw*fh);
-	
-
-
-	int i, j;
-	for (j = 0; j < fh; j++) {
-		for (i = 0; i < fw; i++) {
-			if (j < h && i < w) {
-				assert(get2DBufferIndex(i, j, fw) < (uint32_t)(fw*fh));
-				assert(get2DBufferIndex(i, j, w) < (uint32_t)b.mLength);
-				output[get2DBufferIndex(i, j, fw)] = ((char*)b.mData)[get2DBufferIndex(i, j, w)];
-			}
-			else {
-				assert(get2DBufferIndex(i, j, fw) < (uint32_t)(fw*fh));
-				output[get2DBufferIndex(i, j, fw)] = 0;
-			}
-		}
-	}
-
-	return makeBufferOwned(output, fw*fh);
-}
-
-static int getFinalImageSize(int w) {
-	int s = 1;
-	while (s < w) {
-		s *= 2;
-	}
-
-	s = max(8, s);
-	return s;
-}
-
 static TextureData loadTextureFromPalettedImageData1bpp(Buffer tPCXImageBuffer, Buffer tPaletteBuffer, int w, int h) {
 	uint8_t* output = allocMemory(w*h*4);
 	uint8_t* img = (uint8_t*)tPCXImageBuffer.mData;

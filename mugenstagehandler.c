@@ -70,6 +70,7 @@ static void updateSingleStaticStageElementTile(StaticStageHandlerElement* e, Sta
 	tSingleAnimation->mReferencePosition = vecAdd(tSingleAnimation->mReferencePosition, tSingleAnimation->mOffset);
 	tSingleAnimation->mReferencePosition = vecSub(tSingleAnimation->mReferencePosition, vecScale(getStageCoordinateSystemOffset(getCameraCoordP()), 1)); // TODO: properly
 	tSingleAnimation->mReferencePosition = vecSub(tSingleAnimation->mReferencePosition, makePosition(-e->mCoordinates.x / 2, 0, 0));
+	tSingleAnimation->mReferencePosition.z++;
 }
 
 static void updateSingleStaticStageElementTileCB(void* tCaller, void* tData) {

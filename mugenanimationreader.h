@@ -3,6 +3,8 @@
 #include <tari/datastructures.h>
 #include <tari/animation.h>
 
+#include "mugenspritefilereader.h"
+
 typedef enum {
 	FACE_DIRECTION_LEFT,
 	FACE_DIRECTION_RIGHT
@@ -47,3 +49,5 @@ MugenAnimations loadMugenAnimationFile(char* tPath);
 int hasMugenAnimation(MugenAnimations* tAnimations, int i);
 MugenAnimation* getMugenAnimation(MugenAnimations* tAnimations, int i);
 MugenAnimation* createOneFrameMugenAnimationForSprite(int tSpriteGroup, int tSpriteItem);
+
+Vector3DI  getAnimationFirstElementSpriteSize(MugenAnimation* tAnimation, MugenSpriteFile* tSprites);

@@ -5,7 +5,12 @@
 
 
 typedef struct {
+	Vector3DI mOffset;
 	TextureData mTexture;
+} MugenSpriteFileSubSprite;
+
+typedef struct {
+	List mTextures; // MugenSpriteFileSubSprite
 	TextureSize mOriginalTextureSize;
 	int mIsLinked;
 	int mIsLinkedTo;

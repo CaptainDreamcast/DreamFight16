@@ -40,7 +40,7 @@ static void loadFightScreen() {
 	instantiateActor(MugenStateHandler);
 	instantiateActor(ExplodHandler);
 
-	setStageMugenDefinition("assets/stages/greenhill.def");
+	setStageMugenDefinition("assets/stages/stage0.def");
 	instantiateActor(StageBP);
 
 	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");

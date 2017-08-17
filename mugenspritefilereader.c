@@ -186,6 +186,41 @@ static TextureData loadTextureFromPalettedImageData1bpp(Buffer tPCXImageBuffer, 
 	return ret;
 }
 
+typedef struct {
+	Buffer mBuffer;
+	Vector3DI mOffset;
+	Vector3DI mSize;
+} SubImageBuffer;
+
+typedef struct {
+	List* mDst;
+	Buffer mPaletteBuffer;
+} ApplyPaletteToSubImageListCaller;
+
+static void loadTextureFromSinglePalettedImageListEntry1bpp(void* tCaller, void* tData) {
+	ApplyPaletteToSubImageListCaller* caller = tCaller;
+	SubImageBuffer* buffer = tData;
+
+	MugenSpriteFileSubSprite* newSprite = allocMemory(sizeof(MugenSpriteFileSubSprite));
+	newSprite->mOffset = buffer->mOffset;
+	newSprite->mTexture = loadTextureFromPalettedImageData1bpp(buffer->mBuffer, caller->mPaletteBuffer, buffer->mSize.x, buffer->mSize.y);
+
+	list_push_back_owned(caller->mDst, newSprite);
+}
+
+static List loadTextureFromPalettedImageList1bpp(List tBufferList, Buffer tPaletteBuffer) {
+	List ret = new_list();
+
+	ApplyPaletteToSubImageListCaller caller;
+	caller.mDst = &ret;
+	caller.mPaletteBuffer = tPaletteBuffer;
+
+	list_map(&tBufferList, loadTextureFromSinglePalettedImageListEntry1bpp, &caller);
+
+	return ret;
+}
+
+
 static Buffer decodeRLEBufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
 	uint8_t* output = allocMemory(tFinalSize+10);
 	uint8_t* input = b.mData;
@@ -242,9 +277,9 @@ static Buffer decodeRLE8BufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
 	return makeBufferOwned(output, tFinalSize);
 }
 
-static MugenSpriteFileSprite* makeMugenSpriteFileSprite(TextureData tTexture, TextureSize tOriginalTextureSize, Vector3D tAxisOffset) {
+static MugenSpriteFileSprite* makeMugenSpriteFileSprite(List tTextures, TextureSize tOriginalTextureSize, Vector3D tAxisOffset) {
 	MugenSpriteFileSprite* e = allocMemory(sizeof(MugenSpriteFileSprite));
-	e->mTexture = tTexture;
+	e->mTextures = tTextures;
 	e->mOriginalTextureSize = tOriginalTextureSize;
 	e->mIsLinked = 0;
 	e->mIsLinkedTo = 0;
@@ -270,6 +305,90 @@ static Buffer* loadPCXPaletteToAllocatedBuffer(BufferPointer p, int tEncodedSize
 	return insertPal;
 }
 
+static SubImageBuffer* getSingleAllocatedBufferFromSource(Buffer b, int x, int y, int dx, int dy, int tWidth, int tHeight) {
+	int dstSize = dx*dy;
+	char* dst = allocMemory(dstSize);
+	char* src = b.mData;
+
+	int i, j;
+	for (j = 0; j < dy; j++) {
+		for (i = 0; i < dx; i++) {
+			assert(get2DBufferIndex(i, j, dx) < (uint32_t)dstSize);
+			if (x + i >= tWidth || y + j >= tHeight) dst[get2DBufferIndex(i, j, dx)] = 0;
+			else dst[get2DBufferIndex(i, j, dx)] = src[get2DBufferIndex(x+i, y+j, tWidth)];
+		}
+	}
+
+	SubImageBuffer* ret = allocMemory(sizeof(SubImageBuffer));
+	ret->mBuffer = makeBufferOwned(dst, dstSize);
+	ret->mOffset = makeVector3DI(x, y, 0);
+	ret->mSize = makeVector3DI(dx, dy, 0);
+	return ret;
+}
+
+static int getMaximumSizeFit(int tVal) {
+	if (tVal <= 8) return 8;
+
+	int i = 8;
+	while(i < 5000) {
+		if (i <= tVal && i * 2 > tVal) {
+			return i;
+		}
+
+		i *= 2;
+	}
+
+	logError("Unable to find fit");
+	logErrorInteger(tVal);
+	abortSystem();
+	return 0;
+}
+
+List breakImageBufferUpIntoMultipleBuffers(Buffer b, int tWidth, int tHeight) {
+	List ret = new_list();
+
+	int y = 0;
+	while (y < tHeight) {
+		int heightLeft = tHeight - y;
+		int dy = getMaximumSizeFit(heightLeft);
+		int x = 0;
+		while (x < tWidth) {
+			int widthLeft = tWidth - x;
+			int dx = getMaximumSizeFit(widthLeft);
+			SubImageBuffer* newBuffer = getSingleAllocatedBufferFromSource(b, x, y, dx, dy, tWidth, tHeight);
+			list_push_back_owned(&ret, newBuffer);
+
+			x += dx;
+		}
+		y += dy;
+	}
+
+	return ret;
+}
+
+static int removeSingleSubImageBufferEntryCB(void* tCaller, void* tData) {
+	(void)tCaller;
+	SubImageBuffer* buffer = tData;
+	freeBuffer(buffer->mBuffer);
+
+	return 1;
+}
+
+static void freeSubImageBufferList(List tList) {
+	list_remove_predicate(&tList, removeSingleSubImageBufferEntryCB, NULL);
+}
+
+static MugenSpriteFileSprite* makeMugenSpriteFileSpriteFromRawAndPaletteBuffer(Buffer tRawImageBuffer, Buffer tPaletteBuffer, int tWidth, int tHeight, Vector3D tAxisOffset) {
+
+	List subImagelist = breakImageBufferUpIntoMultipleBuffers(tRawImageBuffer, tWidth, tHeight);
+	freeBuffer(tRawImageBuffer);
+
+	List textures = loadTextureFromPalettedImageList1bpp(subImagelist, tPaletteBuffer);
+	freeSubImageBufferList(subImagelist);
+
+	return makeMugenSpriteFileSprite(textures, makeTextureSize(tWidth, tHeight), tAxisOffset);
+}
+
 static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, int mIsUsingOwnPalette, Buffer b, Vector3D tAxisOffset) { // TODO: refactor
 	PCXHeader header;
 	
@@ -281,8 +400,6 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 	int bytesPerPixel = header.mBitsPerPixel / 8;
 	int w = header.mMaxX - header.mMinX + 1;
 	int h = header.mMaxY - header.mMinY + 1;
-	int finalWidth = getFinalImageSize(w);
-	int finalHeight = getFinalImageSize(h);
 	int32_t pcxImageSize = bytesPerPixel*w*h;
 
 	assert(header.mBitsPerPixel == 8);
@@ -294,10 +411,6 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 	Buffer encodedImageBuffer = makeBuffer(p, encodedSize);
 	Buffer rawImageBuffer = decodeRLEBufferAndReturnOwnedBuffer(encodedImageBuffer, pcxImageSize);
 
-	Buffer pcxImageBuffer = makeBufferWithCorrectImageSize(rawImageBuffer, w, h, finalWidth, finalHeight);
-	freeBuffer(rawImageBuffer);
-
-
 	if (mIsUsingOwnPalette) {
 		Buffer* insertPalette = loadPCXPaletteToAllocatedBuffer(p, encodedSize);
 		vector_push_back_owned(&tDst->mPalettes, insertPalette);
@@ -305,10 +418,9 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 
 	Buffer* paletteBuffer = vector_get_back(&tDst->mPalettes);
 
-	TextureData ret = loadTextureFromPalettedImageData1bpp(pcxImageBuffer, *paletteBuffer, finalWidth, finalHeight);
-	freeBuffer(pcxImageBuffer);
+	return makeMugenSpriteFileSpriteFromRawAndPaletteBuffer(rawImageBuffer, *paletteBuffer, w, h, tAxisOffset);
 
-	return makeMugenSpriteFileSprite(ret, makeTextureSize(w, h), tAxisOffset);
+	
 }
 
 static void insertTextureIntoSpriteFile(MugenSpriteFile* tDst, MugenSpriteFileSprite* tTexture, int tGroup, int tSprite) {
@@ -540,14 +652,7 @@ static void loadSingleSprite2(Buffer b, BufferPointer* p, SFFHeader2* tHeader, M
 		return;
 	}
 
-	
-	int finalWidth = getFinalImageSize(sprite.mWidth);
-	int finalHeight = getFinalImageSize(sprite.mHeight);
-
 	Buffer rawBuffer = readRawSprite2(b, &sprite, tHeader);
-
-	Buffer imageBuffer = makeBufferWithCorrectImageSize(rawBuffer, sprite.mWidth, sprite.mHeight, finalWidth, finalHeight);
-	freeBuffer(rawBuffer);
 
 	int palette;
 	tPreferredPalette = -1; // TODO: fix
@@ -556,11 +661,7 @@ static void loadSingleSprite2(Buffer b, BufferPointer* p, SFFHeader2* tHeader, M
 
 	Buffer* paletteBuffer = vector_get(&tDst->mPalettes, palette);
 
-	TextureData ret = loadTextureFromPalettedImageData1bpp(imageBuffer, *paletteBuffer, finalWidth, finalHeight);
-	freeBuffer(imageBuffer);
-
-
-	MugenSpriteFileSprite* e = makeMugenSpriteFileSprite(ret, makeTextureSize(sprite.mWidth, sprite.mHeight), makePosition(sprite.mAxisX, sprite.mAxisY, 0));
+	MugenSpriteFileSprite* e = makeMugenSpriteFileSpriteFromRawAndPaletteBuffer(rawBuffer, *paletteBuffer, sprite.mWidth, sprite.mHeight, makePosition(sprite.mAxisX, sprite.mAxisY, 0));
 	insertTextureIntoSpriteFile(tDst, e, sprite.mGroupNo, sprite.mItemNo);
 }
 

@@ -478,6 +478,15 @@ MugenAnimation * createOneFrameMugenAnimationForSprite(int tSpriteGroup, int tSp
 	return e;
 }
 
+Vector3DI getAnimationFirstElementSpriteSize(MugenAnimation * tAnimation, MugenSpriteFile* tSprites)
+{
+	assert(vector_size(&tAnimation->mSteps));
+	MugenAnimationStep* firstStep = vector_get(&tAnimation->mSteps, 0);
+	
+	MugenSpriteFileSprite* sprite = getMugenSpriteFileTextureReference(tSprites, firstStep->mGroupNumber, firstStep->mSpriteNumber);
+	return makeVector3DI(sprite->mOriginalTextureSize.x, sprite->mOriginalTextureSize.y, 0);
+}
+
 int hasMugenAnimation(MugenAnimations* tAnimations, int i) {
 	return int_map_contains(&tAnimations->mAnimations, i);
 }

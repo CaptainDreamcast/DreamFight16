@@ -16,8 +16,8 @@ void scrollMugenStageHandlerDown();
 
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase);
 
-void addMugenStageHandlerAnimatedBackgroundElement(Position tStart, int tAnimationID, MugenAnimations* tAnimations, MugenSpriteFile* tSprites, Position tDelta);
-void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta);
+void addMugenStageHandlerAnimatedBackgroundElement(Position tStart, int tAnimationID, MugenAnimations* tAnimations, MugenSpriteFile* tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing);
+void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing);
 Position* getMugenStageHandlerCameraPositionReference();
 
 extern ActorBlueprint MugenStageHandler;

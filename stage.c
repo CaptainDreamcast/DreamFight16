@@ -258,9 +258,9 @@ static int isActionGroup(MugenDefScriptGroup* tGroup) {
 static void addBackgroundElementToStageHandler(StageBackgroundElement* e) {
 	e->mStart.z = e->mListPosition + e->mLayerNo * 30; // TODO
 	if (e->mType == STAGE_BACKGROUND_STATIC) {
-		addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta);
+		addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing);
 	} else if (e->mType == STAGE_BACKGROUND_ANIMATED) {
-		addMugenStageHandlerAnimatedBackgroundElement(e->mStart, e->mActionNumber, &gData.mAnimations, &gData.mSprites, e->mDelta);
+		addMugenStageHandlerAnimatedBackgroundElement(e->mStart, e->mActionNumber, &gData.mAnimations, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing);
 	}
 	else {
 		logError("Unable to determine bg element type");
@@ -277,7 +277,7 @@ static void loadBackgroundElement(MugenDefScript* s, char* tName, int i) {
 
 	char type[100];
 	loadStringOrDefault(type, s, tName, "type", "normal");
-	if (!strcmp("normal", type)) {
+	if (!strcmp("normal", type) || !strcmp("parallax", type)) { // TODO: parallax
 		e->mType = STAGE_BACKGROUND_STATIC;
 	} else if (!strcmp("anim", type)) {
 		e->mType = STAGE_BACKGROUND_ANIMATED;
@@ -374,9 +374,8 @@ static void loadStage(void* tData)
 	loadStageMusic(&s);
 	setMugenStageHandlerCameraCoordinates(makeVector3DI(320, 240, 0)); // TODO
 
-	loadStageBackgroundElements(gData.mDefinitionPath, &s);
-
 	setStageCamera();
+	loadStageBackgroundElements(gData.mDefinitionPath, &s);
 
 	unloadMugenDefScript(s);
 }

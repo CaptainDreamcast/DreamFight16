@@ -428,6 +428,56 @@ static void updateMugenAnimationHandler(void* tData) {
 	int_map_map(&gData.mAnimations, updateSingleMugenAnimation, NULL);
 }
 
+typedef struct {
+	MugenAnimationHandlerElement* e;
+	MugenAnimationStep* mStep;
+	Position mScalePosition;
+	Vector3D mScale;
+
+	Position mBasePosition;
+
+} DrawSingleMugenAnimationSpriteCaller;
+
+static void drawSingleMugenAnimationSpriteCB(void* tCaller, void* tData) {
+	DrawSingleMugenAnimationSpriteCaller* caller = tCaller;
+	MugenSpriteFileSubSprite* sprite = tData;
+
+	MugenAnimationHandlerElement* e = caller->e;
+	Position p = caller->mBasePosition;
+	p = vecAdd(p, makePosition(sprite->mOffset.x, sprite->mOffset.y, 0));
+
+	Rectangle texturePos = makeRectangleFromTexture(sprite->mTexture);
+	if (e->mHasRectangleWidth) {
+		int newWidth = e->mRectangleWidth - sprite->mOffset.x;
+		if (newWidth <= 0) return;
+		newWidth = min(newWidth, sprite->mTexture.mTextureSize.x);
+		texturePos.bottomRight.x = texturePos.topLeft.x + newWidth;
+	}
+
+	if (!e->mIsFacingRight) {
+		Rectangle originalTexturePos = texturePos;
+		Position center = e->mPlayerPositionInStageCoordinates;
+		double deltaX = center.x - p.x;
+		double nRightX = center.x + deltaX;
+		double nLeftX = nRightX - abs(originalTexturePos.bottomRight.x - originalTexturePos.topLeft.x);
+		p.x = nLeftX;
+		texturePos.topLeft.x = originalTexturePos.bottomRight.x;
+		texturePos.bottomRight.x = originalTexturePos.topLeft.x;
+	}
+
+	if (e->mIsAddition) {
+		setDrawingBlendType(BLEND_TYPE_ADDITION);
+	}
+
+	if (e->mHasCameraPositionInScreenSpace) {
+		p = vecSub(p, *e->mCameraPositionInScreenSpaceReference);
+	}
+
+	scaleDrawing3D(caller->mScale, caller->mScalePosition);
+	drawSprite(sprite->mTexture, p, texturePos);
+	setDrawingParametersToIdentity();
+}
+
 static void drawSingleMugenAnimation(void* tCaller, void* tData) {
 	(void)tCaller;
 	MugenAnimationHandlerElement* e = tData;
@@ -476,7 +526,7 @@ static void drawSingleMugenAnimation(void* tCaller, void* tData) {
 		p = vecSub(p, *e->mCameraPositionInScreenSpaceReference);
 	}
 
-	scaleDrawing3D(drawScale, p);
+	Position scalePosition = p;
 
 	p = vecSub(p, e->mSprite->mAxisOffset);
 
@@ -493,32 +543,14 @@ static void drawSingleMugenAnimation(void* tCaller, void* tData) {
 	}
 	p.z = z;
 
-	Rectangle texturePos = makeRectangleFromTexture(e->mSprite->mTexture);
-	if (e->mHasRectangleWidth) {
-		texturePos.bottomRight.x = texturePos.topLeft.x + e->mRectangleWidth;
-	}
+	DrawSingleMugenAnimationSpriteCaller caller;
+	caller.e = e;
+	caller.mStep = step;
+	caller.mScale = drawScale;
+	caller.mScalePosition = scalePosition;
+	caller.mBasePosition = p;
 
-	if (!e->mIsFacingRight) {
-		Rectangle originalTexturePos = texturePos;
-		Position center = e->mPlayerPositionInStageCoordinates;
-		double deltaX = center.x - p.x;
-		double nRightX = center.x + deltaX;
-		double nLeftX = nRightX - abs(originalTexturePos.bottomRight.x - originalTexturePos.topLeft.x);
-		p.x = nLeftX;
-		texturePos.topLeft.x = originalTexturePos.bottomRight.x;
-		texturePos.bottomRight.x = originalTexturePos.topLeft.x;
-	}
-
-	if (e->mIsAddition) {
-		setDrawingBlendType(BLEND_TYPE_ADDITION);
-	}
-
-	if (e->mHasCameraPositionInScreenSpace) {
-		p = vecSub(p, *e->mCameraPositionInScreenSpaceReference);
-	}
-
-	drawSprite(e->mSprite->mTexture, p, texturePos);
-	setDrawingParametersToIdentity();
+	list_map(&e->mSprite->mTextures, drawSingleMugenAnimationSpriteCB, &caller);
 }
 
 static void drawMugenAnimationHandler(void* tData) {

@@ -133,6 +133,7 @@
     <ClCompile Include="..\gamelogic.c" />
     <ClCompile Include="..\lz5.c" />
     <ClCompile Include="..\main.c" />
+    <ClCompile Include="..\menuscreen.c" />
     <ClCompile Include="..\mugenanimationhandler.c" />
     <ClCompile Include="..\mugenanimationreader.c" />
     <ClCompile Include="..\mugenassignment.c" />
@@ -151,6 +152,8 @@
     <ClCompile Include="..\playerdefinition.c" />
     <ClCompile Include="..\playerhitdata.c" />
     <ClCompile Include="..\stage.c" />
+    <ClCompile Include="..\titlescreen.c" />
+    <ClCompile Include="..\warningscreen.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\collision.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="..\fightui.h" />
     <ClInclude Include="..\gamelogic.h" />
     <ClInclude Include="..\lz5.h" />
+    <ClInclude Include="..\menuscreen.h" />
     <ClInclude Include="..\mugenanimationhandler.h" />
     <ClInclude Include="..\mugenanimationreader.h" />
     <ClInclude Include="..\mugenassignment.h" />
@@ -177,6 +181,8 @@
     <ClInclude Include="..\playerdefinition.h" />
     <ClInclude Include="..\playerhitdata.h" />
     <ClInclude Include="..\stage.h" />
+    <ClInclude Include="..\titlescreen.h" />
+    <ClInclude Include="..\warningscreen.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

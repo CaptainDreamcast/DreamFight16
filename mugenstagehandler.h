@@ -9,10 +9,8 @@
 void setMugenStageHandlerCameraCoordinates(Vector3DI tCoordinates);
 void setMugenStageHandlerCameraRange(GeoRectangle tRect);
 void setMugenStageHandlerCameraPosition(Position p);
-void scrollMugenStageHandlerLeft();
-void scrollMugenStageHandlerRight();
-void scrollMugenStageHandlerUp();
-void scrollMugenStageHandlerDown();
+void addMugenStageHandlerCameraPositionX(double tX);
+void setMugenStageHandlerCameraPositionX(double tX);
 
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase);
 

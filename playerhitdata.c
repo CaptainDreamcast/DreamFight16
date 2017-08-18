@@ -299,6 +299,13 @@ void setHitDataHitFlag(Player* tPlayer, char * tFlag)
 	strcpy(e->mHitFlag, tFlag);
 }
 
+char* getActiveHitDataGuardFlag(Player * tPlayer)
+{
+	assert(int_map_contains(&gData.mActiveHitDataMap, tPlayer->mHitDataID));
+	PlayerHitData* e = int_map_get(&gData.mActiveHitDataMap, tPlayer->mHitDataID);
+	return e->mGuardFlag;
+}
+
 void setHitDataGuardFlag(Player* tPlayer, char * tFlag)
 {
 	assert(int_map_contains(&gData.mPassiveHitDataMap, tPlayer->mHitDataID));

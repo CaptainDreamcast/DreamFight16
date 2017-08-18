@@ -73,6 +73,7 @@ MugenAttackType getHitDataAttackType(Player* tPlayer);
 void setHitDataAttackType(Player* tPlayer, MugenAttackType tType);
 
 void setHitDataHitFlag(Player* tPlayer, char* tFlag);
+char* getActiveHitDataGuardFlag(Player* tPlayer);
 void setHitDataGuardFlag(Player* tPlayer, char* tFlag);
 void setHitDataAffectTeam(Player* tPlayer, MugenAffectTeam tAffectTeam);
 

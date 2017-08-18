@@ -10,6 +10,7 @@
 #include <tari/logoscreen.h>
 
 #include "fightscreen.h"
+#include "warningscreen.h"
 
 #ifdef DREAMCAST
 KOS_INIT_FLAGS(INIT_DEFAULT);
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
 
 	setMainFileSystem();
 	
-	setScreenAfterWrapperLogoScreen(&FightScreen);
+	setScreenAfterWrapperLogoScreen(&WarningScreen);
 	startScreenHandling(getLogoScreenFromWrapper());
 
 	exitGame();

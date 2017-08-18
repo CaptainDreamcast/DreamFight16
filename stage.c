@@ -392,15 +392,21 @@ static void updateCameraMovement() {
 
 	double right = getCameraPositionX(gData.mStageInfo.mLocalCoordinates.y) + gData.mStageInfo.mLocalCoordinates.x / 2;
 	double left = getCameraPositionX(gData.mStageInfo.mLocalCoordinates.y) - gData.mStageInfo.mLocalCoordinates.x / 2;
+	
+	double lx = (left + gData.mCamera.mTension) - minX;
+	double rx = maxX - (right - gData.mCamera.mTension);
 
-	if (minX < left + gData.mCamera.mTension) {
-		scrollMugenStageHandlerLeft();
+	if (lx > 0 && rx > 0) {
+		// TODO
 	}
-
-	if (maxX > right - gData.mCamera.mTension) {
-		scrollMugenStageHandlerRight();
+	else if (rx > 0) {
+		double delta = min(rx, -lx);
+		addMugenStageHandlerCameraPositionX(delta);
 	}
-
+	else if (lx > 0) {
+		double delta = min(lx, -rx);
+		addMugenStageHandlerCameraPositionX(-delta);
+	}
 }
 
 static void updateStage(void* tData) {
@@ -502,7 +508,7 @@ double getStageLeftOfScreenBasedOnPlayer(int tCoordinateP)
 	ScreenSize sz = getScreenSize();
 	p = transformCoordinatesVector(p, sz.y, tCoordinateP);
 
-	return p.x - sz.x / 2;
+	return p.x;
 }
 
 double getStageRightOfScreenBasedOnPlayer(int tCoordinateP)
@@ -510,8 +516,9 @@ double getStageRightOfScreenBasedOnPlayer(int tCoordinateP)
 	Position p = *getMugenStageHandlerCameraPositionReference();
 	ScreenSize sz = getScreenSize();
 	p = transformCoordinatesVector(p, sz.y, tCoordinateP);
+	double screenSize = transformCoordinates(sz.x, sz.y, tCoordinateP);
 
-	return p.x + sz.x / 2;
+	return p.x + screenSize;
 }
 
 Position getStageCenterOfScreenBasedOnPlayer(int tCoordinateP)
@@ -526,4 +533,14 @@ Position getStageCenterOfScreenBasedOnPlayer(int tCoordinateP)
 int getGameWidth(int tCoordinateP)
 {
 	return (int)transformCoordinates(640, 480, tCoordinateP); // TODO: non-hardcoded
+}
+
+int getStageLeftEdgeMinimumPlayerDistance(int tCoordinateP)
+{
+	return (int)transformCoordinates(gData.mBound.mScreenLeft, getStageCoordinateP(), tCoordinateP);
+}
+
+int getStageRightEdgeMinimumPlayerDistance(int tCoordinateP)
+{
+	return (int)transformCoordinates(gData.mBound.mScreenRight, getStageCoordinateP(), tCoordinateP);
 }

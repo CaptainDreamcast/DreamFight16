@@ -179,10 +179,7 @@ static void loadNextStep(MugenAnimationHandlerElement* e) {
 
 	updateHitboxes(e);
 
-
 	e->mIsAddition = step->mIsAddition; // TODO: properly
-
-	// TODO: flip sprite
 }
 
 static void increaseMugenDuration(MugenDuration* tDuration) {
@@ -359,7 +356,6 @@ int getHandledAnimationElementFromTimeOffset(int tID, int tTime)
 {
 	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
 	
-
 	int ret;
 	if (tTime > 0) {
 		tTime += e->mStepTime;
@@ -371,7 +367,6 @@ int getHandledAnimationElementFromTimeOffset(int tID, int tTime)
 		tTime += (step->mDuration - 1) - e->mStepTime;
 		ret = getHandledAnimationElementFromTimeOffsetLoop(e, tTime, e->mStep, -1);
 	}
-
 
 	return ret + 1;
 }
@@ -443,6 +438,7 @@ static void drawSingleMugenAnimationSpriteCB(void* tCaller, void* tData) {
 	MugenSpriteFileSubSprite* sprite = tData;
 
 	MugenAnimationHandlerElement* e = caller->e;
+	MugenAnimationStep* step = caller->mStep;
 	Position p = caller->mBasePosition;
 	p = vecAdd(p, makePosition(sprite->mOffset.x, sprite->mOffset.y, 0));
 
@@ -454,7 +450,10 @@ static void drawSingleMugenAnimationSpriteCB(void* tCaller, void* tData) {
 		texturePos.bottomRight.x = texturePos.topLeft.x + newWidth;
 	}
 
-	if (!e->mIsFacingRight) {
+	int isFacingRight = e->mIsFacingRight;
+	if (step->mIsFlippingHorizontally) isFacingRight ^= 1;
+
+	if (!isFacingRight) {
 		Rectangle originalTexturePos = texturePos;
 		Position center = e->mPlayerPositionInStageCoordinates;
 		double deltaX = center.x - p.x;
@@ -465,12 +464,12 @@ static void drawSingleMugenAnimationSpriteCB(void* tCaller, void* tData) {
 		texturePos.bottomRight.x = originalTexturePos.topLeft.x;
 	}
 
-	if (e->mIsAddition) {
-		setDrawingBlendType(BLEND_TYPE_ADDITION);
-	}
-
 	if (e->mHasCameraPositionInScreenSpace) {
 		p = vecSub(p, *e->mCameraPositionInScreenSpaceReference);
+	}
+
+	if (e->mIsAddition) {
+		setDrawingBlendType(BLEND_TYPE_ADDITION);
 	}
 
 	scaleDrawing3D(caller->mScale, caller->mScalePosition);

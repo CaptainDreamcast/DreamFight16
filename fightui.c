@@ -79,6 +79,8 @@ typedef struct {
 } DisplayName;
 
 typedef struct {
+	int mIsActive;
+
 	int mValue;
 	Position mPosition;
 
@@ -87,6 +89,7 @@ typedef struct {
 
 	int mTextID;
 	int mFramesPerCount;
+	int mNow;
 } TimeCounter;
 
 typedef struct {
@@ -426,9 +429,12 @@ static void loadTimer(MugenDefScript* tScript) {
 	int breakSize = -5;
 
 	gData.mTime.mPosition = vecSub(gData.mTime.mPosition, makePosition(textSize + breakSize / 2, textSize + breakSize, 0));
-	gData.mTime.mValue = 99;
+	gData.mTime.mIsActive = 0;
 
 	gData.mTime.mTextID = addHandledText(gData.mTime.mPosition, "99", 0, COLOR_WHITE, makePosition(textSize, textSize, 1), makePosition(breakSize, breakSize, 1), makePosition(640, 640, 1), INF);
+	gData.mTime.mValue = 99;
+	gData.mTime.mNow = 0;
+	resetTimer();
 }
 
 static void loadRound(MugenDefScript* tScript) {
@@ -677,6 +683,28 @@ static void updateControlCountdown() {
 	}
 }
 
+static void updateTimeDisplayText() {
+	char text[10];
+	if(gData.mTime.mValue < 10) sprintf(text, "0%d", gData.mTime.mValue);
+	else sprintf(text, "%d", gData.mTime.mValue);
+	setHandledText(gData.mTime.mTextID, text);
+}
+
+static void updateTimeDisplay() {
+	if (!gData.mTime.mIsActive) return;
+
+	gData.mTime.mNow++;
+	if (gData.mTime.mNow >= gData.mTime.mFramesPerCount) {
+		gData.mTime.mNow = 0;
+		gData.mTime.mValue--;
+		if (gData.mTime.mValue < 0) { // TODO
+			gData.mTime.mValue = 0;
+		}
+
+		updateTimeDisplayText();
+	}
+}
+
 static void updateFightUI(void* tData) {
 	(void)tData;
 	updateHitSparks();
@@ -686,6 +714,7 @@ static void updateFightUI(void* tData) {
 	updateKODisplay();
 	updateWinDisplay();
 	updateControlCountdown();
+	updateTimeDisplay();
 }
 
 
@@ -738,6 +767,23 @@ void setPowerBarPercentage(Player* tPlayer, double tPercentage)
 {
 	PowerBar* bar = &gData.mPowerBars[tPlayer->mRootID];
 	setBarToPercentage(bar->mFrontAnimationID, bar->mPowerRangeX, tPercentage);
+}
+
+void enableTimer()
+{
+	gData.mTime.mIsActive = 1;
+}
+
+void disableTimer()
+{
+	gData.mTime.mIsActive = 0;
+}
+
+void resetTimer()
+{
+	gData.mTime.mNow = 0;
+	gData.mTime.mValue = 99;
+	updateTimeDisplayText();
 }
 
 MugenAnimation * getFightEffectAnimation(int tNumber)

@@ -21,10 +21,11 @@
 #include "gamelogic.h"
 #include "config.h"
 #include "playerhitdata.h"
+#include "titlescreen.h"
 
 static Screen* getNextFightScreenScreen() {
 	if (hasPressedAbortFlank()) {
-		abortScreenHandling();
+		return &TitleScreen;
 	}
 
 	return NULL;

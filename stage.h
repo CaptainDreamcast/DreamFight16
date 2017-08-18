@@ -32,3 +32,6 @@ double getStageRightOfScreenBasedOnPlayer(int tCoordinateP);
 Position getStageCenterOfScreenBasedOnPlayer(int tCoordinateP);
 
 int getGameWidth(int tCoordinateP);
+
+int getStageLeftEdgeMinimumPlayerDistance(int tCoordinateP);
+int getStageRightEdgeMinimumPlayerDistance(int tCoordinateP);

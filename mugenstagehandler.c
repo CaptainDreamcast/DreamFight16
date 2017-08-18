@@ -44,7 +44,7 @@ static void loadMugenStageHandler(void* tData) {
 	gData.mCameraPosition = makePosition(0,0,0);
 	gData.mCameraTargetPosition = makePosition(0, 0, 0);
 	gData.mCameraRange = makeGeoRectangle(-INF, -INF, 2*INF, 2*INF);
-	gData.mCameraSpeed = makePosition(3, 3, 0);
+	gData.mCameraSpeed = makePosition(5, 5, 0);
 
 	gData.mStaticElements = new_vector();
 
@@ -62,6 +62,7 @@ static void updateSingleStaticStageElementTile(StaticStageHandlerElement* e, Sta
 	double scale = e->mCoordinates.y / (double)gData.mCameraCoordinates.y;
 
 	Vector3D deltaInCameraSpace = makePosition(getCameraPositionX(getCameraCoordP()), getCameraPositionY(getCameraCoordP()), 0);
+	deltaInCameraSpace = vecScale(deltaInCameraSpace, -1);
 	deltaInCameraSpace = vecScale3D(deltaInCameraSpace, e->mDelta);
 	deltaInCameraSpace.z = 0;
 
@@ -133,28 +134,16 @@ void setMugenStageHandlerCameraPosition(Position p)
 	gData.mCameraTargetPosition = p;
 }
 
-void scrollMugenStageHandlerLeft()
+void addMugenStageHandlerCameraPositionX(double tX)
 {
-	gData.mCameraTargetPosition = vecAdd(gData.mCameraTargetPosition, makePosition(-gData.mCameraSpeed.x, 0, 0));
-	gData.mCameraTargetPosition = clampPositionToGeoRectangle(gData.mCameraTargetPosition, gData.mCameraRange);
+	gData.mCameraTargetPosition.x += tX;
+	gData.mCameraPosition.x = gData.mCameraTargetPosition.x;
 }
 
-void scrollMugenStageHandlerRight()
+void setMugenStageHandlerCameraPositionX(double tX)
 {
-	gData.mCameraTargetPosition = vecAdd(gData.mCameraTargetPosition, makePosition(gData.mCameraSpeed.x, 0, 0));
-	gData.mCameraTargetPosition = clampPositionToGeoRectangle(gData.mCameraTargetPosition, gData.mCameraRange);
-}
-
-void scrollMugenStageHandlerUp()
-{
-	gData.mCameraTargetPosition = vecAdd(gData.mCameraTargetPosition, makePosition(0, -gData.mCameraSpeed.y, 0));
-	gData.mCameraTargetPosition = clampPositionToGeoRectangle(gData.mCameraTargetPosition, gData.mCameraRange);
-}
-
-void scrollMugenStageHandlerDown()
-{
-	gData.mCameraTargetPosition = vecAdd(gData.mCameraTargetPosition, makePosition(0, gData.mCameraSpeed.y, 0));
-	gData.mCameraTargetPosition = clampPositionToGeoRectangle(gData.mCameraTargetPosition, gData.mCameraRange);
+	gData.mCameraTargetPosition.x = tX;
+	gData.mCameraPosition.x = gData.mCameraTargetPosition.x;
 }
 
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase)

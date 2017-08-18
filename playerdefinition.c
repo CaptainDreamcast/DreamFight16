@@ -457,18 +457,14 @@ static void updateGuarding(Player* p) {
 	}
 }
 
-static void updateGuardingOver(Player* p) {
-	if (isPlayerPaused(p)) return;
-	if (!p->mIsInControl) return;
-	if (getPlayerState(p) != 140) return;
-	if (getRemainingPlayerAnimationTime(p)) return;
-
-
+static void setPlayerUnguarding(Player* p) {
 	if (getPlayerStateType(p) == MUGEN_STATE_TYPE_STANDING) {
 		changePlayerState(p, 0);
-	} else if (getPlayerStateType(p) == MUGEN_STATE_TYPE_CROUCHING) {
+	}
+	else if (getPlayerStateType(p) == MUGEN_STATE_TYPE_CROUCHING) {
 		changePlayerState(p, 11);
-	} else if (getPlayerStateType(p) == MUGEN_STATE_TYPE_AIR) {
+	}
+	else if (getPlayerStateType(p) == MUGEN_STATE_TYPE_AIR) {
 		changePlayerState(p, 51);
 	}
 	else {
@@ -476,6 +472,16 @@ static void updateGuardingOver(Player* p) {
 		logErrorInteger(getPlayerStateType(p));
 		abortSystem();
 	}
+}
+
+static void updateGuardingOver(Player* p) {
+	if (isPlayerPaused(p)) return;
+	if (!p->mIsInControl) return;
+	if (getPlayerState(p) != 140) return;
+	if (getRemainingPlayerAnimationTime(p)) return;
+
+
+	setPlayerUnguarding(p);
 }
 static void updateSinglePlayer(Player* p);
 
@@ -553,6 +559,21 @@ static void updatePushFlags() {
 	getRootPlayer(1)->mPushDisabledFlag = 0;
 }
 
+static void updateStageBorder(Player* p) {
+	double left = getStageLeftOfScreenBasedOnPlayer(getPlayerCoordinateP(p));
+	double right = getStageRightOfScreenBasedOnPlayer(getPlayerCoordinateP(p));
+	int lx = getStageLeftEdgeMinimumPlayerDistance(getPlayerCoordinateP(p));
+	int rx = getStageRightEdgeMinimumPlayerDistance(getPlayerCoordinateP(p));
+	double x = getPlayerPositionX(p, getPlayerCoordinateP(p));
+
+	if (x < left + lx) {
+		setPlayerPositionX(p, left + lx, getPlayerCoordinateP(p));
+	}
+	else if (x > right - rx) {
+		setPlayerPositionX(p, right-rx, getPlayerCoordinateP(p));
+	}
+}
+
 static void updateSinglePlayer(Player* p) {
 	updateWalking(p);
 	updateJumping(p);
@@ -568,6 +589,7 @@ static void updateSinglePlayer(Player* p) {
 	updateGuardingOver(p);
 	updateHitAttributeSlots(p);
 	updatePush(p);
+	updateStageBorder(p);
 
 	updateTest(p);
 
@@ -663,10 +685,40 @@ static void setPlayerHitStates(Player* p, Player* tOtherPlayer) {
 	}
 }
 
+static int checkPlayerHitGuardFlagsAndReturnIfGuardable(Player* tPlayer, char* tFlags) {
+	MugenStateType type = getPlayerStateType(tPlayer);
+	char test[100];
+	strcpy(test, tFlags);
+	turnStringLowercase(test);
+
+	if (type == MUGEN_STATE_TYPE_STANDING) {
+
+		return strchr(test, 'h') != NULL || strchr(test, 'm') != NULL;
+	} else  if (type == MUGEN_STATE_TYPE_CROUCHING) {
+		return strchr(test, 'l') != NULL || strchr(test, 'm') != NULL;
+	}
+	else  if (type == MUGEN_STATE_TYPE_AIR) {
+		return strchr(test, 'a') != NULL;
+	}
+	else {
+		logError("Unrecognized player type.");
+		logErrorInteger(type);
+		abortSystem();
+		return 0;
+	}
+
+}
+
+static void setPlayerUnguarding(Player* p);
+
 static void setPlayerHit(Player* p, Player* tOtherPlayer, void* tHitData) {
 	setPlayerControl(p, 0);
 
 	copyHitDataToActive(p, tHitData);
+
+	if (isPlayerGuarding(p) && !checkPlayerHitGuardFlagsAndReturnIfGuardable(p, getActiveHitDataGuardFlag(p))) {
+		setPlayerUnguarding(p);
+	}
 
 	if (isPlayerGuarding(p)) {
 		setActiveHitDataVelocityX(p, getActiveHitDataGuardVelocity(p));
@@ -1300,7 +1352,7 @@ void setPlayerVelocityX(Player* p, double x, int tCoordinateP)
 {
 	double scale = getPlayerCoordinateP(p) / tCoordinateP;
 	Velocity* vel = getHandledPhysicsVelocityReference(p->mPhysicsID);
-	double fx = x*scale;
+	double fx = x*scale*2; // TODO: fix
 	if (p->mFaceDirection == FACE_DIRECTION_LEFT) fx *= -1;
 	vel->x = fx;
 }
@@ -1333,7 +1385,7 @@ void addPlayerVelocityX(Player* p, double x, int tCoordinateP)
 
 	double scale = getPlayerCoordinateP(p) / tCoordinateP;
 	Velocity* vel = getHandledPhysicsVelocityReference(p->mPhysicsID);
-	double fx = x*scale;
+	double fx = x*scale*2; // TODO
 	if (p->mFaceDirection == FACE_DIRECTION_LEFT) fx *= -1;
 	vel->x += fx;
 }

@@ -10,6 +10,9 @@
 void playHitSpark(Position tPosition, Player* tPlayer, int tIsInPlayerFile, int tNumber, int tIsFacingRight, int tPositionCoordinateP, int tScaleCoordinateP);
 void setLifeBarPercentage(Player* tPlayer, double tPercentage);
 void setPowerBarPercentage(Player* tPlayer, double tPercentage);
+void enableTimer();
+void disableTimer();
+void resetTimer();
 
 MugenAnimation* getFightEffectAnimation(int tNumber);
 MugenSpriteFile* getFightEffectSprites();

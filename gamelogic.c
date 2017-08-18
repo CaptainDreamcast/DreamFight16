@@ -20,7 +20,7 @@ static struct {
 
 static void fightAnimationFinishedCB() {
 	gData.mRoundStateNumber = 2;
-	
+	enableTimer();
 }
 
 static void roundAnimationFinishedCB() {
@@ -35,12 +35,12 @@ static void introFinished() {
 static void fadeInFinished(void* tData) {
 	(void)tData;
 
-	
+	/*
 	setPlayerControl(getRootPlayer(0), 1);
 	setPlayerControl(getRootPlayer(1), 1);
 	fightAnimationFinishedCB();
 	return;
-	
+	*/
 
 	gData.mRoundStateNumber = 1;
 	gData.mIsDisplayingIntro = 2;
@@ -49,6 +49,7 @@ static void fadeInFinished(void* tData) {
 }
 
 static void startRound() {
+	disableTimer();
 	gData.mRoundStateNumber = 0;
 	gData.mIsDisplayingIntro = 0;
 	gData.mIsDisplayingWinPose = 0;
@@ -102,6 +103,7 @@ static void koAnimationFinishedCB() {
 }
 
 static void startKO(int i) {
+	disableTimer();
 	gData.mRoundWinner = getRootPlayer(i ^ 1);
 	gData.mRoundStateNumber = 3;
 	setPlayerControl(getRootPlayer(0), 0);
@@ -134,6 +136,7 @@ static void resetRound(void* tCaller) {
 	increasePlayerRoundsExisted();
 	gData.mRoundNumber++;
 	resetPlayers();
+	resetTimer();
 	startRound();
 }
 

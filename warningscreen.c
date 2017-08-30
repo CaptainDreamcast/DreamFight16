@@ -38,12 +38,6 @@ static void startFadeIn(void* tCaller) {
 	tweenDouble(dst, 0, 1, quadraticTweeningFunction, 60, NULL, NULL);
 }
 
-static void startWarningFadeIn(void* tCaller) {
-	(void)tCaller;
-
-	tweenDouble(&gData.mWarningTrans, 0, 1, quadraticTweeningFunction, 60, NULL, NULL);
-}
-
 static void loadWarningScreen() {
 	gData.mWarningTexture = loadTexture("assets/warning/WARNING.pkg");
 	gData.mWarningID = playOneFrameAnimationLoop(makePosition(188, 40, 1), &gData.mWarningTexture);

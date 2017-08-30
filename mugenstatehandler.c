@@ -23,6 +23,7 @@ typedef struct {
 	int mIsPaused;
 	int mIsInHelperMode;
 	int mIsInputControlDisabled;
+	int mIsDisabled;
 } RegisteredState;
 
 static struct {
@@ -137,6 +138,7 @@ int registerMugenStateMachine(MugenStates * tStates, Player* tPlayer)
 	e->mIsPaused = 0;
 	e->mIsInHelperMode = 0;
 	e->mIsInputControlDisabled = 0;
+	e->mIsDisabled = 0;
 
 	return int_map_push_back_owned(&gData.mRegisteredStates, e);
 }
@@ -174,7 +176,16 @@ void unpauseRegisteredStateMachine(int tID)
 {
 	assert(int_map_contains(&gData.mRegisteredStates, tID));
 	RegisteredState* e = int_map_get(&gData.mRegisteredStates, tID);
+	if (e->mIsDisabled) return;
 	e->mIsPaused = 0;
+}
+
+void disableRegisteredStateMachine(int tID)
+{
+	assert(int_map_contains(&gData.mRegisteredStates, tID));
+	RegisteredState* e = int_map_get(&gData.mRegisteredStates, tID);
+	e->mIsDisabled = 1;
+	pauseRegisteredStateMachine(tID);
 }
 
 int getRegisteredStateTimeInState(int tID)

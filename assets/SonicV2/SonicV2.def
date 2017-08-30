@@ -1,0 +1,28 @@
+[Info]
+name="Sonic the Hedgehog V2"
+displayname="Sonic"
+versiondate=2/22/2008 (Started) ?????Finished)
+mugenversion=
+author="Claymizer(Brandon Clay)"
+pal.defaults=1,2,3,4,5,6
+
+[Files]
+sprite=Sonic.sff
+sound=jason.snd
+anim=Sonic.air
+cmd=Sonic.cmd
+cns=Sonic.cns
+st=Sonic.cns
+stcommon=common1.cns
+pal1=Sonic4.act
+pal2=Olympics.act
+pal3=Invert.act
+pal4=Black.act
+pal5=Mephiles.act
+pal6=Scourge.act
+pal7=metal.act
+pal8=SSonic.act
+pal9=8-bit.act
+[Arcade]
+intro.storyboard=
+ending.storyboard=

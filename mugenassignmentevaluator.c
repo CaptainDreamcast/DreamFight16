@@ -365,6 +365,106 @@ static AssignmentReturnValue evaluateSetVariableAssignment(MugenAssignment* tAss
 
 }
 
+static int evaluateSingleHitDefAttributeFlag2(char* tFlag, MugenAttackClass tClass, MugenAttackType tType) {
+	turnStringLowercase(tFlag);
+
+	assert(strlen(tFlag) == 2);
+
+	int isPart1OK;
+	if (tClass == MUGEN_ATTACK_CLASS_NORMAL) {
+		isPart1OK = tFlag[0] == 'n';
+	} else if (tClass == MUGEN_ATTACK_CLASS_SPECIAL) {
+		isPart1OK = tFlag[0] == 's';
+	}
+	else if (tClass == MUGEN_ATTACK_CLASS_HYPER) {
+		isPart1OK = tFlag[0] == 'h';
+	}
+	else {
+		logError("Unrecognized attack class");
+		logErrorInteger(tClass);
+		abortSystem();
+		isPart1OK = 0;
+	}
+
+	if (!isPart1OK) return 0;
+
+	int isPart2OK;
+	if (tType == MUGEN_ATTACK_TYPE_ATTACK) {
+		isPart2OK = tFlag[1] == 'a';
+	}
+	else if (tType == MUGEN_ATTACK_TYPE_PROJECTILE) {
+		isPart2OK = tFlag[1] == 'p';
+	}
+	else if (tType == MUGEN_ATTACK_TYPE_THROW) {
+		isPart2OK = tFlag[1] == 't';
+	}
+	else {
+		logError("Unrecognized attack type");
+		logErrorInteger(tType);
+		abortSystem();
+		isPart2OK = 0;
+	}
+
+	return isPart2OK;
+}
+
+static AssignmentReturnValue evaluateHitDefAttributeAssignment(AssignmentReturnValue tValue, Player* tPlayer) {
+
+	if (!isHitDataActive(tPlayer)) {
+		return makeBooleanAssignmentReturn(0);
+	}
+
+	char* pos = tValue.mValue;
+	int positionsRead;
+	char flag[10], comma[10];
+	int items = sscanf(pos, "%s %s%n", flag, comma, &positionsRead);
+	pos += positionsRead;
+
+	turnStringLowercase(flag);
+
+	int isFlag1OK;
+	MugenStateType type = getHitDataType(tPlayer);
+	if (type == MUGEN_STATE_TYPE_STANDING) {
+		isFlag1OK = strchr(flag, 's') != NULL;
+	}
+	else if (type == MUGEN_STATE_TYPE_CROUCHING) {
+		isFlag1OK = strchr(flag, 'c') != NULL;
+	}
+	else if (type == MUGEN_STATE_TYPE_AIR) {
+		isFlag1OK = strchr(flag, 'a') != NULL;
+	}
+	else {
+		logError("Invalid hitdef type");
+		logErrorInteger(type);
+		abortSystem();
+		isFlag1OK = 0;
+	}
+
+	if(!isFlag1OK) return makeBooleanAssignmentReturn(0);
+
+	if(items == 1) return makeBooleanAssignmentReturn(isFlag1OK);
+	assert(items == 2);
+	assert(!strcmp(",", comma));
+
+	int hasNext = 1;
+	while (hasNext) {
+		items = sscanf(pos, "%s %s%n", flag, comma, &positionsRead);
+		pos += positionsRead;
+		assert(items >= 1);
+
+		int isFlag2OK = evaluateSingleHitDefAttributeFlag2(flag, getHitDataAttackClass(tPlayer), getHitDataAttackType(tPlayer));
+		if (isFlag2OK) {
+			return makeBooleanAssignmentReturn(1);
+		}
+
+		if (items == 1) hasNext = 0;
+		else assert(!strcmp(",", comma));
+	}
+
+	return makeBooleanAssignmentReturn(0);
+}
+
+
 static AssignmentReturnValue evaluateComparisonAssignmentInternal(MugenAssignment* mAssignment, AssignmentReturnValue b, Player* tPlayer) {
 	char name[MUGEN_DEF_STRING_LENGTH];
 	
@@ -399,6 +499,9 @@ static AssignmentReturnValue evaluateComparisonAssignmentInternal(MugenAssignmen
 	}
 	else if (!strcmp("teammode", name)) {
 		return evaluateTeamModeAssignment(b, tPlayer);
+	}
+	else if (!strcmp("hitdefattr", name)) {
+		return evaluateHitDefAttributeAssignment(b, tPlayer);
 	}
 	else if (isRangeAssignmentReturn(b)) {
 		return evaluateRangeComparisonAssignment(a, b);
@@ -825,9 +928,9 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 		return makeNumberAssignmentReturn(getPlayerMoveContactCounter(tPlayer));
 	}
 	else if (!strcmp("hitdefattr", testString)) {
-		return makeStringAssignmentReturn(getPlayerHitDefinitionAttributes(tPlayer)); //TODO
+		return makeStringAssignmentReturn("hitdefattr");
 	}
-	else if (!strcmp("ap", testString) || !strcmp("aa", testString) || !strcmp("miss", testString) || !strcmp("m-", testString) || !strcmp("a-", testString) || !strcmp("nt", testString) || !strcmp("hp", testString) || !strcmp("n", testString) || !strcmp("heavy", testString) || !strcmp("sp", testString) || !strcmp("at", testString) || !strcmp("sca", testString) || !strcmp("h", testString) || !strcmp("i", testString) || !strcmp("a", testString) || !strcmp("m", testString) || !strcmp("trip", testString) || !strcmp("l", testString) || !strcmp("mafd", testString) || !strcmp("med", testString) || !strcmp("hit", testString) || !strcmp("light", testString) || !strcmp("high", testString) || !strcmp("low", testString) || !strcmp("medium", testString) || !strcmp("maf", testString) || !strcmp("ma", testString) || !strcmp("na", testString) || !strcmp("sc", testString) || !strcmp("sa", testString) || !strcmp("ha", testString) || !strcmp("s", testString) || !strcmp("a", testString) || !strcmp("c", testString)) {
+	else if (!strcmp("lam", testString) || !strcmp("map", testString) || !strcmp("ap", testString) || !strcmp("aa", testString) || !strcmp("miss", testString) || !strcmp("m-", testString) || !strcmp("a-", testString) || !strcmp("nt", testString) || !strcmp("hp", testString) || !strcmp("n", testString) || !strcmp("heavy", testString) || !strcmp("sp", testString) || !strcmp("at", testString) || !strcmp("sca", testString) || !strcmp("h", testString) || !strcmp("i", testString) || !strcmp("a", testString) || !strcmp("m", testString) || !strcmp("trip", testString) || !strcmp("l", testString) || !strcmp("mafd", testString) || !strcmp("med", testString) || !strcmp("hit", testString) || !strcmp("light", testString) || !strcmp("high", testString) || !strcmp("low", testString) || !strcmp("medium", testString) || !strcmp("maf", testString) || !strcmp("ma", testString) || !strcmp("na", testString) || !strcmp("sc", testString) || !strcmp("sa", testString) || !strcmp("ha", testString) || !strcmp("s", testString) || !strcmp("a", testString) || !strcmp("c", testString)) {
 		return makeStringAssignmentReturn(variable->mName); //TODO
 	}
 	else if (!strcmp("var", testString) || !strcmp("sysvar", testString) || !strcmp("sysfvar", testString) || !strcmp("fvar", testString)) {
@@ -1031,6 +1134,9 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 	else if (!strcmp("winko", testString)) {
 		return makeBooleanAssignmentReturn(hasPlayerWonByKO(tPlayer));
 	}
+	else if (!strcmp("loseko", testString)) {
+		return makeBooleanAssignmentReturn(hasPlayerLostByKO(tPlayer));
+	}
 	else if (!strcmp("winperfect", testString)) {
 		return makeBooleanAssignmentReturn(hasPlayerWonPerfectly(tPlayer));
 	}
@@ -1045,6 +1151,9 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 	}
 	else if (!strcmp("numproj", testString)) {
 		return makeNumberAssignmentReturn(getPlayerProjectileAmount(tPlayer));
+	}
+	else if (!strcmp("numprojid", testString)) {
+		return makeStringAssignmentReturn("numprojid");
 	}
 	else if (!strcmp("movehit", testString)) {
 		return makeNumberAssignmentReturn(hasPlayerMoveHitOtherPlayer(tPlayer));
@@ -1213,6 +1322,9 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 	}
 	else if (!strcmp("velocity.run.fwd.x", testString)) {
 		return makeStringAssignmentReturn("velocity.run.fwd.x");
+	}
+	else if (!strcmp("velocity.run.fwd.y", testString)) {
+		return makeStringAssignmentReturn("velocity.run.fwd.y");
 	}
 	else if (!strcmp("velocity.run.back.x", testString)) {
 		return makeStringAssignmentReturn("velocity.run.back.x");
@@ -1433,6 +1545,9 @@ static AssignmentReturnValue evaluateConstArrayAssignment(AssignmentReturnValue 
 	else if (!strcmp("velocity.run.fwd.x", var)) {
 		return makeFloatAssignmentReturn(getPlayerForwardRunVelocityX(tPlayer));
 	}
+	else if (!strcmp("velocity.run.fwd.y", var)) {
+		return makeFloatAssignmentReturn(getPlayerForwardRunVelocityY(tPlayer));
+	}
 	else if (!strcmp("velocity.run.back.x", var)) {
 		return makeFloatAssignmentReturn(getPlayerBackwardRunVelocityX(tPlayer));
 	}
@@ -1645,6 +1760,11 @@ static AssignmentReturnValue evaluatePlayerIDExistArrayAssignment(AssignmentRetu
 	return makeBooleanAssignmentReturn(doesPlayerIDExist(tPlayer, id));
 }
 
+static AssignmentReturnValue evaluateNumberOfProjectilesWithIDArrayAssignment(AssignmentReturnValue tIndex, Player* tPlayer) {
+	int id = evaluateAssignmentReturnAsNumber(tIndex);
+	return makeNumberAssignmentReturn(getPlayerProjectileAmountWithID(tPlayer, id));
+}
+
 static AssignmentReturnValue evaluateArrayAssignment(MugenAssignment* tAssignment, Player* tPlayer) {
 	MugenDependOnTwoAssignment* arrays = tAssignment->mData;
 
@@ -1770,6 +1890,10 @@ static AssignmentReturnValue evaluateArrayAssignment(MugenAssignment* tAssignmen
 	else if (!strcmp("playeridexist", test)) {
 		AssignmentReturnValue b = evaluateAssignmentInternal(arrays->b, tPlayer);
 		return evaluatePlayerIDExistArrayAssignment(b, tPlayer);
+	}
+	else if (!strcmp("numprojid", test)) {
+		AssignmentReturnValue b = evaluateAssignmentInternal(arrays->b, tPlayer);
+		return evaluateNumberOfProjectilesWithIDArrayAssignment(b, tPlayer);
 	}
 	else {
 		logError("Unknown array.");

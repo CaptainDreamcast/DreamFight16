@@ -17,6 +17,7 @@
 #include "mugenassignmentevaluator.h"
 #include "fightui.h"
 #include "gamelogic.h"
+#include "projectile.h"
 
 typedef struct {
 
@@ -236,9 +237,7 @@ typedef struct {
 	MugenAssignment* mFallEnvironmentShakePhase;
 } HitDefinitionController;
 
-
-static void parseHitDefinitionController(MugenStateController* tController, MugenDefScriptGroup* tGroup) {
-	HitDefinitionController* e = allocMemory(sizeof(HitDefinitionController));
+static void readHitDefinitionFromGroup(HitDefinitionController* e, MugenDefScriptGroup* tGroup) {
 	assert(fetchAssignmentFromGroupAndReturnWhetherItExists("attr", tGroup, &e->mAttribute));
 
 	if (!fetchAssignmentFromGroupAndReturnWhetherItExists("hitflag", tGroup, &e->mHitFlag)) {
@@ -381,7 +380,11 @@ static void parseHitDefinitionController(MugenStateController* tController, Muge
 	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("fall.envshake.ampl", tGroup, &e->mFallEnvironmentShakeAmplitude, "0");
 	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("fall.envshake.phase", tGroup, &e->mFallEnvironmentShakePhase, "0");
 
+}
 
+static void parseHitDefinitionController(MugenStateController* tController, MugenDefScriptGroup* tGroup) {
+	HitDefinitionController* e = allocMemory(sizeof(HitDefinitionController));
+	readHitDefinitionFromGroup(e, tGroup);
 	tController->mData = e;
 }
 
@@ -1110,6 +1113,87 @@ static void parseReversalDefinitionController(MugenStateController* tController,
 	tController->mData = e;
 }
 
+typedef struct {
+	HitDefinitionController mHitDef;
+
+	MugenAssignment* mID;
+	MugenAssignment* mAnimation;
+	MugenAssignment* mHitAnimation;
+	MugenAssignment* mRemoveAnimation;
+	MugenAssignment* mCancelAnimation;
+
+	MugenAssignment* mScale;
+	MugenAssignment* mIsRemovingProjectileAfterHit;
+	MugenAssignment* mRemoveTime;
+	MugenAssignment* mVelocity;
+	MugenAssignment* mRemoveVelocity;
+	MugenAssignment* mAcceleration;
+	MugenAssignment* mVelocityMultipliers;
+	MugenAssignment* mHitAmountBeforeVanishing;
+
+	MugenAssignment* mMissTime;
+	MugenAssignment* mPriority;
+	MugenAssignment* mSpriteSpriority;
+
+	MugenAssignment* mEdgeBound;
+	MugenAssignment* mStageBound;
+	MugenAssignment* mHeightBoundValues;
+	MugenAssignment* mOffset;
+	MugenAssignment* mPositionType;
+
+	MugenAssignment* mShadow;
+	MugenAssignment* mSuperMoveTime;
+	MugenAssignment* mPauseMoveTime;
+	MugenAssignment* mHasOwnPalette;
+
+	MugenAssignment* mRemapPalette;
+	MugenAssignment* mAfterImageTime;
+	MugenAssignment* mAfterImageLength;
+	MugenAssignment* mAfterImage;
+} ProjectileController;
+
+static void parseProjectileController(MugenStateController* tController, MugenDefScriptGroup* tGroup) {
+	ProjectileController* e = allocMemory(sizeof(ProjectileController));
+	readHitDefinitionFromGroup(&e->mHitDef, tGroup);
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projid", tGroup, &e->mID, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projanim", tGroup, &e->mAnimation, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projhitanim", tGroup, &e->mHitAnimation, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projremanim", tGroup, &e->mRemoveAnimation, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projcancelanim", tGroup, &e->mCancelAnimation, "");
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projscale", tGroup, &e->mScale, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projremove", tGroup, &e->mIsRemovingProjectileAfterHit, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projremovetime", tGroup, &e->mRemoveTime, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("velocity", tGroup, &e->mVelocity, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("remvelocity", tGroup, &e->mRemoveVelocity, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("accel", tGroup, &e->mAcceleration, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("velmul", tGroup, &e->mVelocityMultipliers, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projhits", tGroup, &e->mHitAmountBeforeVanishing, "");
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projmisstime", tGroup, &e->mMissTime, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projpriority", tGroup, &e->mPriority, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projsprpriority", tGroup, &e->mSpriteSpriority, "");
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projedgebound", tGroup, &e->mEdgeBound, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projstagebound", tGroup, &e->mStageBound, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projheightbound", tGroup, &e->mHeightBoundValues, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("offset", tGroup, &e->mOffset, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("postype", tGroup, &e->mPositionType, "");
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("projshadow", tGroup, &e->mShadow, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("supermovetime", tGroup, &e->mSuperMoveTime, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("pausemovetime", tGroup, &e->mPauseMoveTime, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("ownpal", tGroup, &e->mHasOwnPalette, "");
+
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("remappal", tGroup, &e->mRemapPalette, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("afterimage.time", tGroup, &e->mAfterImageTime, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("afterimage.length", tGroup, &e->mAfterImageLength, "");
+	fetchAssignmentFromGroupAndReturnWhetherItExistsDefaultString("afterimage", tGroup, &e->mAfterImage, "");
+
+	tController->mData = e;
+}
+
 
 void parseStateControllerType(MugenStateController* tController, MugenDefScriptGroup* tGroup) {
 	assert(string_map_contains(&tGroup->mElements, "type"));
@@ -1257,6 +1341,7 @@ void parseStateControllerType(MugenStateController* tController, MugenDefScriptG
 	}
 	else if (!strcmp("pause", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_PAUSE;
+		parseNullController(tController); // TODO
 	}
 	else if (!strcmp("superpause", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_SUPER_PAUSE;
@@ -1422,6 +1507,7 @@ void parseStateControllerType(MugenStateController* tController, MugenDefScriptG
 	}
 	else if (!strcmp("projectile", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_PROJECTILE;
+		parseProjectileController(tController, tGroup);
 	}
 	else if (!strcmp("powerset", type)) {
 		tController->mType = MUGEN_STATE_CONTROLLER_TYPE_SET_POWER;
@@ -1593,27 +1679,29 @@ static void handleHitDefinitionAttribute(HitDefinitionController* e, Player* tPl
 	assert(strlen(arg2) == 2);
 	assert(!strcmp(",", comma));
 
-	if (strchr(arg1, 'S') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_STANDING);
-	else if (strchr(arg1, 'C') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_CROUCHING);
-	else if (strchr(arg1, 'A') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_AIR);
+	turnStringLowercase(arg1);
+	if (strchr(arg1, 's') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_STANDING);
+	else if (strchr(arg1, 'c') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_CROUCHING);
+	else if (strchr(arg1, 'a') != NULL) setHitDataType(tPlayer, MUGEN_STATE_TYPE_AIR);
 	else {
 		logError("Unable to parse hitdef attr.");
 		logErrorString(arg1);
 		abortSystem();
 	}
 
-	if (arg2[0] == 'N') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_NORMAL);
-	else if (arg2[0] == 'S') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_SPECIAL);
-	else if (arg2[0] == 'H') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_HYPER);
+	turnStringLowercase(arg2);
+	if (arg2[0] == 'n') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_NORMAL);
+	else if (arg2[0] == 's') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_SPECIAL);
+	else if (arg2[0] == 'h') setHitDataAttackClass(tPlayer, MUGEN_ATTACK_CLASS_HYPER);
 	else {
 		logError("Unable to parse hitdef attr 2.");
 		logErrorString(arg2);
 		abortSystem();
 	}
 
-	if (arg2[1] == 'A') setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_ATTACK);
-	else if (arg2[1] == 'T') setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_THROW);
-	else if (arg2[1] == 'P')  setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_PROJECTILE);
+	if (arg2[1] == 'a') setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_ATTACK);
+	else if (arg2[1] == 't') setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_THROW);
+	else if (arg2[1] == 'p')  setHitDataAttackType(tPlayer, MUGEN_ATTACK_TYPE_PROJECTILE);
 	else {
 		logError("Unable to parse hitdef attr 2.");
 		logErrorString(arg2);
@@ -2015,9 +2103,7 @@ static void handleHitDefinitionSinglePowerAddition(MugenAssignment* tAssignment,
 	freeMemory(flag);
 }
 
-static void handleHitDefinition(MugenStateController* tController, Player* tPlayer) {
-	HitDefinitionController* e = tController->mData;
-
+static void handleHitDefinitionWithController(HitDefinitionController* e, Player* tPlayer) {
 	setHitDataVelocityX(tPlayer, 0);
 	setHitDataVelocityY(tPlayer, 0);
 
@@ -2032,9 +2118,9 @@ static void handleHitDefinition(MugenStateController* tController, Player* tPlay
 	handleHitDefinitionDamage(e->mDamage, tPlayer);
 	handleHitDefinitionSinglePauseTime(e->mPauseTime, tPlayer, setHitDataPauseTime, 0, 0);
 	handleHitDefinitionSinglePauseTime(e->mGuardPauseTime, tPlayer, setHitDataGuardPauseTime, getHitDataPlayer1PauseTime(tPlayer), getHitDataPlayer2PauseTime(tPlayer));
-	
+
 	handleHitDefinitionSparkNumberSingle(e->mSparkNumber, tPlayer, setHitDataSparkNumber, getDefaultPlayerSparkNumberIsInPlayerFile(tPlayer), getDefaultPlayerSparkNumber(tPlayer));
-	handleHitDefinitionSparkNumberSingle(e->mGuardSparkNumber, tPlayer, setHitDataGuardSparkNumber, getDefaultPlayerGuardSparkNumberIsInPlayerFile(tPlayer), getDefaultPlayerGuardSparkNumber(tPlayer)); 
+	handleHitDefinitionSparkNumberSingle(e->mGuardSparkNumber, tPlayer, setHitDataGuardSparkNumber, getDefaultPlayerGuardSparkNumberIsInPlayerFile(tPlayer), getDefaultPlayerGuardSparkNumber(tPlayer));
 	handleHitDefinitionSparkXY(e->mSparkXY, tPlayer);
 	handleHitDefinitionSingleSound(e->mHitSound, tPlayer, setHitDataHitSound, 0, 0); // TODO: proper default
 	handleHitDefinitionSingleSound(e->mGuardSound, tPlayer, setHitDataGuardSound, 0, 0); // TODO: proper default
@@ -2048,7 +2134,7 @@ static void handleHitDefinition(MugenStateController* tController, Player* tPlay
 	handleHitDefinitionOneIntegerElement(e->mGuardSlideTime, tPlayer, setHitDataGuardSlideTime, getHitDataGuardHitTime(tPlayer));
 	handleHitDefinitionOneIntegerElement(e->mAirHitTime, tPlayer, setHitDataAirHitTime, 20);
 	handleHitDefinitionOneIntegerElement(e->mGuardControlTime, tPlayer, setHitDataGuardControlTime, getHitDataGuardSlideTime(tPlayer));
-	handleHitDefinitionOneIntegerElement(e->mGuardDistance, tPlayer, setHitDataGuardDistance, getDefaultPlayerAttackDistance(tPlayer)); 
+	handleHitDefinitionOneIntegerElement(e->mGuardDistance, tPlayer, setHitDataGuardDistance, getDefaultPlayerAttackDistance(tPlayer));
 	handleHitDefinitionOneFloatElement(e->mYAccel, tPlayer, setHitDataYAccel, transformCoordinates(0.7, 480, getPlayerCoordinateP(tPlayer)));
 	handleHitDefinitionTwoFloatElements(e->mGroundVelocity, tPlayer, setHitDataGroundVelocity, 0, 0);
 	handleHitDefinitionOneFloatElement(e->mGuardVelocity, tPlayer, setHitDataGuardVelocity, getHitDataGroundVelocityX(tPlayer));
@@ -2122,6 +2208,12 @@ static void handleHitDefinition(MugenStateController* tController, Player* tPlay
 	setHitDataIsFacingRight(tPlayer, getPlayerIsFacingRight(tPlayer));
 
 	setHitDataActive(tPlayer);
+}
+
+static void handleHitDefinition(MugenStateController* tController, Player* tPlayer) {
+	HitDefinitionController* e = tController->mData;
+
+	handleHitDefinitionWithController(e, tPlayer);
 }
 
 static void handleAnimationChange(MugenStateController* tController, Player* tPlayer) {
@@ -2538,7 +2630,7 @@ static void handlePositionFreeze(MugenStateController* tController, Player* tPla
 static void handleHitFallVelocity(Player* tPlayer) {
 
 	addPlayerVelocityX(tPlayer, getActiveHitDataFallXVelocity(tPlayer), getPlayerCoordinateP(tPlayer));
-	addPlayerVelocityY(tPlayer, getActiveHitDataFallYVelocity(tPlayer), getPlayerCoordinateP(tPlayer));
+	addPlayerVelocityY(tPlayer, -getActiveHitDataFallYVelocity(tPlayer), getPlayerCoordinateP(tPlayer)); // TODO: check
 }
 
 
@@ -3081,6 +3173,54 @@ static void handleReversalDefinition(MugenStateController* tController, Player* 
 	handleReversalDefinitionEntry(e->mAttributes, tPlayer);
 }
 
+static void handleProjectile(MugenStateController* tController, Player* tPlayer) {
+	ProjectileController* e = tController->mData;
+
+	Player* p = createNewProjectileFromPlayer(tPlayer);
+
+	handleHitDefinitionOneIntegerElement(e->mID, p, setProjectileID, -1);
+	handleHitDefinitionOneIntegerElement(e->mAnimation, p, setProjectileAnimation, 0);
+	handleHitDefinitionOneIntegerElement(e->mHitAnimation, p, setProjectileHitAnimation, -1);
+	handleHitDefinitionOneIntegerElement(e->mRemoveAnimation, p, setProjectileRemoveAnimation, getProjectileHitAnimation(p));
+	handleHitDefinitionOneIntegerElement(e->mCancelAnimation, p, setProjectileCancelAnimation, getProjectileRemoveAnimation(p));
+	handleHitDefinitionTwoFloatElements(e->mScale, p, setProjectileScale, 1, 1);
+	handleHitDefinitionOneIntegerElement(e->mIsRemovingProjectileAfterHit, p, setProjectileRemoveAfterHit, 1);
+	handleHitDefinitionOneIntegerElement(e->mRemoveTime, p, setProjectileRemoveTime, -1);
+	handleHitDefinitionTwoFloatElements(e->mVelocity, p, setProjectileVelocity, 0, 0);
+	handleHitDefinitionTwoFloatElements(e->mRemoveVelocity, p, setProjectileRemoveVelocity, 0, 0);
+	handleHitDefinitionTwoFloatElements(e->mAcceleration, p, setProjectileAcceleration, 0, 0);
+	handleHitDefinitionTwoFloatElements(e->mVelocityMultipliers, p, setProjectileVelocityMultipliers, 1, 1);
+
+
+	handleHitDefinitionOneIntegerElement(e->mHitAmountBeforeVanishing, p, setProjectileHitAmountBeforeVanishing, 1);
+	handleHitDefinitionOneIntegerElement(e->mMissTime, p, setProjectilMisstime, 0);
+	handleHitDefinitionOneIntegerElement(e->mPriority, p, setProjectilePriority, 1);
+	handleHitDefinitionOneIntegerElement(e->mSpriteSpriority, p, setProjectileSpritePriority, 3);
+
+	handleHitDefinitionOneIntegerElement(e->mEdgeBound, p, setProjectileEdgeBound, (int)transformCoordinates(40, 240, getPlayerCoordinateP(p)));
+	handleHitDefinitionOneIntegerElement(e->mStageBound, p, setProjectileStageBound, (int)transformCoordinates(40, 240, getPlayerCoordinateP(p)));
+	handleHitDefinitionTwoIntegerElements(e->mHeightBoundValues, p, setProjectileHeightBoundValues, (int)transformCoordinates(-240, 240, getPlayerCoordinateP(p)), (int)transformCoordinates(1, 240, getPlayerCoordinateP(p)));
+
+	Position offset;
+	getTwoFloatValuesWithDefaultValues(e->mOffset, p, &offset.x, &offset.y, 0, 0);
+	offset.z = 0;
+	int positionType;
+	getSingleIntegerValueOrDefault(e->mPositionType, p, &positionType, EXPLOD_POSITION_TYPE_RELATIVE_TO_P1);
+	Position pos = getFinalPositionFromPositionType(positionType, offset, p);
+	setProjectilePosition(p, pos);
+
+	handleHitDefinitionOneIntegerElement(e->mShadow, p, setProjectileShadow, 0);
+	handleHitDefinitionOneIntegerElement(e->mSuperMoveTime, p, setProjectileSuperMoveTime, 0);
+	handleHitDefinitionOneIntegerElement(e->mPauseMoveTime, p, setProjectilePauseMoveTime, 0);
+
+	handleHitDefinitionOneIntegerElement(e->mHasOwnPalette, p, setProjectileHasOwnPalette, 0);
+	handleHitDefinitionTwoIntegerElements(e->mRemapPalette, p, setProjectileRemapPalette, -1, 0);
+	handleHitDefinitionOneIntegerElement(e->mAfterImageTime, p, setProjectileAfterImageTime, 0);
+	handleHitDefinitionOneIntegerElement(e->mAfterImageLength, p, setProjectileAfterImageLength, 0);
+	handleHitDefinitionOneIntegerElement(e->mAfterImage, p, setProjectileAfterImage, 0);
+
+	handleHitDefinitionWithController(&e->mHitDef, p);
+}
 
 int handleMugenStateControllerAndReturnWhetherStateChanged(MugenStateController * tController, Player* tPlayer)
 {
@@ -3219,6 +3359,9 @@ int handleMugenStateControllerAndReturnWhetherStateChanged(MugenStateController 
 	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_SUPER_PAUSE) {
 		handleSuperPause(tController, tPlayer);
 	}
+	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_PAUSE) {
+		handleNull(); // TODO
+	}
 	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_AFTER_IMAGE) {
 		handleNull(); // TODO
 	}
@@ -3296,6 +3439,9 @@ int handleMugenStateControllerAndReturnWhetherStateChanged(MugenStateController 
 	}
 	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_VICTORY_QUOTE) {
 		handleNull(); // TODO
+	}
+	else if (tController->mType == MUGEN_STATE_CONTROLLER_TYPE_PROJECTILE) {
+		handleProjectile(tController, tPlayer); 
 	}
 	else {
 		logError("Unrecognized state controller.");

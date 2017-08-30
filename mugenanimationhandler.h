@@ -20,6 +20,7 @@ void setRegisteredAnimationOneFrameDrawScale(int tID, Vector3D tScale);
 void setRegisteredAnimationOneFrameDrawAngle(int tID, double tAngle);
 void addRegisteredAnimationOneFrameDrawAngle(int tID, double tAngle);
 void setRegisteredAnimationOneFrameFixedDrawAngle(int tID, double tAngle);
+void setRegisteredAnimationToNotUseStage(int tID);
 
 void changeMugenAnimationWithStartStep(int tID, MugenAnimation* tNewAnimation, int tStartStep);
 

@@ -5,6 +5,7 @@
 #include <tari/file.h>
 #include <tari/texthandler.h>
 #include <tari/math.h>
+#include <tari/input.h>
 
 #include "mugendefreader.h"
 #include "mugenspritefilereader.h"
@@ -90,6 +91,8 @@ typedef struct {
 	int mTextID;
 	int mFramesPerCount;
 	int mNow;
+
+	void(*mFinishedCB)();
 } TimeCounter;
 
 typedef struct {
@@ -169,6 +172,21 @@ typedef struct {
 	int mNow;
 } ControlCountdown;
 
+typedef struct {
+	int mIsActive;
+
+	int mContinueTextID;
+	int mValueTextID;
+
+	int mValue;
+	int mNow;
+	int mDuration;
+
+	void(*mFinishedCB)();
+	void(*mPressedContinueCB)();
+
+} Continue;
+
 static struct {
 	MugenSpriteFile mFightSprites;
 	MugenAnimations mFightAnimations;
@@ -185,6 +203,7 @@ static struct {
 	FightDisplay mFight;
 	KO mKO;
 	WinDisplay mWin;
+	Continue mContinue;
 
 	ControlCountdown mControl;
 
@@ -518,6 +537,10 @@ static void loadHitSparks() {
 	gData.mHitSparks = new_list();
 }
 
+static void loadContinue() {
+	gData.mContinue.mIsActive = 0;
+}
+
 static void loadFightUI(void* tData) {
 	(void)tData;
 
@@ -533,6 +556,7 @@ static void loadFightUI(void* tData) {
 	loadKO(&script);
 	loadWinDisplay(&script);
 	loadControl(&script);
+	loadContinue();
 	unloadMugenDefScript(script);
 
 	loadHitSparks();
@@ -664,7 +688,7 @@ static void updateWinDisplay() {
 	if (!gData.mWin.mIsDisplaying) return;
 
 	gData.mWin.mNow++;
-	if (gData.mWin.mNow >= gData.mWin.mDisplayTime) {
+	if (gData.mWin.mNow >= gData.mWin.mDisplayTime || hasPressedStartFlank()) {
 		removeDisplayedText(gData.mWin.mTextID);
 		gData.mWin.mCB();
 		gData.mWin.mIsDisplaying = 0;
@@ -697,11 +721,51 @@ static void updateTimeDisplay() {
 	if (gData.mTime.mNow >= gData.mTime.mFramesPerCount) {
 		gData.mTime.mNow = 0;
 		gData.mTime.mValue--;
-		if (gData.mTime.mValue < 0) { // TODO
+		if (gData.mTime.mValue < 0) {
 			gData.mTime.mValue = 0;
+			gData.mTime.mFinishedCB();
 		}
 
 		updateTimeDisplayText();
+	}
+}
+
+static void setContinueInactive() {
+	removeHandledText(gData.mContinue.mContinueTextID);
+	removeHandledText(gData.mContinue.mValueTextID);
+	gData.mContinue.mIsActive = 0;
+}
+
+
+static void decreaseContinueCounter() {
+
+	removeHandledText(gData.mContinue.mValueTextID);
+
+	gData.mContinue.mValue--;
+	char text[10];
+	sprintf(text, "%d", gData.mContinue.mValue);
+	gData.mContinue.mValueTextID = addHandledText(makePosition(307, 200, 20), text, 0, COLOR_WHITE, makePosition(40, 40, 1), makePosition(-5, -5, 0), makePosition(INF, INF, 1), INF);
+}
+
+static void updateContinueDisplay() {
+	if (!gData.mContinue.mIsActive) return;
+
+	if (hasPressedStartFlank()) {
+		setContinueInactive();
+		gData.mContinue.mPressedContinueCB();
+		return;
+	}
+	
+	gData.mContinue.mNow++;
+	if (gData.mContinue.mNow >= gData.mContinue.mDuration || hasPressedAFlank()) {
+		gData.mContinue.mNow = 0;
+		if (!gData.mContinue.mValue) {
+			setContinueInactive();
+			gData.mContinue.mFinishedCB();
+			return;
+		}
+
+		decreaseContinueCounter();
 	}
 }
 
@@ -715,6 +779,7 @@ static void updateFightUI(void* tData) {
 	updateWinDisplay();
 	updateControlCountdown();
 	updateTimeDisplay();
+	updateContinueDisplay();
 }
 
 
@@ -884,6 +949,26 @@ void playWinAnimation(char * tName, void(*tFunc)())
 	gData.mWin.mNow = 0;
 	gData.mWin.mCB = tFunc;
 	gData.mWin.mIsDisplaying = 1;
+}
+
+void playContinueAnimation(void(*tAnimationFinishedFunc)(), void(*tContinuePressedFunc)())
+{
+
+	gData.mContinue.mFinishedCB = tAnimationFinishedFunc;
+	gData.mContinue.mPressedContinueCB = tContinuePressedFunc;
+	gData.mContinue.mValue = 10;
+	gData.mContinue.mNow = 0;
+	gData.mContinue.mDuration = 60;
+
+	gData.mContinue.mContinueTextID = addHandledText(makePosition(170, 150, 20), "Continue?", 0, COLOR_WHITE, makePosition(40, 40, 1), makePosition(-5, -5, 0), makePosition(INF, INF, 1), INF);
+	gData.mContinue.mValueTextID = addHandledText(makePosition(290, 200, 20), "10", 0, COLOR_WHITE, makePosition(40, 40, 1), makePosition(-5, -5, 0), makePosition(INF, INF, 1), INF);
+
+	gData.mContinue.mIsActive = 1;
+}
+
+void setTimeDisplayFinishedCB(void(*tTimeDisplayFinishedFunc)())
+{
+	gData.mTime.mFinishedCB = tTimeDisplayFinishedFunc;
 }
 
 static void setSingleUIComponentInvisibleForOneFrame(int tAnimationID) {

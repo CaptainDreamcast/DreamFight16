@@ -65,6 +65,8 @@ typedef struct {
 	int mHasActiveFrameAngle;
 	double mOneFrameAngle;
 
+	int mHasStageDisabled;
+
 } MugenAnimationHandlerElement;
 
 static struct {
@@ -215,6 +217,7 @@ int addMugenAnimation(Player* p, MugenAnimation * tStartAnimation, MugenSpriteFi
 	e->mHasOneFrameScale = 0;
 	e->mHasOneFrameAngle = 0;
 	e->mHasActiveFrameAngle = 0;
+	e->mHasStageDisabled = 0;
 
 	startNewAnimationWithStartStep(e, 0); 
 	
@@ -241,7 +244,8 @@ int getRegisteredAnimationRemainingAnimationTime(int tID)
 	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
 	int remainingTime = (e->mAnimation->mTotalDuration - e->mOverallTime) - 1;
 	
-	
+	remainingTime = max(0, remainingTime); // TODO: fix when reading out
+
 	return remainingTime;
 }
 
@@ -299,6 +303,12 @@ void setRegisteredAnimationOneFrameFixedDrawAngle(int tID, double tAngle)
 {
 	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
 	e->mOneFrameAngle = tAngle;
+}
+
+void setRegisteredAnimationToNotUseStage(int tID)
+{
+	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
+	e->mHasStageDisabled = 1;
 }
 
 void changeMugenAnimationWithStartStep(int tID, MugenAnimation * tNewAnimation, int tStartStep)
@@ -452,7 +462,7 @@ static void drawSingleMugenAnimationSpriteCB(void* tCaller, void* tData) {
 
 	int isFacingRight = e->mIsFacingRight;
 	if (step->mIsFlippingHorizontally) isFacingRight ^= 1;
-
+	
 	if (!isFacingRight) {
 		Rectangle originalTexturePos = texturePos;
 		Position center = e->mPlayerPositionInStageCoordinates;
@@ -513,10 +523,15 @@ static void drawSingleMugenAnimation(void* tCaller, void* tData) {
 
 	MugenAnimationStep* step = getCurrentAnimationStep(e);
 
-	e->mPlayerPositionInStageCoordinates = vecAdd(*e->mBasePosition, getStageCoordinateSystemOffset(e->mPositionCoordinateP));
-	e->mPlayerPositionInStageCoordinates = vecAdd(e->mPlayerPositionInStageCoordinates, step->mDelta);
-	e->mPlayerPositionInStageCoordinates = vecScale(e->mPlayerPositionInStageCoordinates, getScreenFactorFromCoordinateP(e->mPositionCoordinateP));
+	if (e->mHasStageDisabled) {
+		e->mPlayerPositionInStageCoordinates = *e->mBasePosition;
+	} else {
+		e->mPlayerPositionInStageCoordinates = vecAdd(*e->mBasePosition, getStageCoordinateSystemOffset(e->mPositionCoordinateP));
+		e->mPlayerPositionInStageCoordinates = vecAdd(e->mPlayerPositionInStageCoordinates, step->mDelta);
+		e->mPlayerPositionInStageCoordinates = vecScale(e->mPlayerPositionInStageCoordinates, getScreenFactorFromCoordinateP(e->mPositionCoordinateP));
+	}
 	Position p = e->mPlayerPositionInStageCoordinates;
+
 
 	drawScale = vecScale(drawScale, getScreenFactorFromCoordinateP(e->mScaleCoordinateP));
 	drawScale.z = 1;

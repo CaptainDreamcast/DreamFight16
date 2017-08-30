@@ -11,6 +11,7 @@
 
 #include "fightscreen.h"
 #include "warningscreen.h"
+#include "twoplayerselectscreen.h"
 
 #ifdef DREAMCAST
 KOS_INIT_FLAGS(INIT_DEFAULT);
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
 
 	setMainFileSystem();
 	
-	setScreenAfterWrapperLogoScreen(&WarningScreen);
+	setScreenAfterWrapperLogoScreen(&FightScreen);
 	startScreenHandling(getLogoScreenFromWrapper());
 
 	exitGame();

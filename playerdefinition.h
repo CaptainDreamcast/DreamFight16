@@ -46,10 +46,15 @@ typedef struct Player_t{
 	int mControllerID;
 	int mID;
 	int mIsHelper;
+	int mIsProjectile;
+	int mProjectileID;
+	int mProjectileDataID;
 
 	List mHelpers; // contains Player
 	struct Player_t* mParent;
 	int mHelperIDInParent;
+
+	IntMap mProjectiles; // contains Player
 
 	char mDefinitionPath[1024];
 	PlayerHeader mHeader;
@@ -132,11 +137,14 @@ typedef struct Player_t{
 
 	int mRoundsWon;
 
+	int mIsBoundToScreen;
+
 	HitDefAttributeSlot mNotHitBy[2];
 } Player;
 
 void loadPlayers();
 void resetPlayers();
+void resetPlayersEntirely();
 void updatePlayers();
 
 void playerHitCB(Player* p, void* tHitData);
@@ -164,7 +172,6 @@ void setPlayerPhysics(Player* p, MugenStatePhysics tNewPhysics);
 int getPlayerMoveContactCounter(Player* p);
 void resetPlayerMoveContactCounter(Player* p);
 void setPlayerMoveContactCounterActive(Player* p);
-char* getPlayerHitDefinitionAttributes(Player* p);
 
 int getPlayerVariable(Player* p, int tIndex);
 void setPlayerVariable(Player* p, int tIndex, int tValue);
@@ -207,6 +214,7 @@ double getPlayerVerticalAcceleration(Player* p);
 double getPlayerForwardWalkVelocityX(Player* p);
 double getPlayerBackwardWalkVelocityX(Player* p);
 double getPlayerForwardRunVelocityX(Player* p);
+double getPlayerForwardRunVelocityY(Player* p);
 double getPlayerBackwardRunVelocityX(Player* p);
 double getPlayerBackwardRunVelocityY(Player* p);
 double getPlayerForwardRunJumpVelocityX(Player* p);
@@ -302,6 +310,7 @@ int getPlayerHelperAmountWithID(Player* p, int tID);
 Player* getPlayerHelperOrNullIfNonexistant(Player* p, int tID);
 
 int getPlayerProjectileAmount(Player* p);
+int getPlayerProjectileAmountWithID(Player* p, int tID);
 
 int getPlayerTimeLeftInHitPause(Player* p);
 
@@ -337,6 +346,7 @@ void setPlayerHeight(Player* p, int tHeight);
 void increasePlayerRoundsExisted();
 void increasePlayerRoundsWon(Player* p);
 int hasPlayerWonByKO(Player* p);
+int hasPlayerLostByKO(Player* p);
 int hasPlayerWonPerfectly(Player* p);
 int hasPlayerWon(Player* p);
 int hasPlayerLost(Player* p);
@@ -406,6 +416,9 @@ int getPlayerID(Player* p);
 void setPlayerID(Player* p, int tID);
 void setPlayerHelperControl(Player* p, int tCanControl);
 
+Player* createNewProjectileFromPlayer(Player* p);
+void removeProjectile(Player* p);
+
 int getPlayerControlTime(Player* p);
 
 void setPlayerDrawScale(Player* p, Vector3D tScale);
@@ -442,3 +455,5 @@ int getDefaultPlayerSparkNumberIsInPlayerFile(Player* p);
 int getDefaultPlayerSparkNumber(Player* p);
 int getDefaultPlayerGuardSparkNumberIsInPlayerFile(Player* p);
 int getDefaultPlayerGuardSparkNumber(Player* p);
+
+int isPlayerProjectile(Player* p);

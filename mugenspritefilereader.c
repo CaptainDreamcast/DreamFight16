@@ -188,7 +188,7 @@ static List loadTextureFromPalettedImageList1bpp(List tBufferList, Buffer tPalet
 }
 
 
-static Buffer decodeRLEBufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
+static Buffer decodeRLE5BufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
 	uint8_t* output = allocMemory(tFinalSize+10);
 	uint8_t* input = b.mData;
 
@@ -202,10 +202,15 @@ static Buffer decodeRLEBufferAndReturnOwnedBuffer(Buffer b, int tFinalSize) {
 			ip++;
 			uint8_t val = input[ip];
 			int k;
-			for (k = 0; k < steps; k++) output[op++] = val;
+			
+			for (k = 0; k < steps; k++) {
+				output[op++] = val;
+			}
+			if (op >= tFinalSize + 1) break;
 		}
 		else {
 			output[op++] = cur;
+			if (op >= tFinalSize + 1) break;
 		}
 
 		
@@ -282,7 +287,10 @@ static SubImageBuffer* getSingleAllocatedBufferFromSource(Buffer b, int x, int y
 		for (i = 0; i < dx; i++) {
 			assert(get2DBufferIndex(i, j, dx) < (uint32_t)dstSize);
 			if (x + i >= tWidth || y + j >= tHeight) dst[get2DBufferIndex(i, j, dx)] = 0;
-			else dst[get2DBufferIndex(i, j, dx)] = src[get2DBufferIndex(x+i, y+j, tWidth)];
+			else {
+				assert(get2DBufferIndex(x + i, y + j, tWidth) < (uint32_t)b.mLength);
+				dst[get2DBufferIndex(i, j, dx)] = src[get2DBufferIndex(x + i, y + j, tWidth)];
+			}
 		}
 	}
 
@@ -324,7 +332,6 @@ List breakImageBufferUpIntoMultipleBuffers(Buffer b, int tWidth, int tHeight) {
 			int dx = getMaximumSizeFit(widthLeft);
 			SubImageBuffer* newBuffer = getSingleAllocatedBufferFromSource(b, x, y, dx, dy, tWidth, tHeight);
 			list_push_back_owned(&ret, newBuffer);
-
 			x += dx;
 		}
 		y += dy;
@@ -367,22 +374,29 @@ static MugenSpriteFileSprite* loadTextureFromPCXBuffer(MugenSpriteFile* tDst, in
 	int bytesPerPixel = header.mBitsPerPixel / 8;
 	int w = header.mMaxX - header.mMinX + 1;
 	int h = header.mMaxY - header.mMinY + 1;
-	int32_t pcxImageSize = bytesPerPixel*w*h;
-
+	int32_t pcxImageSize = bytesPerPixel*header.mBytesPerLine*h;
+	
 	assert(header.mBitsPerPixel == 8);
 	assert(header.mEncoding == 1);
 	assert(header.mPlaneAmount == 1);
-	assert(header.mBytesPerLine == w);
+	w = header.mBytesPerLine; // TODO: check what's correct
 
-	int encodedSize = b.mLength - sizeof(PCXHeader) - 256 * 3;
+	int encodedSize;
+	if (mIsUsingOwnPalette) {
+		encodedSize = b.mLength - sizeof(PCXHeader) - 256 * 3;
+	}
+	else {
+		encodedSize = b.mLength - sizeof(PCXHeader);
+	}
+
 	Buffer encodedImageBuffer = makeBuffer(p, encodedSize);
-	Buffer rawImageBuffer = decodeRLEBufferAndReturnOwnedBuffer(encodedImageBuffer, pcxImageSize);
+	Buffer rawImageBuffer = decodeRLE5BufferAndReturnOwnedBuffer(encodedImageBuffer, pcxImageSize);
 
 	if (mIsUsingOwnPalette) {
 		Buffer* insertPalette = loadPCXPaletteToAllocatedBuffer(p, encodedSize);
 		vector_push_back_owned(&tDst->mPalettes, insertPalette);
 	}
-
+	assert(vector_size(&tDst->mPalettes));
 	Buffer* paletteBuffer = vector_get_back(&tDst->mPalettes);
 
 	return makeMugenSpriteFileSpriteFromRawAndPaletteBuffer(rawImageBuffer, *paletteBuffer, w, h, tAxisOffset);

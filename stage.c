@@ -258,9 +258,9 @@ static int isActionGroup(MugenDefScriptGroup* tGroup) {
 static void addBackgroundElementToStageHandler(StageBackgroundElement* e) {
 	e->mStart.z = e->mListPosition + e->mLayerNo * 30; // TODO
 	if (e->mType == STAGE_BACKGROUND_STATIC) {
-		addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing);
+		addMugenStageHandlerStaticBackgroundElement(e->mStart, e->mSpriteNo.x, e->mSpriteNo.y, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing, gData.mStageInfo.mLocalCoordinates);
 	} else if (e->mType == STAGE_BACKGROUND_ANIMATED) {
-		addMugenStageHandlerAnimatedBackgroundElement(e->mStart, e->mActionNumber, &gData.mAnimations, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing);
+		addMugenStageHandlerAnimatedBackgroundElement(e->mStart, e->mActionNumber, &gData.mAnimations, &gData.mSprites, e->mDelta, e->mTile, e->mTileSpacing, gData.mStageInfo.mLocalCoordinates);
 	}
 	else {
 		logError("Unable to determine bg element type");

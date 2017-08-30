@@ -22,10 +22,11 @@
 #include "config.h"
 #include "playerhitdata.h"
 #include "titlescreen.h"
+#include "projectile.h"
 
 static Screen* getNextFightScreenScreen() {
 	if (hasPressedAbortFlank()) {
-		return &TitleScreen;
+		abortScreenHandling(); // TODO
 	}
 
 	return NULL;
@@ -36,6 +37,7 @@ static void loadFightScreen() {
 	
 	instantiateActor(MugenConfig);
 	instantiateActor(HitDataHandler);
+	instantiateActor(ProjectileHandler);
 	instantiateActor(MugenAnimationHandler);
 	instantiateActor(MugenCommandHandler);
 	instantiateActor(MugenStateHandler);
@@ -44,13 +46,19 @@ static void loadFightScreen() {
 	setStageMugenDefinition("assets/stages/stage0.def");
 	instantiateActor(StageBP);
 
-	setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
+	
+	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
 	//setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
+	setPlayerDefinitionPath(0, "assets/Beat/Beat.def");
 	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
+	//setPlayerDefinitionPath(0, "assets/SonicV2/SonicV2.def");
 
 	//setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
 	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");
+	setPlayerDefinitionPath(1, "assets/Beat/Beat.def");
 	setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
+	setPlayerDefinitionPath(1, "assets/SonicV2/SonicV2.def");
+
 	loadPlayers();
 
 	instantiateActor(FightUIBP);

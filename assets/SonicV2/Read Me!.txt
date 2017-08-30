@@ -1,0 +1,78 @@
+Sonic Version 2 for Mugen (Read me)
+
+created by Brandon Clay (Claymizer) 
+
+written= 04/24/2008
+-----------------------------------------------------------
+Why I made this?
+
+I did not have mugen for a for a short, and when I redownloaded it, I downloaded my characters along with it.
+I then fought my "old" Sonic several times, and i ALWAYS lost to him. Plus I decided that he has bad animation.
+I told myself that I could do way better, and this is what I've been creating over the past 2 months.
+
+-----------------------------------------------------------
+What's new
+
+-New Attacks
+This Sonic is completely different from the first one I've made. It's attacks are sort of
+based on the Sonic from Super Smash Brothers:Brawl.
+
+
+-5 specials
+
+Homing Attack = Down, Forward, (any kick)
+
+Ring Toss = Down, Forward, (any punch)
+
+Spin Dash = Down, Backward, (any punch)
+
+Foot Storm = Any kick button in rapid succesion (3 times)
+
+Spring Jump = Down, Up (Or just press Up while crouching)
+
+
+-2 Hypers,
+Super Sonic = Down, Forward, any two punches
+
+and Dark Super Sonic = Down, Down, (any punch)
+ Note: During the Dark Super Sonic Special, there is a new catch. It does not require any power, but instead takes away life
+force. Make sure you hit!(Use at own risk...) 
+
+
+-7 colors (i'll add more when I update......)
+Original
+8-bit
+Black
+Inverted Palette
+Mephiles the Dark
+Scourge the hedgehog
+Metal Sonic
+-Attacks can be comboed from weakest to stongest.
+-2 different voicepacks(Special Thanks to Marshtomp8)
+
+Ryan Drummond or Jason Griffith
+
+For Ryan's voice open the def file and make sure the sound line looks like this- sound=ryan.snd
+
+
+And, for Jason's voice open the def file and make sure the sound line looks like this- sound=jason.snd
+
+
+-----------------------------------------------------------
+Special Thanks and Credits
+
+-Elecbyte for creating Mugen 
+-Sega for creating Sonic the hedgehog
+-Nintendo for making Super Smash Bros. Brawl and creating the sound test feature.
+-Paint Shop Pro for converting my pictures
+-Fighter Factory for making Character Creation easy
+-Cyanide for hosting his tutorials on his side
+-<Alive> For creating Character Creation tutorial
+-Charles Millner of my high school (encouraged new tools for mugen)
+-Myself, for taking the time to Sonic and Sonic V2
+-Marshtomp8 for providing the Metal Sonic Palette and the Ryan Drummond voicepack!
+-Anyone else who helped the slightest bit
+
+
+           Thanks,
+                    -Brandon D. Clay

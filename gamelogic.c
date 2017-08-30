@@ -1,6 +1,9 @@
 #include "gamelogic.h"
 
+#include <assert.h>
+
 #include <tari/screeneffect.h>
+#include <tari/wrapper.h>
 
 #include "playerdefinition.h"
 #include "fightui.h"
@@ -16,6 +19,10 @@ static struct {
 	int mRoundNotOverFlag;
 
 	Player* mRoundWinner;
+
+	Screen* mNextScreen;
+
+	int mIsInSinglePlayerMode;
 } gData;
 
 static void fightAnimationFinishedCB() {
@@ -32,6 +39,13 @@ static void introFinished() {
 	playRoundAnimation(gData.mRoundNumber, roundAnimationFinishedCB);
 }
 
+static void startIntro() {
+	gData.mRoundStateNumber = 1;
+	gData.mIsDisplayingIntro = 2;
+	changePlayerState(getRootPlayer(0), 5900);
+	changePlayerState(getRootPlayer(1), 5900);
+}
+
 static void fadeInFinished(void* tData) {
 	(void)tData;
 
@@ -42,10 +56,7 @@ static void fadeInFinished(void* tData) {
 	return;
 	*/
 
-	gData.mRoundStateNumber = 1;
-	gData.mIsDisplayingIntro = 2;
-	changePlayerState(getRootPlayer(0), 5900);
-	changePlayerState(getRootPlayer(1), 5900);
+	startIntro();
 }
 
 static void startRound() {
@@ -60,8 +71,33 @@ static void startRound() {
 	addFadeIn(30, fadeInFinished, NULL);
 }
 
+static void resetRound(void*);
+
+static void setWinner() {
+	if (getPlayerLife(getRootPlayer(0)) >= getPlayerLife(getRootPlayer(1))) {
+		gData.mRoundWinner = getRootPlayer(0);
+	}
+	else {
+		gData.mRoundWinner = getRootPlayer(1);
+	}
+
+	gData.mRoundStateNumber = 3;
+	setPlayerControl(getRootPlayer(0), 0);
+	setPlayerControl(getRootPlayer(1), 0);
+}
+
+static void startWinPose();
+
+static void timerFinishedCB() {
+	disableTimer();
+	setWinner();
+	startWinPose();
+}
+
 static void loadGameLogic(void* tData) {
 	(void)tData;
+	setTimeDisplayFinishedCB(timerFinishedCB);
+
 	gData.mGameTime = 0;
 	gData.mRoundNumber = 1;
 	startRound();
@@ -69,7 +105,7 @@ static void loadGameLogic(void* tData) {
 
 static void updateIntro() {
 	if (!gData.mIsDisplayingIntro) return;
-
+	
 	if (gData.mIsDisplayingIntro == 2) { // TODO: fix call stuff
 		gData.mIsDisplayingIntro--;
 		return;
@@ -84,8 +120,51 @@ static void updateIntro() {
 	}
 }
 
+static void goToNextScreen(void* tCaller) {
+	(void)tCaller;
+	if (!gData.mNextScreen) return;
+
+	setNewScreen(gData.mNextScreen);
+}
+
+static void goToGameOverScreen(void* tCaller) {
+	(void)tCaller;
+	assert(0);
+}
+
+static void continueAnimationFinishedCB() {
+	addFadeOut(30, goToGameOverScreen, NULL);
+}
+
+static void resetGameLogic(void* tCaller) {
+	(void)tCaller;
+
+	resetRound(NULL);
+	resetPlayersEntirely();
+
+	gData.mGameTime = 0;
+	gData.mRoundNumber = 1;
+}
+
+static void resetGameStart() {
+	addFadeOut(30, resetGameLogic, NULL);
+}
+
+static void continuePressedCB() {
+	resetGameStart();
+}
+
+static void startContinue() {
+	playContinueAnimation(continueAnimationFinishedCB, continuePressedCB);
+}
+
 static void winAnimationFinishedCB() {
-	printf("over\n");
+	if (gData.mIsInSinglePlayerMode && getPlayerAILevel(gData.mRoundWinner)) {
+		startContinue();
+	}
+	else {
+		addFadeOut(30, goToNextScreen, NULL);
+	}
 }
 
 static void startWinPose() {
@@ -102,12 +181,9 @@ static void koAnimationFinishedCB() {
 	startWinPose();
 }
 
-static void startKO(int i) {
+static void startKO() {
 	disableTimer();
-	gData.mRoundWinner = getRootPlayer(i ^ 1);
-	gData.mRoundStateNumber = 3;
-	setPlayerControl(getRootPlayer(0), 0);
-	setPlayerControl(getRootPlayer(1), 0);
+	setWinner();
 	playKOAnimation(koAnimationFinishedCB);
 }
 
@@ -118,7 +194,7 @@ static void updateWinCondition() {
 	for (i = 0; i < 2; i++) {
 
 		if (!getPlayerLife(getRootPlayer(i))) {
-			startKO(i);
+			startKO();
 			break;
 		}
 	}
@@ -200,5 +276,20 @@ int isMatchOver()
 void setRoundNotOverFlag()
 {
 	gData.mRoundNotOverFlag = 1; // TODO: use
+}
+
+void setScreenAfterFightScreen(Screen * tScreen)
+{
+	gData.mNextScreen = tScreen;
+}
+
+void setGameModeStory()
+{
+	gData.mIsInSinglePlayerMode = 1;
+}
+
+void setGameModeTwoPlayer()
+{
+	gData.mIsInSinglePlayerMode = 0;
 }
 

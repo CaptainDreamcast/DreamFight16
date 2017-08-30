@@ -13,6 +13,7 @@ int getRegisteredStateState(int tID);
 int getRegisteredStatePreviousState(int tID);
 void pauseRegisteredStateMachine(int tID);
 void unpauseRegisteredStateMachine(int tID);
+void disableRegisteredStateMachine(int tID);
 
 int getRegisteredStateTimeInState(int tID);
 void setRegisteredStateTimeInState(int tID, int tTime);

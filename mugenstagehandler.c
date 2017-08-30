@@ -208,11 +208,11 @@ static void addMugenStageHandlerBackgroundElementTiles(StaticStageHandlerElement
 
 }
 
-static void addMugenStageHandlerBackgroundElement(Position tStart, MugenAnimation* tAnimation, MugenSpriteFile * tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing) {
+static void addMugenStageHandlerBackgroundElement(Position tStart, MugenAnimation* tAnimation, MugenSpriteFile * tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing, Vector3DI tCoordinates) {
 	StaticStageHandlerElement* e = allocMemory(sizeof(StaticStageHandlerElement));
 	e->mStart = tStart;
 	e->mDelta = tDelta;
-	e->mCoordinates = makeVector3DI(320, 240, 0);
+	e->mCoordinates = tCoordinates;
 
 	e->mAnimation = tAnimation;
 	e->mAnimationReferences = new_list();
@@ -223,14 +223,14 @@ static void addMugenStageHandlerBackgroundElement(Position tStart, MugenAnimatio
 	vector_push_back_owned(&gData.mStaticElements, e);
 }
 
-void addMugenStageHandlerAnimatedBackgroundElement(Position tStart, int tAnimationID, MugenAnimations* tAnimations, MugenSpriteFile * tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing)
+void addMugenStageHandlerAnimatedBackgroundElement(Position tStart, int tAnimationID, MugenAnimations* tAnimations, MugenSpriteFile * tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing, Vector3DI tCoordinates)
 {
-	addMugenStageHandlerBackgroundElement(tStart, getMugenAnimation(tAnimations, tAnimationID), tSprites, tDelta, tTile, tTileSpacing);
+	addMugenStageHandlerBackgroundElement(tStart, getMugenAnimation(tAnimations, tAnimationID), tSprites, tDelta, tTile, tTileSpacing, tCoordinates);
 }
 
-void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing)
+void addMugenStageHandlerStaticBackgroundElement(Position tStart, int tSpriteGroup, int tSpriteItem, MugenSpriteFile* tSprites, Position tDelta, Vector3DI tTile, Vector3DI tTileSpacing, Vector3DI tCoordinates)
 {
-	addMugenStageHandlerBackgroundElement(tStart, createOneFrameMugenAnimationForSprite(tSpriteGroup, tSpriteItem), tSprites, tDelta, tTile, tTileSpacing);
+	addMugenStageHandlerBackgroundElement(tStart, createOneFrameMugenAnimationForSprite(tSpriteGroup, tSpriteItem), tSprites, tDelta, tTile, tTileSpacing, tCoordinates);
 }
 
 Position * getMugenStageHandlerCameraPositionReference()

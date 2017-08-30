@@ -34,3 +34,4 @@ windows/Debug/*
 *.user
 *.db
 *.opendb
+*.ilk

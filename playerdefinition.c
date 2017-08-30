@@ -20,6 +20,7 @@
 #include "mugencommandhandler.h"
 #include "mugenstatehandler.h"
 #include "playerhitdata.h"
+#include "projectile.h"
 
 #include "stage.h"
 #include "fightui.h"
@@ -141,6 +142,7 @@ static void initHitDefAttributeSlot(HitDefAttributeSlot* tSlot) {
 
 static void resetHelperState(Player* p) {
 	p->mHelpers = new_list();
+	p->mProjectiles = new_int_map();
 
 	p->mNoWalkFlag = 0;
 	p->mNoAutoTurnFlag = 0;
@@ -204,12 +206,17 @@ static void loadPlayerState(Player* p) {
 	p->mParent = NULL;
 	p->mHelperIDInParent = -1;
 
+	p->mIsProjectile = 0;
+	p->mProjectileID = -1;
+	p->mProjectileDataID = -1;
+
 	p->mPower = 2000; // TODO: lower
+	
+	p->mIsBoundToScreen = 1;
 }
 
 static void loadPlayerStateWithConstantsLoaded(Player* p) {
 	p->mLife = p->mConstants.mHeader.mLife; 
-	p->mLife = 100; // TODO: fix
 }
 
 static void loadSinglePlayerFromMugenDefinition(Player* p)
@@ -230,7 +237,7 @@ void loadPlayers() {
 	for (i = 0; i < 2; i++) {
 		gData.mPlayers[i].mRoot = &gData.mPlayers[i];
 		gData.mPlayers[i].mOtherPlayer = &gData.mPlayers[i ^ 1];
-		gData.mPlayers[i].mPreferredPalette = i; // TODO
+		gData.mPlayers[i].mPreferredPalette = 0; // TODO
 		gData.mPlayers[i].mRootID = i;
 		gData.mPlayers[i].mControllerID = i; // TODO: remove
 		loadSinglePlayerFromMugenDefinition(&gData.mPlayers[i]);
@@ -257,8 +264,20 @@ void resetPlayers()
 {
 	resetSinglePlayer(&gData.mPlayers[0]);
 	resetSinglePlayer(&gData.mPlayers[1]);
+}
 
+static void resetSinglePlayerEntirely(Player* p) {
+	p->mRoundsWon = 0;
+	p->mRoundsExisted = 0;
+	p->mPower = 0;
+	setPowerBarPercentage(p, 0);
+}
 
+void resetPlayersEntirely()
+{
+	resetPlayers();
+	resetSinglePlayerEntirely(&gData.mPlayers[0]);
+	resetSinglePlayerEntirely(&gData.mPlayers[1]);
 }
 
 
@@ -560,6 +579,8 @@ static void updatePushFlags() {
 }
 
 static void updateStageBorder(Player* p) {
+	if (!p->mIsBoundToScreen) return;
+
 	double left = getStageLeftOfScreenBasedOnPlayer(getPlayerCoordinateP(p));
 	double right = getStageRightOfScreenBasedOnPlayer(getPlayerCoordinateP(p));
 	int lx = getStageLeftEdgeMinimumPlayerDistance(getPlayerCoordinateP(p));
@@ -913,6 +934,9 @@ void playerHitCB(Player* p, void* tHitData)
 	
 	setPlayerMoveContactCounterActive(otherPlayer);
 
+	if (isPlayerProjectile(otherPlayer)) {
+		handleProjectileHit(otherPlayer);
+	}
 }
 
 void setPlayerDefinitionPath(int i, char * tDefinitionPath)
@@ -1068,13 +1092,6 @@ void setPlayerMoveContactCounterActive(Player* p) {
 	increaseComboCounter(p);
 }
 
-char * getPlayerHitDefinitionAttributes(Player* p)
-{
-	// TODO
-	(void)p;
-	return "";
-}
-
 int getPlayerVariable(Player* p, int tIndex)
 {
 	// assert(tIndex < 100); // TODO: figure out
@@ -1163,6 +1180,7 @@ int getPlayerAnimationNumber(Player* p)
 
 int getRemainingPlayerAnimationTime(Player* p)
 {
+	// printf("%d %d remaining time %d\n", p->mRootID, p->mID, getRegisteredAnimationRemainingAnimationTime(p->mAnimationID));
 	return getRegisteredAnimationRemainingAnimationTime(p->mAnimationID);
 }
 
@@ -1287,6 +1305,11 @@ double getPlayerForwardRunVelocityX(Player* p)
 	return p->mConstants.mVelocityData.mRunForward.x;
 }
 
+double getPlayerForwardRunVelocityY(Player* p)
+{
+	return p->mConstants.mVelocityData.mRunForward.y;
+}
+
 double getPlayerBackwardRunVelocityX(Player* p)
 {
 	return p->mConstants.mVelocityData.mRunBackward.x;
@@ -1352,7 +1375,7 @@ void setPlayerVelocityX(Player* p, double x, int tCoordinateP)
 {
 	double scale = getPlayerCoordinateP(p) / tCoordinateP;
 	Velocity* vel = getHandledPhysicsVelocityReference(p->mPhysicsID);
-	double fx = x*scale*2; // TODO: fix
+	double fx = x*scale;
 	if (p->mFaceDirection == FACE_DIRECTION_LEFT) fx *= -1;
 	vel->x = fx;
 }
@@ -1385,7 +1408,7 @@ void addPlayerVelocityX(Player* p, double x, int tCoordinateP)
 
 	double scale = getPlayerCoordinateP(p) / tCoordinateP;
 	Velocity* vel = getHandledPhysicsVelocityReference(p->mPhysicsID);
-	double fx = x*scale*2; // TODO
+	double fx = x*scale;
 	if (p->mFaceDirection == FACE_DIRECTION_LEFT) fx *= -1;
 	vel->x += fx;
 }
@@ -1452,6 +1475,11 @@ int hasPlayerStateSelf(Player * p, int mNewState)
 
 void changePlayerState(Player* p, int mNewState)
 {
+	if (!hasPlayerStateSelf(p, mNewState)) {
+		logWarning("Trying to change into state that does not exist");
+		logWarningInteger(mNewState);
+		return;
+	}
 	changeHandledStateMachineState(p->mStateMachineID, mNewState);
 	setRegisteredStateTimeInState(p->mStateMachineID, -1);
 	updateSingleStateMachineByID(p->mStateMachineID); // TODO: think
@@ -1466,6 +1494,11 @@ void changePlayerStateToOtherPlayerStateMachine(Player * p, Player * tOtherPlaye
 
 void changePlayerStateBeforeImmediatelyEvaluatingIt(Player * p, int mNewState)
 {
+	if (!hasPlayerStateSelf(p, mNewState)) {
+		logWarning("Trying to change into state that does not exist");
+		logWarningInteger(mNewState);
+		return;
+	}
 	changeHandledStateMachineState(p->mStateMachineID, mNewState);
 
 }
@@ -1783,6 +1816,13 @@ int getPlayerProjectileAmount(Player* p)
 	return 0; // TODO
 }
 
+int getPlayerProjectileAmountWithID(Player * p, int tID)
+{
+	(void)p;
+	(void)tID;
+	return 0; // TODO
+}
+
 
 int getPlayerTimeLeftInHitPause(Player* p)
 {
@@ -1983,6 +2023,12 @@ int hasPlayerWonByKO(Player* p)
 	return 0; // TODO
 }
 
+int hasPlayerLostByKO(Player * p)
+{
+	(void)p;
+	return 0; // TODO
+}
+
 int hasPlayerWonPerfectly(Player* p)
 {
 	return hasPlayerWon(p) && p->mLife == p->mConstants.mHeader.mLife;
@@ -2083,7 +2129,7 @@ double getPlayerFallDefenseMultiplier(Player* p)
 int getPlayerAILevel(Player* p)
 {
 	(void)p;
-	return p->mRootID*0; // TODO
+	return p->mRootID*8; // TODO
 }
 
 int getPlayerLife(Player* p)
@@ -2287,20 +2333,24 @@ static void removePlayerBoundHelpers(Player* p) {
 	delete_list(&p->mBoundHelpers);
 }
 
-void destroyPlayer(Player * p)
+static void destroyGeneralPlayer(Player* p) {
+	removeRegisteredStateMachine(p->mStateMachineID);
+	removeRegisteredAnimation(p->mAnimationID);
+	removeFromPhysicsHandler(p->mPhysicsID);
+	removePlayerHitData(p);
+	freeMemory(p);
+}
+
+void destroyPlayer(Player * p) // TODO: rename
 {
 	assert(p->mIsHelper);
 	assert(p->mParent);
 	assert(p->mHelperIDInParent != -1);
 
-	removeRegisteredStateMachine(p->mStateMachineID);
-	removeRegisteredAnimation(p->mAnimationID);
-	removeFromPhysicsHandler(p->mPhysicsID);
-	removePlayerHitData(p);
 	removePlayerBoundHelpers(p);
 	movePlayerHelpers(p);
 	removeHelperFromPlayer(p->mParent, p);
-	freeMemory(p);
+	destroyGeneralPlayer(p);
 }
 
 void addHelperToPlayer(Player * p, Player * tHelper)
@@ -2325,6 +2375,36 @@ void setPlayerHelperControl(Player * p, int tCanControl)
 	if (!tCanControl) {
 		setRegisteredStateDisableCommandState(p->mStateMachineID);
 	}
+}
+
+static void addProjectileToRoot(Player* tPlayer, Player* tProjectile) {
+	Player* root = tPlayer->mRoot;
+
+	tProjectile->mProjectileID = int_map_push_back(&root->mProjectiles, tProjectile);
+}
+
+Player * createNewProjectileFromPlayer(Player * p)
+{
+	Player* helper = allocMemory(sizeof(Player));
+	*helper = *p;
+
+	resetHelperState(helper);
+	setPlayerExternalDependencies(helper);
+	disableRegisteredStateMachine(helper->mStateMachineID);
+	addProjectileToRoot(p, helper);
+	addAdditionalProjectileData(helper);
+	setPlayerPhysics(helper, MUGEN_STATE_PHYSICS_NONE);
+	setPlayerIsFacingRight(helper, getPlayerIsFacingRight(p));
+	helper->mIsProjectile = 1;
+
+	return helper;
+}
+
+void removeProjectile(Player* p) {
+	assert(p->mIsProjectile);
+	assert(p->mProjectileID != -1);
+	removeAdditionalProjectileData(p);
+	destroyGeneralPlayer(p);
 }
 
 int getPlayerControlTime(Player * p)
@@ -2516,11 +2596,11 @@ int getPlayerPaletteNumber(Player * p)
 
 void setPlayerScreenBound(Player * p, int tIsBoundToScreen, int tIsCameraFollowingX, int tIsCameraFollowingY)
 {
-	(void)p;
-	(void)tIsBoundToScreen;
+	p->mIsBoundToScreen = tIsBoundToScreen;
 	(void)tIsCameraFollowingX;
 	(void)tIsCameraFollowingY;
 	// TODO
+
 }
 
 static void resetPlayerHitBySlotGeneral(Player * p, int tSlot) {
@@ -2596,4 +2676,9 @@ int getDefaultPlayerGuardSparkNumberIsInPlayerFile(Player * p)
 int getDefaultPlayerGuardSparkNumber(Player * p)
 {
 	return p->mConstants.mHeader.mGuardSparkNo;
+}
+
+int isPlayerProjectile(Player * p)
+{
+	return p->mIsProjectile;
 }

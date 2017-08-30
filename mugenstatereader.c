@@ -37,17 +37,18 @@ static struct {
 
 static void handleMugenStateDefType(MugenState* tState, MugenDefScriptGroupElement* tElement) {
 	char* type = getAllocatedMugenDefStringVariableAsElement(tElement);
-	
-	if (!strcmp("S", type)) {
+	turnStringLowercase(type);
+
+	if (!strcmp("s", type)) {
 		tState->mType = MUGEN_STATE_TYPE_STANDING;
-	} else if (!strcmp("C", type)) {
+	} else if (!strcmp("c", type)) {
 		tState->mType = MUGEN_STATE_TYPE_CROUCHING;
-	} else if (!strcmp("A", type)) {
+	} else if (!strcmp("a", type)) {
 		tState->mType = MUGEN_STATE_TYPE_AIR;
-	} else if (!strcmp("L", type)) {
+	} else if (!strcmp("l", type)) {
 		tState->mType = MUGEN_STATE_TYPE_LYING;
 	}
-	else if (!strcmp("U", type)) {
+	else if (!strcmp("u", type)) {
 		tState->mType = MUGEN_STATE_TYPE_UNCHANGED;
 	}
 	else {
@@ -61,16 +62,17 @@ static void handleMugenStateDefType(MugenState* tState, MugenDefScriptGroupEleme
 
 static void handleMugenStateDefMoveType(MugenState* tState, MugenDefScriptGroupElement* tElement) {
 	char* moveType = getAllocatedMugenDefStringVariableAsElement(tElement);
+	turnStringLowercase(moveType);
 
-	if (!strcmp("A", moveType)) {
+	if (!strcmp("a", moveType)) {
 		tState->mMoveType = MUGEN_STATE_MOVE_TYPE_ATTACK;
-	} else if (!strcmp("I", moveType)) {
+	} else if (!strcmp("i", moveType)) {
 		tState->mMoveType = MUGEN_STATE_MOVE_TYPE_IDLE;
 	}
-	else if (!strcmp("H", moveType)) {
+	else if (!strcmp("h", moveType)) {
 		tState->mMoveType = MUGEN_STATE_MOVE_TYPE_BEING_HIT;
 	}
-	else if (!strcmp("U", moveType)) {
+	else if (!strcmp("u", moveType)) {
 		tState->mMoveType = MUGEN_STATE_MOVE_TYPE_UNCHANGED;
 	}
 	else {
@@ -84,19 +86,20 @@ static void handleMugenStateDefMoveType(MugenState* tState, MugenDefScriptGroupE
 
 static void handleMugenStateDefPhysics(MugenState* tState, MugenDefScriptGroupElement* tElement) {
 	char* physics = getAllocatedMugenDefStringVariableAsElement(tElement);
+	turnStringLowercase(physics);
 
-	if (!strcmp("U", physics)) {
+	if (!strcmp("u", physics)) {
 		tState->mPhysics = MUGEN_STATE_PHYSICS_UNCHANGED;
-	} else if (!strcmp("S", physics)) {
+	} else if (!strcmp("s", physics)) {
 		tState->mPhysics = MUGEN_STATE_PHYSICS_STANDING;
 	}
-	else if (!strcmp("C", physics)) {
+	else if (!strcmp("c", physics)) {
 		tState->mPhysics = MUGEN_STATE_PHYSICS_CROUCHING;
 	}
-	else if (!strcmp("A", physics)) {
+	else if (!strcmp("a", physics)) {
 		tState->mPhysics = MUGEN_STATE_PHYSICS_AIR;
 	}
-	else if (!strcmp("N", physics)) {
+	else if (!strcmp("n", physics)) {
 		tState->mPhysics = MUGEN_STATE_PHYSICS_NONE;
 	}
 	else {

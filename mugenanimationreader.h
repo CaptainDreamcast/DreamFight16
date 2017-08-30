@@ -49,5 +49,6 @@ MugenAnimations loadMugenAnimationFile(char* tPath);
 int hasMugenAnimation(MugenAnimations* tAnimations, int i);
 MugenAnimation* getMugenAnimation(MugenAnimations* tAnimations, int i);
 MugenAnimation* createOneFrameMugenAnimationForSprite(int tSpriteGroup, int tSpriteItem);
+void destroyMugenAnimation(MugenAnimation* tAnimation);
 
 Vector3DI  getAnimationFirstElementSpriteSize(MugenAnimation* tAnimation, MugenSpriteFile* tSprites);

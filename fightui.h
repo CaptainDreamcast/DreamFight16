@@ -21,6 +21,8 @@ void playRoundAnimation(int tRound, void(*tFunc)());
 void playFightAnimation(void(*tFunc)());
 void playKOAnimation(void(*tFunc)());
 void playWinAnimation(char* tName, void(*tFunc)());
+void playContinueAnimation(void(*tAnimationFinishedFunc)(), void(*tContinuePressedFunc)());
+void setTimeDisplayFinishedCB(void(*tTimeDisplayFinishedFunc)());
 
 void setBarInvisibleForOneFrame();
 

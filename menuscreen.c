@@ -6,6 +6,8 @@
 
 #include "fightscreen.h"
 #include "titlescreen.h"
+#include "twoplayerselectscreen.h"
+#include "storyscreen.h"
 
 static void fadeOutFinished(void* tData) {
 	Screen* screen = tData;
@@ -16,9 +18,14 @@ static void fadeOut(Screen* tScreen) {
 	addFadeOut(30, fadeOutFinished, tScreen);
 }
 
-static void selectFightOption(void* tData) {
+static void selectStoryOption(void* tData) {
 	(void)tData;
-	fadeOut(&FightScreen);
+	fadeOut(&StoryScreen);
+}
+
+static void selectTwoPlayerOption(void* tData) {
+	(void)tData;
+	fadeOut(&TwoPlayerSelectScreen);
 }
 
 static void loadMenuScreen() {
@@ -28,9 +35,8 @@ static void loadMenuScreen() {
 	setOptionTextSize(20);
 	setOptionTextBreakSize(-5);
 	
-	addOption(makePosition(50, 100, 1), "Super Story Mode", selectFightOption, NULL);
-	addOption(makePosition(50, 150, 1), "Arcade Mode", selectFightOption, NULL);
-	addOption(makePosition(50, 200, 1), "2 Player Mode", selectFightOption, NULL);
+	addOption(makePosition(70, 100, 1), "Super Story Mode", selectStoryOption, NULL);
+	addOption(makePosition(70, 150, 1), "2 Player Mode", selectTwoPlayerOption, NULL);
 
 	addFadeIn(30, NULL, NULL);
 }

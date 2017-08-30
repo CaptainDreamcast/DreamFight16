@@ -478,6 +478,14 @@ MugenAnimation * createOneFrameMugenAnimationForSprite(int tSpriteGroup, int tSp
 	return e;
 }
 
+void destroyMugenAnimation(MugenAnimation * tAnimation)
+{
+	vector_empty(&tAnimation->mSteps); // TODO: free everything in steps
+	delete_vector(&tAnimation->mSteps); 
+
+	freeMemory(tAnimation);
+}
+
 Vector3DI getAnimationFirstElementSpriteSize(MugenAnimation * tAnimation, MugenSpriteFile* tSprites)
 {
 	assert(vector_size(&tAnimation->mSteps));

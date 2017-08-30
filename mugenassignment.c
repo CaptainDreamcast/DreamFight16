@@ -627,6 +627,7 @@ static int isVariable(char* tText) {
 	if (!strcmp("numhelper", testText)) return 1;
 	if (!strcmp("numexplod", testText)) return 1;
 	if (!strcmp("numproj", testText)) return 1;
+	if (!strcmp("numprojid", testText)) return 1;
 	if (!strcmp("ailevel", testText)) return 1;
 	if (!strcmp("random", testText)) return 1;
 	if (!strcmp("power", testText)) return 1;
@@ -646,6 +647,7 @@ static int isVariable(char* tText) {
 	if (!strcmp("win", testText)) return 1;
 	if (!strcmp("lose", testText)) return 1;
 	if (!strcmp("winko", testText)) return 1;
+	if (!strcmp("loseko", testText)) return 1;
 	if (!strcmp("winperfect", testText)) return 1;
 	if (!strcmp("palno", testText)) return 1;
 	if (!strcmp("life", testText)) return 1;
@@ -681,6 +683,7 @@ static int isVariable(char* tText) {
 	if (!strcmp("velocity.walk.fwd.x", testText)) return 1;
 	if (!strcmp("velocity.walk.back.x", testText)) return 1;
 	if (!strcmp("velocity.run.fwd.x", testText)) return 1;
+	if (!strcmp("velocity.run.fwd.y", testText)) return 1;
 	if (!strcmp("velocity.run.back.x", testText)) return 1;
 	if (!strcmp("velocity.run.back.y", testText)) return 1;
 	if (!strcmp("velocity.runjump.fwd.x", testText)) return 1;
@@ -774,6 +777,8 @@ static int isVariable(char* tText) {
 	if (!strcmp("mafd", testText)) return 1;
 	if (!strcmp("mafp", testText)) return 1;
 	if (!strcmp("maf", testText)) return 1;
+	if (!strcmp("map", testText)) return 1;
+	if (!strcmp("lam", testText)) return 1;
 	if (!strcmp("ma", testText)) return 1;
 	if (!strcmp("m", testText)) return 1;
 
@@ -788,6 +793,7 @@ static int isVariable(char* tText) {
 	if (!strcmp("hit", testText)) return 1;
 	if (!strcmp("miss", testText)) return 1;
 	if (!strcmp("left", testText)) return 1;
+	if (!strcmp("right", testText)) return 1;
 
 	if (!strcmp("normal", testText)) return 1;
 	if (!strcmp("player", testText)) return 1;

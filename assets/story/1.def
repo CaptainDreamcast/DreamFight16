@@ -1,0 +1,14 @@
+[Header]
+Sprites = assets/story/1.sff
+
+
+[STORYSTART]
+
+[Fight 1]
+
+[Image 1]
+Group = 1
+Item = 0
+
+[Text 1]
+Text = "asdadasdasdasd"

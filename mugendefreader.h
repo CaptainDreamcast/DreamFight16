@@ -71,6 +71,8 @@ double getMugenDefFloatVariableAsElement(MugenDefScriptGroupElement* tElement);
 
 int isMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 int getMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
+int getMugenDefNumberVariableAsGroup(MugenDefScriptGroup* tGroup, char* tVariableName);
+
 int isMugenDefNumberVariableAsElement(MugenDefScriptGroupElement* tElement);
 int getMugenDefNumberVariableAsElement(MugenDefScriptGroupElement* tElement);
 

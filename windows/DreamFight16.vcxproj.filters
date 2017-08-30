@@ -99,6 +99,18 @@
     <ClCompile Include="..\menuscreen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\projectile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\twoplayerselectscreen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\story.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\storyscreen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fightscreen.h">
@@ -183,6 +195,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\menuscreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\twoplayerselectscreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\story.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\storyscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -779,6 +779,7 @@ static int isVariable(char* tText) {
 	if (!strcmp("maf", testText)) return 1;
 	if (!strcmp("map", testText)) return 1;
 	if (!strcmp("lam", testText)) return 1;
+	if (!strcmp("lma", testText)) return 1;
 	if (!strcmp("ma", testText)) return 1;
 	if (!strcmp("m", testText)) return 1;
 
@@ -947,6 +948,7 @@ static MugenAssignment* parseMugenContextFreeVectorFromString(char* tText) {
 	int position;
 	assert(hasContextFreeComma(tText, &position));
 
+	// TODO: handle when second element is gone
 	return parseTwoElementMugenAssignmentFromStringWithFixedPosition(tText, MUGEN_ASSIGNMENT_TYPE_VECTOR, ",", position);
 }
 

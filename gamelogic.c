@@ -7,6 +7,7 @@
 
 #include "playerdefinition.h"
 #include "fightui.h"
+#include "mugenstagehandler.h"
 
 static struct {
 	int mGameTime;
@@ -212,6 +213,7 @@ static void resetRound(void* tCaller) {
 	increasePlayerRoundsExisted();
 	gData.mRoundNumber++;
 	resetPlayers();
+	resetMugenStageHandlerCameraPosition();
 	resetTimer();
 	startRound();
 }

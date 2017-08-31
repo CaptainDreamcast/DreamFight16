@@ -11,6 +11,7 @@ void setMugenStageHandlerCameraRange(GeoRectangle tRect);
 void setMugenStageHandlerCameraPosition(Position p);
 void addMugenStageHandlerCameraPositionX(double tX);
 void setMugenStageHandlerCameraPositionX(double tX);
+void resetMugenStageHandlerCameraPosition();
 
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase);
 

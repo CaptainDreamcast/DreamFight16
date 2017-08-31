@@ -146,6 +146,13 @@ void setMugenStageHandlerCameraPositionX(double tX)
 	gData.mCameraPosition.x = gData.mCameraTargetPosition.x;
 }
 
+void resetMugenStageHandlerCameraPosition()
+{
+	gData.mCameraPosition.x = gData.mCameraTargetPosition.x = 0; // TODO: properly
+	gData.mCameraPosition.y = gData.mCameraTargetPosition.y = 0;
+	
+}
+
 void setMugenStageHandlerScreenShake(int tTime, double tFrequency, int tAmplitude, double tPhase)
 {
 	(void)tTime;

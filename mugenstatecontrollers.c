@@ -1909,6 +1909,7 @@ static void handleHitDefinitionSingleAttackHeight(MugenAssignment* tAssignment, 
 	else if (!strcmp("high", flag)) tFunc(tPlayer, MUGEN_ATTACK_HEIGHT_HIGH);
 	else if (!strcmp("low", flag)) tFunc(tPlayer, MUGEN_ATTACK_HEIGHT_LOW);
 	else if (!strcmp("trip", flag)) tFunc(tPlayer, MUGEN_ATTACK_HEIGHT_TRIP);
+	else if (!strcmp("heavy", flag)) tFunc(tPlayer, MUGEN_ATTACK_HEIGHT_HEAVY);
 	else if (!strcmp("none", flag)) tFunc(tPlayer, MUGEN_ATTACK_HEIGHT_NONE);
 	else {
 		logError("Unable to parse hitdef attack height type.");

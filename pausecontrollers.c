@@ -123,6 +123,10 @@ void setSuperPauseAnimation(int tIsInPlayerFile, int tAnimationNumber)
 	MugenAnimation* animation;
 	MugenSpriteFile* sprites;
 	if (tIsInPlayerFile) {
+		if (!doesPlayerHaveAnimationHimself(gData.mSuperPause.mPlayer, tAnimationNumber)) {
+			gData.mSuperPause.mHasAnimation = 0;
+			return;
+		}
 		animation = getPlayerAnimation(gData.mSuperPause.mPlayer, tAnimationNumber);
 		sprites = getPlayerSprites(gData.mSuperPause.mPlayer);
 	}

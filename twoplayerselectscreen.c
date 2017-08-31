@@ -76,7 +76,12 @@ static void updateSelectorDisplay(int i) {
 
 static void loadSelector(int i, Position tTextPosition) {
 	SelectScreenSelector* selector = &gData.mSelectors[i];
-	selector->mSelected = i;
+	if (i) {
+		selector->mSelected = gData.mCharacterAmount - 1;
+	}
+	else {
+		selector->mSelected = 0;
+	}
 	selector->mPosition = gData.mCharacters[i].mPosition;
 	selector->mPosition.z+=i+1;
 	
@@ -94,8 +99,9 @@ static void loadSelector(int i, Position tTextPosition) {
 
 static void loadSelectScreen() {
 	gData.mCharacterAmount = 0;
-	addCharacter("assets/kfm/kfm.def", "assets/portraits/kfm.pkg", "Kung-fu Man", makePosition(100, 150, 2));
-	addCharacter("assets/Beat/Beat.def", "assets/portraits/beat.pkg", "Beat", makePosition(350, 150, 2));
+	addCharacter("assets/kfm/kfm.def", "assets/portraits/kfm.pkg", "Kung-fu Man", makePosition(80, 150, 2));
+	addCharacter("assets/Beat/Beat.def", "assets/portraits/beat.pkg", "Beat", makePosition(240, 150, 2));
+	addCharacter("assets/Sonicth/Sonicth.def", "assets/portraits/sonic.pkg", "Sonic", makePosition(400, 150, 2));
 
 	gData.mHalfSelector = loadTexture("assets/selectscreen/selectorhalf.pkg");
 	

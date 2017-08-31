@@ -56,8 +56,8 @@ static void loadFightScreen() {
 	//setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
 	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");
 	setPlayerDefinitionPath(1, "assets/Beat/Beat.def");
-	setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
-	setPlayerDefinitionPath(1, "assets/SonicV2/SonicV2.def");
+	//setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
+	//setPlayerDefinitionPath(1, "assets/SonicV2/SonicV2.def");
 
 	loadPlayers();
 

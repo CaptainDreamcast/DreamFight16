@@ -347,10 +347,10 @@ static void loadSingleHealthBar(int i, MugenDefScript* tScript) {
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "bg0", 0, &bar->mBG0AnimationID, &bar->mBG0Position, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "bg1", 1, &bar->mBG1AnimationID, &bar->mBG1Position, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "mid", 2,  &bar->mMidAnimationID, &bar->mMidPosition, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "front", 3, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "bg0", 1, &bar->mBG0AnimationID, &bar->mBG0Position, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "bg1", 2, &bar->mBG1AnimationID, &bar->mBG1Position, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "mid", 3,  &bar->mMidAnimationID, &bar->mMidPosition, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "front", 4, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
 
 	sprintf(name, "p%d.range.x", i + 1);
 	loadVectorOrDefault(&bar->mHealthRangeX, tScript, "Lifebar", name, makePosition(0, 0, 0));
@@ -371,10 +371,10 @@ static void loadSinglePowerBar(int i, MugenDefScript* tScript) {
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "bg0", 0, &bar->mBG0AnimationID, &bar->mBG0Position, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "bg1", 1, &bar->mBG1AnimationID, &bar->mBG1Position, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "mid", 2, &bar->mMidAnimationID, &bar->mMidPosition, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "front", 3, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "bg0", 1, &bar->mBG0AnimationID, &bar->mBG0Position, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "bg1", 2, &bar->mBG1AnimationID, &bar->mBG1Position, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "mid", 3, &bar->mMidAnimationID, &bar->mMidPosition, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "front", 4, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
 
 	sprintf(name, "p%d.range.x", i + 1);
 	loadVectorOrDefault(&bar->mPowerRangeX, tScript, "Powerbar", name, makePosition(0, 0, 0));
@@ -395,10 +395,10 @@ static void loadSingleFace(int i, MugenDefScript* tScript) {
 
 	Player* p = getRootPlayer(i);
 	int coordP = COORD_P; // TODO
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg", 0, &face->mBGAnimationID, &face->mBGPosition, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg0", 0, &face->mBG0AnimationID, &face->mBG0Position, coordP);
-	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg1", 1, &face->mBG1AnimationID, &face->mBG1Position, coordP);
-	loadSingleUIComponent(i, tScript, getPlayerSprites(p), getPlayerAnimations(p), basePosition, "Face", "face", 2, &face->mFaceAnimationID, &face->mFacePosition, getPlayerCoordinateP(p));
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg", 1, &face->mBGAnimationID, &face->mBGPosition, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg0", 1, &face->mBG0AnimationID, &face->mBG0Position, coordP);
+	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Face", "bg1", 2, &face->mBG1AnimationID, &face->mBG1Position, coordP);
+	loadSingleUIComponent(i, tScript, getPlayerSprites(p), getPlayerAnimations(p), basePosition, "Face", "face", 3, &face->mFaceAnimationID, &face->mFacePosition, getPlayerCoordinateP(p));
 
 }
 

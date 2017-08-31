@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 
 	setMainFileSystem();
 	
-	setScreenAfterWrapperLogoScreen(&FightScreen);
+	setScreenAfterWrapperLogoScreen(&WarningScreen);
 	startScreenHandling(getLogoScreenFromWrapper());
 
 	exitGame();

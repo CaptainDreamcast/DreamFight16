@@ -56,6 +56,8 @@ typedef struct Player_t{
 
 	IntMap mProjectiles; // contains Player
 
+	int mAILevel;
+
 	char mDefinitionPath[1024];
 	PlayerHeader mHeader;
 	MugenCommands mCommands;
@@ -201,6 +203,7 @@ double getPlayerVelocityY(Player* p, int tCoordinateP);
 double getPlayerStandFrictionThreshold(Player* p);
 double getPlayerCrouchFrictionThreshold(Player* p);
 double getPlayerAirGetHitGroundLevelY(Player* p);
+double getPlayerAirGetHitGroundRecoveryGroundLevelY(Player* p);
 double getPlayerAirGetHitGroundRecoveryGroundYTheshold(Player* p);
 double getPlayerAirGetHitAirRecoveryVelocityYThreshold(Player* p);
 double getPlayerAirGetHitTripGroundLevelY(Player* p);
@@ -245,6 +248,7 @@ void addPlayerPositionY(Player* p, double y, int tCoordinateP);
 
 int isPlayerCommandActive(Player* p, char* tCommandName);
 
+int hasPlayerState(Player* p, int mNewState);
 int hasPlayerStateSelf(Player* p, int mNewState);
 void changePlayerState(Player* p, int mNewState);
 void changePlayerStateToOtherPlayerStateMachine(Player* p, Player* tOtherPlayer, int mNewState);
@@ -371,6 +375,8 @@ void setPlayerAttackMultiplier(Player* p, double tValue);
 
 double getPlayerFallDefenseMultiplier(Player* p);
 
+void setPlayerHuman(int i);
+void setPlayerArtificial(int i);
 int getPlayerAILevel(Player* p);
 
 int getPlayerLife(Player* p);

@@ -219,6 +219,15 @@ void setRegisteredStateDisableCommandState(int tID)
 	e->mIsInputControlDisabled = 1;
 }
 
+int hasHandledStateMachineState(int tID, int tNewState)
+{
+	assert(int_map_contains(&gData.mRegisteredStates, tID));
+	RegisteredState* e = int_map_get(&gData.mRegisteredStates, tID);
+	
+	MugenStates* states = getCurrentStateMachineStates(e);
+	return int_map_contains(&states->mStates, tNewState);
+}
+
 int hasHandledStateMachineStateSelf(int tID, int tNewState)
 {
 	assert(int_map_contains(&gData.mRegisteredStates, tID));

@@ -442,9 +442,9 @@ MugenAnimations loadMugenAnimationFile(char * tPath)
 MugenAnimation* getMugenAnimation(MugenAnimations * tAnimations, int i)
 {
 	if (!int_map_contains(&tAnimations->mAnimations, i)) {
-		logError("Could not load animation.");
-		logErrorInteger(i);
-		abortSystem();
+		logWarning("Could not load animation. Defaulting to 0.");
+		logWarningInteger(i);
+		return int_map_get(&tAnimations->mAnimations, 0);
 	}
 
 	return int_map_get(&tAnimations->mAnimations, i);

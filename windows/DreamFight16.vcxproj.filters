@@ -111,6 +111,12 @@
     <ClCompile Include="..\storyscreen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\ai.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gameoverscreen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\fightscreen.h">
@@ -207,6 +213,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\storyscreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gameoverscreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

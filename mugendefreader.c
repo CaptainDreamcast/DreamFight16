@@ -306,8 +306,6 @@ static MugenDefToken* parseRecursively(Buffer* b, BufferPointer p) {
 		logError("Unable to parse token.");
 		p[100] = '\0';
 		logErrorString(p);
-		printf("%d\n", (int)p[0]);
-		
 		abortSystem();
 		return NULL;
 	}
@@ -487,7 +485,6 @@ static void setVectorElement(MugenDefScriptGroupElement* element, MugenDefToken*
 
 		e->mVector.mElement[i] = allocMemory(strlen(temp) + 10);
 		strcpy(e->mVector.mElement[i], temp);
-		if(e->mVector.mElement[i][0] == '[') printf("%s\n", e->mVector.mElement[i]);
 
 		i++;
 	}
@@ -690,7 +687,6 @@ MugenDefScript loadMugenDefScript(char * tPath)
 {
 	debugLog("Start loading script.");
 	debugString(tPath);
-	printf("load: %s\n", tPath);
 
 	Buffer b = fileToBuffer(tPath);
 	BufferPointer p = getBufferPointer(b);

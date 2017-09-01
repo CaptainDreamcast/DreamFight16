@@ -4,10 +4,10 @@
 ; Player information
 [Info]
 name ="Sonic The Hedgehog"
-displayname ="Sonic The Hedgehog"
+displayname ="Sonic"
 versiondate =05,23,2006
 mugenversion =04,14,2002
-author ="Brandon Clay"
+author ="Claymizer"
 pal.defaults =1
 
 ; Files for the player

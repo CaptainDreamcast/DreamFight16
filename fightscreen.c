@@ -23,10 +23,12 @@
 #include "playerhitdata.h"
 #include "titlescreen.h"
 #include "projectile.h"
+#include "ai.h"
+#include "titlescreen.h"
 
 static Screen* getNextFightScreenScreen() {
 	if (hasPressedAbortFlank()) {
-		abortScreenHandling(); // TODO
+		return &TitleScreen;
 	}
 
 	return NULL;
@@ -35,6 +37,7 @@ static Screen* getNextFightScreenScreen() {
 static void loadFightScreen() {
 	setupGameCollisions();
 	
+	instantiateActor(AIHandler);
 	instantiateActor(MugenConfig);
 	instantiateActor(HitDataHandler);
 	instantiateActor(ProjectileHandler);

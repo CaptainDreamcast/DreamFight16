@@ -8,6 +8,7 @@
 #include "playerdefinition.h"
 #include "fightui.h"
 #include "mugenstagehandler.h"
+#include "gameoverscreen.h"
 
 static struct {
 	int mGameTime;
@@ -130,7 +131,7 @@ static void goToNextScreen(void* tCaller) {
 
 static void goToGameOverScreen(void* tCaller) {
 	(void)tCaller;
-	assert(0);
+	setNewScreen(&GameOverScreen);
 }
 
 static void continueAnimationFinishedCB() {

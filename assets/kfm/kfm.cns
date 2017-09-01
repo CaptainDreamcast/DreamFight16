@@ -1309,7 +1309,7 @@ sprpriority = 2
 [State 1020, Friction]
 type = VelMul
 trigger1 = 1
-x = .85 * ifelse (AnimElemTime(6) < 0, 1, .8)
+x = .85 
 
 [State 1020, Afterimage]
 type = AfterImage
@@ -2320,7 +2320,7 @@ getpower  = 0
 priority  = 5
 guardflag = MA
 pausetime = 6,10
-sparkxy = 0, ifelse(Time = 0, -48, -55)
+sparkxy = 0, -48
 hitsound   = 5,2
 guardsound = 6,0
 ground.type = Low

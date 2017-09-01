@@ -123,6 +123,8 @@ static void loadFightGroup() {
 
 	setPlayerDefinitionPath(0, player);
 	setPlayerDefinitionPath(1, enemy);
+	setPlayerHuman(0);
+	setPlayerArtificial(1);
 
 	freeMemory(player);
 	freeMemory(enemy);
@@ -155,7 +157,6 @@ static void loadEndingGroup() {
 static void loadNextStoryGroup() {
 	int isRunning = 1;
 	while (isRunning) {
-		printf("load group %s\n", gData.mCurrentGroup->mName);
 		if (isImageGroup()) {
 			loadImageGroup();
 		}
@@ -183,7 +184,6 @@ static void findStartOfStoryBoard() {
 	gData.mCurrentGroup = gData.mScript.mFirstGroup;
 
 	while (gData.mCurrentGroup && strcmp("STORYSTART", gData.mCurrentGroup->mName)) {
-		printf("search group %s\n", gData.mCurrentGroup->mName);
 		gData.mCurrentGroup = gData.mCurrentGroup->mNext;
 	}
 

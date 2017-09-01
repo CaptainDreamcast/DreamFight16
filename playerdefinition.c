@@ -5,7 +5,6 @@
 
 #include <tari/file.h>
 #include <tari/physicshandler.h>
-#include <tari/input.h>
 #include <tari/log.h>
 #include <tari/system.h>
 #include <tari/timer.h>
@@ -26,6 +25,7 @@
 #include "fightui.h"
 #include "mugenstagehandler.h"
 #include "gamelogic.h"
+#include "ai.h"
 
 static struct {
 	Player mPlayers[2];
@@ -127,6 +127,10 @@ static void loadPlayerFiles(char* tPath, Player* tPlayer, MugenDefScript* tScrip
 	setPlayerExternalDependencies(tPlayer);
 	tPlayer->mCommandID = registerMugenCommands(tPlayer, &tPlayer->mCommands);
 
+	if (getPlayerAILevel(tPlayer)) {
+		setAIActive(tPlayer);
+	}
+
 	if (doesPlayerStartFacingLeft(tPlayer->mRootID)) {
 		setPlayerFaceDirection(tPlayer, FACE_DIRECTION_LEFT);
 	}
@@ -210,7 +214,7 @@ static void loadPlayerState(Player* p) {
 	p->mProjectileID = -1;
 	p->mProjectileDataID = -1;
 
-	p->mPower = 2000; // TODO: lower
+	p->mPower = 0; 
 	
 	p->mIsBoundToScreen = 1;
 }
@@ -293,7 +297,7 @@ static void updateWalking(Player* p) {
 
 	if (getPlayerStateType(p) != MUGEN_STATE_TYPE_STANDING) return;
 
-	if (hasPressedLeftSingle(p->mControllerID) || hasPressedRightSingle(p->mControllerID)) {
+	if (isPlayerCommandActive(p, "holdfwd") || isPlayerCommandActive(p, "holdback")) {
 		if (getPlayerState(p) != 20) {
 			changePlayerState(p, 20);
 		}
@@ -308,7 +312,7 @@ static void updateJumping(Player* p) {
 	if (getPlayerStateType(p) != MUGEN_STATE_TYPE_STANDING) return;
 
 
-	if (hasPressedUpSingle(p->mControllerID)) {
+	if (isPlayerCommandActive(p, "holdup")) {
 		changePlayerState(p, 40);
 	}
 }
@@ -335,7 +339,7 @@ static void updateCrouchingDown(Player* p) {
 	if (getPlayerStateType(p) != MUGEN_STATE_TYPE_STANDING) return;
 
 
-	if (hasPressedDownSingle(p->mControllerID)) {
+	if (isPlayerCommandActive(p, "holddown")) {
 		changePlayerState(p, 10);
 	}
 }
@@ -345,7 +349,7 @@ static void updateStandingUp(Player* p) {
 	if (getPlayerStateType(p) != MUGEN_STATE_TYPE_CROUCHING) return;
 
 
-	if (!hasPressedDownSingle(p->mControllerID)) {
+	if (!isPlayerCommandActive(p, "holddown")) {
 		changePlayerState(p, 12);
 	}
 }
@@ -510,15 +514,6 @@ static void updateSinglePlayerCB(void* tCaller, void* tData) {
 	updateSinglePlayer(p);
 }
 
-static void updateTest(Player* p) {
-	return;
-	if (!p->mRootID || isPlayerHelper(p)) return;
-
-	if (getGameTime() % 60 == 0) {
-		setPlayerCommandActiveForAI(p->mCommandID, "x", 2);
-	}
-}
-
 static void updateSingleHitAttributeSlot(HitDefAttributeSlot* tSlot) {
 	if (!tSlot->mIsActive) return;
 
@@ -611,8 +606,6 @@ static void updateSinglePlayer(Player* p) {
 	updateHitAttributeSlots(p);
 	updatePush(p);
 	updateStageBorder(p);
-
-	updateTest(p);
 
 	list_map(&p->mHelpers, updateSinglePlayerCB, NULL);
 }
@@ -1245,6 +1238,11 @@ double getPlayerAirGetHitGroundLevelY(Player* p)
 	return p->mConstants.mMovementData.mAirGetHitGroundLevelY;
 }
 
+double getPlayerAirGetHitGroundRecoveryGroundLevelY(Player * p)
+{
+	return p->mConstants.mMovementData.mAirGetHitGroundRecoveryGroundGoundLevelY;
+}
+
 double getPlayerAirGetHitGroundRecoveryGroundYTheshold(Player* p)
 {
 	return p->mConstants.mMovementData.mAirGetHitGroundRecoveryGroundYTheshold;
@@ -1468,6 +1466,13 @@ int isPlayerCommandActive(Player* p, char * tCommandName)
 	return isCommandActive(p->mCommandID, tCommandName);
 }
 
+
+
+int hasPlayerState(Player * p, int mNewState)
+{
+	return hasHandledStateMachineState(p->mStateMachineID, mNewState);
+}
+
 int hasPlayerStateSelf(Player * p, int mNewState)
 {
 	return hasHandledStateMachineStateSelf(p->mStateMachineID, mNewState);
@@ -1475,7 +1480,7 @@ int hasPlayerStateSelf(Player * p, int mNewState)
 
 void changePlayerState(Player* p, int mNewState)
 {
-	if (!hasPlayerStateSelf(p, mNewState)) {
+	if (!hasPlayerState(p, mNewState)) {
 		logWarning("Trying to change into state that does not exist");
 		logWarningInteger(mNewState);
 		return;
@@ -1494,7 +1499,7 @@ void changePlayerStateToOtherPlayerStateMachine(Player * p, Player * tOtherPlaye
 
 void changePlayerStateBeforeImmediatelyEvaluatingIt(Player * p, int mNewState)
 {
-	if (!hasPlayerStateSelf(p, mNewState)) {
+	if (!hasPlayerState(p, mNewState)) {
 		logWarning("Trying to change into state that does not exist");
 		logWarningInteger(mNewState);
 		return;
@@ -2126,10 +2131,21 @@ double getPlayerFallDefenseMultiplier(Player* p)
 	return 100.0 / (f+100);
 }
 
+void setPlayerHuman(int i)
+{
+	Player* p = getRootPlayer(i);
+	p->mAILevel = 0;
+}
+
+void setPlayerArtificial(int i)
+{
+	Player* p = getRootPlayer(i);
+	p->mAILevel = 8; // TODO: properly
+}
+
 int getPlayerAILevel(Player* p)
 {
-	(void)p;
-	return p->mRootID*8; // TODO
+	return p->mAILevel;
 }
 
 int getPlayerLife(Player* p)

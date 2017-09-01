@@ -126,11 +126,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ai.c" />
     <ClCompile Include="..\collision.c" />
     <ClCompile Include="..\config.c" />
     <ClCompile Include="..\fightscreen.c" />
     <ClCompile Include="..\fightui.c" />
     <ClCompile Include="..\gamelogic.c" />
+    <ClCompile Include="..\gameoverscreen.c" />
     <ClCompile Include="..\lz5.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\menuscreen.c" />
@@ -160,11 +162,13 @@
     <ClCompile Include="..\warningscreen.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ai.h" />
     <ClInclude Include="..\collision.h" />
     <ClInclude Include="..\config.h" />
     <ClInclude Include="..\fightscreen.h" />
     <ClInclude Include="..\fightui.h" />
     <ClInclude Include="..\gamelogic.h" />
+    <ClInclude Include="..\gameoverscreen.h" />
     <ClInclude Include="..\lz5.h" />
     <ClInclude Include="..\menuscreen.h" />
     <ClInclude Include="..\mugenanimationhandler.h" />

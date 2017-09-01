@@ -414,7 +414,10 @@ static void loadSingleName(int i, MugenDefScript* tScript) {
 
 	int coordP = COORD_P; // TODO
 	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Name", "bg", 0, &displayName->mBGAnimationID, &displayName->mBGPosition, coordP);
-	loadSingleUIText(i, tScript, basePosition, "Name", "name", 0, &displayName->mTextID, &displayName->mTextPosition, 0, getPlayerDisplayName(getRootPlayer(i)), 15, -5);
+
+	char displayNameText[1024];
+	sprintf(displayNameText, "%s by %s", getPlayerDisplayName(getRootPlayer(i)), getPlayerAuthorName(getRootPlayer(i)));
+	loadSingleUIText(i, tScript, basePosition, "Name", "name", 0, &displayName->mTextID, &displayName->mTextPosition, 0, displayNameText, 15, -5);
 }
 
 static void loadPlayerUIs(MugenDefScript* tScript) {

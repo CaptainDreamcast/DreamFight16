@@ -124,6 +124,8 @@ static void goToFight(void* tCaller) {
 		setPlayerDefinitionPath(i, gData.mCharacters[gData.mSelectors[i].mSelected].mDefinitionPath);
 	}
 	setScreenAfterFightScreen(&TwoPlayerSelectScreen);
+	setPlayerHuman(0);
+	setPlayerHuman(1);
 
 	setNewScreen(&FightScreen);
 }

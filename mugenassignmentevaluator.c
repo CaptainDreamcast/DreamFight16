@@ -1284,6 +1284,9 @@ static AssignmentReturnValue evaluateVariableAssignment(MugenAssignment* tAssign
 	else if (!strcmp("movement.crouch.friction.threshold", testString)) {
 		return makeStringAssignmentReturn("movement.crouch.friction.threshold");
 	}
+	else if (!strcmp("movement.air.gethit.groundrecover.groundlevel", testString)) {
+		return makeStringAssignmentReturn("movement.air.gethit.groundrecover.groundlevel");
+	}
 	else if (!strcmp("movement.air.gethit.groundlevel", testString)) {
 		return makeStringAssignmentReturn("movement.air.gethit.groundlevel");
 	}
@@ -1508,6 +1511,9 @@ static AssignmentReturnValue evaluateConstArrayAssignment(AssignmentReturnValue 
 	}
 	else if (!strcmp("movement.air.gethit.groundlevel", var)) {
 		return makeFloatAssignmentReturn(getPlayerAirGetHitGroundLevelY(tPlayer));
+	}
+	else if (!strcmp("movement.air.gethit.groundrecover.groundlevel", var)) {
+		return makeFloatAssignmentReturn(getPlayerAirGetHitGroundRecoveryGroundLevelY(tPlayer));
 	}
 	else if (!strcmp("movement.air.gethit.groundrecover.ground.threshold", var)) {
 		return makeFloatAssignmentReturn(getPlayerAirGetHitGroundRecoveryGroundYTheshold(tPlayer));

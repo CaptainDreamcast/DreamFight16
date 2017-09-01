@@ -6,4 +6,5 @@ mugendefreader.o mugenexplod.o mugensound.o mugenspritefilereader.o \
 mugenstagehandler.o mugenstatecontrollers.o mugenstatehandler.o \
 mugenstatereader.o pausecontrollers.o playerdefinition.o \
 playerhitdata.o stage.o warningscreen.o titlescreen.o menuscreen.o \
-projectile.o storyscreen.o story.o twoplayerselectscreen.o
+projectile.o storyscreen.o story.o twoplayerselectscreen.o \
+gameoverscreen.o

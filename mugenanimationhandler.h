@@ -21,6 +21,7 @@ void setRegisteredAnimationOneFrameDrawAngle(int tID, double tAngle);
 void addRegisteredAnimationOneFrameDrawAngle(int tID, double tAngle);
 void setRegisteredAnimationOneFrameFixedDrawAngle(int tID, double tAngle);
 void setRegisteredAnimationToNotUseStage(int tID);
+void setRegisteredAnimationBasePosition(int tID, Position* tBasePosition);
 
 void changeMugenAnimationWithStartStep(int tID, MugenAnimation* tNewAnimation, int tStartStep);
 

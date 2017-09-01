@@ -792,8 +792,13 @@ char* getAllocatedMugenDefStringVariable(MugenDefScript* tScript, char * tGroupN
 	assert(string_map_contains(&tScript->mGroups, tGroupName));
 	MugenDefScriptGroup* e = string_map_get(&tScript->mGroups, tGroupName);
 
-	assert(string_map_contains(&e->mElements, tVariableName));
-	MugenDefScriptGroupElement* element = string_map_get(&e->mElements, tVariableName);
+	return 	getAllocatedMugenDefStringVariableAsGroup(e, tVariableName);
+}
+
+char * getAllocatedMugenDefStringVariableAsGroup(MugenDefScriptGroup * tGroup, char * tVariableName)
+{
+	assert(string_map_contains(&tGroup->mElements, tVariableName));
+	MugenDefScriptGroupElement* element = string_map_get(&tGroup->mElements, tVariableName);
 
 	return getAllocatedMugenDefStringVariableAsElement(element);
 }

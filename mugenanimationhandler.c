@@ -311,6 +311,12 @@ void setRegisteredAnimationToNotUseStage(int tID)
 	e->mHasStageDisabled = 1;
 }
 
+void setRegisteredAnimationBasePosition(int tID, Position * tBasePosition)
+{
+	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
+	e->mBasePosition = tBasePosition;
+}
+
 void changeMugenAnimationWithStartStep(int tID, MugenAnimation * tNewAnimation, int tStartStep)
 {
 	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);

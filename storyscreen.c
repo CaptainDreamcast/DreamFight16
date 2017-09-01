@@ -19,6 +19,7 @@
 #include "playerdefinition.h"
 #include "fightscreen.h"
 #include "gamelogic.h"
+#include "warningscreen.h"
 
 
 static struct {
@@ -34,9 +35,10 @@ static struct {
 	Position mOldAnimationBasePosition;
 	Position mAnimationBasePosition;
 
+	int mSpeakerID;
 	int mTextID;
 
-	int mNow;
+	int mIsStoryOver;
 } gData;
 
 static int isImageGroup() {
@@ -53,22 +55,25 @@ static void increaseGroup() {
 
 static void loadImageGroup() {
 	if (gData.mOldAnimationID != -1) {
-		removeHandledAnimation(gData.mOldAnimationID);
+		removeRegisteredAnimation(gData.mOldAnimationID);
 		destroyMugenAnimation(gData.mOldAnimation);
+	}
+
+	if (gData.mAnimationID != -1) {
+		setRegisteredAnimationBasePosition(gData.mAnimationID, &gData.mOldAnimationBasePosition);
 	}
 
 	gData.mOldAnimationID = gData.mAnimationID;
 	gData.mOldAnimation = gData.mAnimation;
+	
 
-	printf("acc\n");
 	int group = getMugenDefNumberVariableAsGroup(gData.mCurrentGroup, "group");
 	int item =  getMugenDefNumberVariableAsGroup(gData.mCurrentGroup, "item");
-	printf("make anim");
 	gData.mAnimation = createOneFrameMugenAnimationForSprite(group, item);
 
-	printf("addd\n");
 	gData.mAnimationID = addMugenAnimation(NULL, gData.mAnimation, &gData.mSprites, &gData.mAnimationBasePosition, 480, 480);
 	setRegisteredAnimationToNotUseStage(gData.mAnimationID);
+	setRegisteredAnimationToUseFixedZ(gData.mAnimationID);
 
 	increaseGroup();
 }
@@ -84,9 +89,17 @@ static int isTextGroup() {
 static void loadTextGroup() {
 	if (gData.mTextID != -1) {
 		removeHandledText(gData.mTextID);
+		removeHandledText(gData.mSpeakerID);
 	}
 
-	gData.mTextID = addHandledTextWithBuildup(makePosition(50, 300, 3), "sad", 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, -5, 0), makePosition(540, 480, 1), INF, 120);
+	char* speaker = getAllocatedMugenDefStringVariableAsGroup(gData.mCurrentGroup, "speaker");
+	char* text = getAllocatedMugenDefStringVariableAsGroup(gData.mCurrentGroup, "text");
+
+	gData.mSpeakerID = addHandledText(makePosition(40, 340, 3), speaker, 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, 0, 0), makePosition(INF, INF, 1), INF);
+	gData.mTextID = addHandledTextWithBuildup(makePosition(50, 360, 3), text, 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, 0, 0), makePosition(540, 480, 1), INF, 120);
+	
+	freeMemory(speaker);
+	freeMemory(text);
 
 	increaseGroup();
 }
@@ -105,14 +118,38 @@ static void goToFight(void* tCaller) {
 }
 
 static void loadFightGroup() {
-	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
-	setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
+	char* player = getAllocatedMugenDefStringVariableAsGroup(gData.mCurrentGroup, "player");
+	char* enemy = getAllocatedMugenDefStringVariableAsGroup(gData.mCurrentGroup, "enemy");
 
-	startNextStoryPart();
+	setPlayerDefinitionPath(0, player);
+	setPlayerDefinitionPath(1, enemy);
+
+	freeMemory(player);
+	freeMemory(enemy);
+
 	setScreenAfterFightScreen(&StoryScreen);
 	setGameModeStory();
 
+	gData.mIsStoryOver = 1;
 	addFadeOut(30, goToFight, NULL);
+}
+
+static int isEndingGroup() {
+	char* name = gData.mCurrentGroup->mName;
+	char firstW[100];
+	sscanf(name, "%s", firstW);
+
+	return !strcmp("Ending", firstW);
+}
+
+static void goToStoryOver(void* tCaller) {
+	(void)tCaller;
+	setNewScreen(&WarningScreen);
+}
+
+static void loadEndingGroup() {
+	gData.mIsStoryOver = 1;
+	addFadeOut(30, goToStoryOver, NULL);
 }
 
 static void loadNextStoryGroup() {
@@ -128,6 +165,10 @@ static void loadNextStoryGroup() {
 		}
 		else if (isFightGroup()) {
 			loadFightGroup();
+			break;
+		}
+		else if (isEndingGroup()) {
+			loadEndingGroup();
 			break;
 		}
 		else {
@@ -153,8 +194,7 @@ static void findStartOfStoryBoard() {
 	gData.mAnimationID = -1;
 	gData.mOldAnimationID = -1;
 	gData.mTextID = -1;
-	gData.mNow = 0;
-	
+
 	gData.mOldAnimationBasePosition = makePosition(0, 0, 1);
 	gData.mAnimationBasePosition = makePosition(0, 0, 2);
 
@@ -164,6 +204,9 @@ static void findStartOfStoryBoard() {
 
 
 static void loadStoryScreen() {
+	startNextStoryPart();
+	gData.mIsStoryOver = 0;
+	
 	instantiateActor(MugenAnimationHandler);
 
 	char* defPath = getCurrentStoryDefinitionFile();
@@ -177,8 +220,23 @@ static void loadStoryScreen() {
 }
 
 
+static void updateText() {
+	if (gData.mIsStoryOver) return;
+	if (gData.mTextID == -1) return;
+
+	if (hasPressedAFlank() || hasPressedStart()) {
+		if (isHandledTextBuiltUp(gData.mTextID)) {
+			loadNextStoryGroup();
+		}
+		else {
+			setHandledTextBuiltUp(gData.mTextID);
+		}
+	}
+}
 
 static void updateStoryScreen() {
+
+	updateText();
 
 	if (hasPressedAbortFlank()) {
 		setNewScreen(&TitleScreen);

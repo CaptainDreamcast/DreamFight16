@@ -49,14 +49,14 @@ static void loadFightScreen() {
 	
 	//setPlayerDefinitionPath(0, "assets/Mima_RP/Mima_RP.def");
 	//setPlayerDefinitionPath(0, "assets/Ryu/Ryu.def");
-	setPlayerDefinitionPath(0, "assets/Beat/Beat.def");
-	setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
+	//setPlayerDefinitionPath(0, "assets/Beat/Beat.def");
+	//setPlayerDefinitionPath(0, "assets/kfm/kfm.def");
 	//setPlayerDefinitionPath(0, "assets/SonicV2/SonicV2.def");
-	setPlayerDefinitionPath(0, "assets/Sonicth/Sonicth.def");
+	//setPlayerDefinitionPath(0, "assets/Sonicth/Sonicth.def");
 
 	//setPlayerDefinitionPath(1, "assets/Ryu/Ryu.def");
 	//setPlayerDefinitionPath(1, "assets/liukang/liukang.def");
-	setPlayerDefinitionPath(1, "assets/Beat/Beat.def");
+	//setPlayerDefinitionPath(1, "assets/Beat/Beat.def");
 	//setPlayerDefinitionPath(1, "assets/kfm/kfm.def");
 	//setPlayerDefinitionPath(1, "assets/SonicV2/SonicV2.def");
 

@@ -8,6 +8,7 @@
 #include "titlescreen.h"
 #include "twoplayerselectscreen.h"
 #include "storyscreen.h"
+#include "story.h"
 
 static void fadeOutFinished(void* tData) {
 	Screen* screen = tData;
@@ -20,6 +21,7 @@ static void fadeOut(Screen* tScreen) {
 
 static void selectStoryOption(void* tData) {
 	(void)tData;
+	resetStory();
 	fadeOut(&StoryScreen);
 }
 

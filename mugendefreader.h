@@ -58,6 +58,7 @@ MugenDefScript loadMugenDefScript(char* tPath);
 void unloadMugenDefScript(MugenDefScript tScript);
 int isMugenDefStringVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 char* getAllocatedMugenDefStringVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
+char* getAllocatedMugenDefStringVariableAsGroup(MugenDefScriptGroup* tGroup, char* tVariableName);
 int isMugenDefStringVariableAsElement(MugenDefScriptGroupElement* tElement);
 char* getAllocatedMugenDefStringVariableAsElement(MugenDefScriptGroupElement* tElement);
 
@@ -72,7 +73,6 @@ double getMugenDefFloatVariableAsElement(MugenDefScriptGroupElement* tElement);
 int isMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 int getMugenDefNumberVariable(MugenDefScript* tScript, char* tGroupName, char* tVariableName);
 int getMugenDefNumberVariableAsGroup(MugenDefScriptGroup* tGroup, char* tVariableName);
-
 int isMugenDefNumberVariableAsElement(MugenDefScriptGroupElement* tElement);
 int getMugenDefNumberVariableAsElement(MugenDefScriptGroupElement* tElement);
 

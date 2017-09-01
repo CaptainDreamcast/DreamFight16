@@ -10,11 +10,11 @@ Item = 0
 
 [Text 1]
 Speaker = "Rita:"
-Text = "Welcome to the the 16th annual Dream Fight tournament! I am your host today, Rita Okano!"
+Text = "Welcome to the the 16th annual Dream Fight tournament! My name is Rita Okano, and I will be your host today!"
 
 [Text 1]
 Speaker = "Rita:"
-Text = "We have spared no expenses and gathered three of the Dreamcast's most prolific fighters who will duke it out to decide who gets their long-awaited sequel!"
+Text = "We have spared no expenses and gathered four of the Dreamcast's most popular fighters! They will duke it out to decide which of them gets their long-awaited sequel!"
 
 [Image 1]
 Group = 2

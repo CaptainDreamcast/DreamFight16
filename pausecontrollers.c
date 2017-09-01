@@ -48,7 +48,7 @@ static void loadPauseHandler(void* tData) {
 
 void setSuperPauseActive()
 {
-	assert(!gData.mSuperPause.mIsActive);
+	// TODO: check multiple
 
 	setPlayerSuperPaused(gData.mSuperPause.mPlayer);
 	// TODO: stuff

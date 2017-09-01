@@ -96,7 +96,9 @@ static void loadTextGroup() {
 	char* text = getAllocatedMugenDefStringVariableAsGroup(gData.mCurrentGroup, "text");
 
 	gData.mSpeakerID = addHandledText(makePosition(40, 340, 3), speaker, 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, 0, 0), makePosition(INF, INF, 1), INF);
-	gData.mTextID = addHandledTextWithBuildup(makePosition(50, 360, 3), text, 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, 0, 0), makePosition(540, 480, 1), INF, 120);
+
+	int dur = strlen(text);
+	gData.mTextID = addHandledTextWithBuildup(makePosition(50, 360, 3), text, 0, COLOR_WHITE, makePosition(20, 20, 1), makePosition(-5, 0, 0), makePosition(540, 480, 1), INF, dur);
 	
 	freeMemory(speaker);
 	freeMemory(text);

@@ -38,7 +38,7 @@ void setMainFileSystem() {
 #ifdef DEVELOP
 	setFileSystem("/pc");
 #else
-	setFileSystem("/rd");
+	setFileSystem("/cd");
 #endif
 }
 

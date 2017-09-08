@@ -4,7 +4,7 @@
 #include <tari/datastructures.h>
 #include <tari/actorhandler.h>
 
-#include "mugenspritefilereader.h"
+#include <tari/mugenspritefilereader.h>
 
 // documentation at http://www.elecbyte.com/mugendocs-11b1/bgs.html
 

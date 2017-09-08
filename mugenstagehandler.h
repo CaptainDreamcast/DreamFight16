@@ -2,9 +2,8 @@
 
 #include <tari/actorhandler.h>
 #include <tari/animation.h>
-
-#include "mugenspritefilereader.h"
-#include "mugenanimationreader.h"
+#include <tari/mugenspritefilereader.h>
+#include <tari/mugenanimationreader.h>
 
 void setMugenStageHandlerCameraCoordinates(Vector3DI tCoordinates);
 void setMugenStageHandlerCameraRange(GeoRectangle tRect);

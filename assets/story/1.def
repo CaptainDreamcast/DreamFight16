@@ -114,7 +114,11 @@ Text = "(Will you shut up and play your part?)"
 
 [Text 1]
 Speaker = "Rita:"
-Text = "Hahaha KFM, you must have nerves of steel to joke around before such an important match! *Punches KFM in the arm*"
+Text = "Hahaha KFM, you must have nerves of steel to joke around before such an important match!"
+
+[Text 1]
+Speaker = "Rita:"
+Text = "*punches KFM in the arm*"
 
 [Text 1]
 Speaker = "KFM(?):"

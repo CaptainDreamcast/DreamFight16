@@ -9,11 +9,11 @@
 #include <tari/math.h>
 #include <tari/input.h>
 #include <tari/screeneffect.h>
+#include <tari/mugendefreader.h>
+#include <tari/mugenspritefilereader.h>
+#include <tari/mugenanimationreader.h>
 
-#include "mugendefreader.h"
 #include "story.h"
-#include "mugenspritefilereader.h"
-#include "mugenanimationreader.h"
 #include "mugenanimationhandler.h"
 #include "titlescreen.h"
 #include "playerdefinition.h"
@@ -71,7 +71,7 @@ static void loadImageGroup() {
 	int item =  getMugenDefNumberVariableAsGroup(gData.mCurrentGroup, "item");
 	gData.mAnimation = createOneFrameMugenAnimationForSprite(group, item);
 
-	gData.mAnimationID = addMugenAnimation(NULL, gData.mAnimation, &gData.mSprites, &gData.mAnimationBasePosition, 480, 480);
+	gData.mAnimationID = addRegisteredAnimation(NULL, gData.mAnimation, &gData.mSprites, &gData.mAnimationBasePosition, 480, 480);
 	setRegisteredAnimationToNotUseStage(gData.mAnimationID);
 	setRegisteredAnimationToUseFixedZ(gData.mAnimationID);
 
@@ -209,7 +209,7 @@ static void loadStoryScreen() {
 	startNextStoryPart();
 	gData.mIsStoryOver = 0;
 	
-	instantiateActor(MugenAnimationHandler);
+	instantiateActor(MugenGameAnimationHandler);
 
 	char* defPath = getCurrentStoryDefinitionFile();
 	gData.mScript = loadMugenDefScript(defPath);

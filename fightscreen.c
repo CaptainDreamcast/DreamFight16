@@ -6,9 +6,9 @@
 #include <tari/stagehandler.h>
 #include <tari/collisionhandler.h>
 #include <tari/system.h>
+#include <tari/mugenanimationreader.h>
 
 #include "stage.h"
-#include "mugenanimationreader.h"
 #include "mugencommandreader.h"
 #include "mugenstatereader.h"
 #include "playerdefinition.h"
@@ -41,7 +41,7 @@ static void loadFightScreen() {
 	instantiateActor(MugenConfig);
 	instantiateActor(HitDataHandler);
 	instantiateActor(ProjectileHandler);
-	instantiateActor(MugenAnimationHandler);
+	instantiateActor(MugenGameAnimationHandler);
 	instantiateActor(MugenCommandHandler);
 	instantiateActor(MugenStateHandler);
 	instantiateActor(ExplodHandler);

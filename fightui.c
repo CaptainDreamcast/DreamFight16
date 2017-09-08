@@ -6,10 +6,10 @@
 #include <tari/texthandler.h>
 #include <tari/math.h>
 #include <tari/input.h>
+#include <tari/mugendefreader.h>
+#include <tari/mugenspritefilereader.h>
+#include <tari/mugenanimationreader.h>
 
-#include "mugendefreader.h"
-#include "mugenspritefilereader.h"
-#include "mugenanimationreader.h"
 #include "mugenanimationhandler.h"
 #include "stage.h"
 #include "playerdefinition.h"
@@ -216,17 +216,17 @@ static void loadFightDefFilesFromScript(MugenDefScript* tScript, char* tDefPath)
 	getPathToFile(directory, tDefPath);
 
 	char fileName[1024], fullPath[1024];
-	loadStringOrDefault(fileName, tScript, "Files", "sff", "NO_FILE");
+	getMugenDefStringOrDefault(fileName, tScript, "Files", "sff", "NO_FILE");
 	sprintf(fullPath, "%s%s", directory, fileName);
 	gData.mFightSprites = loadMugenSpriteFileWithoutPalette(fullPath);
 
 	gData.mFightAnimations = loadMugenAnimationFile(tDefPath);
 
-	loadStringOrDefault(fileName, tScript, "Files", "fightfx.sff", "NO_FILE");
+	getMugenDefStringOrDefault(fileName, tScript, "Files", "fightfx.sff", "NO_FILE");
 	sprintf(fullPath, "%s%s", directory, fileName);
 	gData.mFightFXSprites = loadMugenSpriteFileWithoutPalette(fullPath);
 
-	loadStringOrDefault(fileName, tScript, "Files", "fightfx.air", "NO_FILE");
+	getMugenDefStringOrDefault(fileName, tScript, "Files", "fightfx.air", "NO_FILE");
 	sprintf(fullPath, "%s%s", directory, fileName);
 	gData.mFightFXAnimations = loadMugenAnimationFile(fullPath);
 
@@ -237,12 +237,12 @@ static int loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(
 
 	int animation;
 	sprintf(name, "%s.anim", tComponentName);
-	loadIntegerOrDefault(&animation, tScript, tGroupName, name, -1);
+	getMugenDefIntegerOrDefault(&animation, tScript, tGroupName, name, -1);
 
 	if (animation == -1) {
 		Vector3DI sprite;
 		sprintf(name, "%s.spr", tComponentName);
-		loadVectorIOrDefault(&sprite, tScript, tGroupName, name, makeVector3DI(-1, -1, 0));
+		getMugenDefVectorIOrDefault(&sprite, tScript, tGroupName, name, makeVector3DI(-1, -1, 0));
 		if (sprite.x == -1 && sprite.y == -1) return 0;
 
 		*oAnimation = createOneFrameMugenAnimationForSprite(sprite.x, sprite.y);
@@ -252,13 +252,13 @@ static int loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(
 	}
 
 	sprintf(name, "%s.offset", tComponentName);
-	loadVectorOrDefault(oPosition, tScript, tGroupName, name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(oPosition, tScript, tGroupName, name, makePosition(0, 0, 0));
 	oPosition->z = tZ;
 	*oPosition = vecAdd(*oPosition, tBasePosition);
 	*oPosition = vecSub(*oPosition, getStageCoordinateSystemOffset(COORD_P)); // TODO: think better
 
 	sprintf(name, "%s.facing", tComponentName);
-	loadIntegerOrDefault(oFaceDirection, tScript, tGroupName, name, 1);
+	getMugenDefIntegerOrDefault(oFaceDirection, tScript, tGroupName, name, 1);
 
 	return 1;
 }
@@ -272,7 +272,7 @@ static void loadSingleUIComponentWithFullComponentName(MugenDefScript* tScript, 
 		return;
 	}
 
-	*oAnimationID = addMugenAnimation(NULL, anim, tSprites, oPosition, COORD_P, tScaleCoordinateP); // TODO non-hardcoded
+	*oAnimationID = addRegisteredAnimation(NULL, anim, tSprites, oPosition, COORD_P, tScaleCoordinateP); // TODO non-hardcoded
 	setRegisteredAnimationToUseFixedZ(*oAnimationID);
 
 	if (faceDirection == -1) {
@@ -292,7 +292,7 @@ static void loadSingleUITextWithFullComponentNameForStorage(MugenDefScript* tScr
 	char name[1024];
 
 	sprintf(name, "%s.offset", tComponentName);
-	loadVectorOrDefault(oPosition, tScript, tGroupName, name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(oPosition, tScript, tGroupName, name, makePosition(0, 0, 0));
 	oPosition->z = tZ;
 	*oPosition = vecAdd(*oPosition, tBasePosition);
 	*oPosition = vecScale(*oPosition, 480.0 / COORD_P); // TODO: non-hardcoded
@@ -306,7 +306,7 @@ static void loadSingleUITextWithFullComponentNameForStorage(MugenDefScript* tScr
 
 	Vector3DI fontData;
 	sprintf(name, "%s.font", tComponentName);
-	loadVectorIOrDefault(&fontData, tScript, tGroupName, name, makeVector3DI(0, 0, 1));
+	getMugenDefVectorIOrDefault(&fontData, tScript, tGroupName, name, makeVector3DI(0, 0, 1));
 
 	*oPosition = vecSub(*oPosition, makePosition(0, tTextSize + tBreakSize, 0));
 	if (fontData.z == -1) {
@@ -343,7 +343,7 @@ static void loadSingleHealthBar(int i, MugenDefScript* tScript) {
 
 	Position basePosition;
 	sprintf(name, "p%d.pos", i + 1);
-	loadVectorOrDefault(&basePosition, tScript, "Lifebar", name, makePosition(0,0,0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Lifebar", name, makePosition(0,0,0));
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
@@ -353,7 +353,7 @@ static void loadSingleHealthBar(int i, MugenDefScript* tScript) {
 	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Lifebar", "front", 4, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
 
 	sprintf(name, "p%d.range.x", i + 1);
-	loadVectorOrDefault(&bar->mHealthRangeX, tScript, "Lifebar", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&bar->mHealthRangeX, tScript, "Lifebar", name, makePosition(0, 0, 0));
 
 	bar->mPercentage = 1;
 	bar->mDisplayedPercentage = 1;
@@ -367,7 +367,7 @@ static void loadSinglePowerBar(int i, MugenDefScript* tScript) {
 
 	Position basePosition;
 	sprintf(name, "p%d.pos", i + 1);
-	loadVectorOrDefault(&basePosition, tScript, "Powerbar", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Powerbar", name, makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
@@ -377,10 +377,10 @@ static void loadSinglePowerBar(int i, MugenDefScript* tScript) {
 	loadSingleUIComponent(i, tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Powerbar", "front", 4, &bar->mFrontAnimationID, &bar->mFrontPosition, coordP);
 
 	sprintf(name, "p%d.range.x", i + 1);
-	loadVectorOrDefault(&bar->mPowerRangeX, tScript, "Powerbar", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&bar->mPowerRangeX, tScript, "Powerbar", name, makePosition(0, 0, 0));
 
 	sprintf(name, "p%d.counter.offset", i + 1);
-	loadVectorOrDefault(&bar->mCounterOffset, tScript, "Powerbar", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&bar->mCounterOffset, tScript, "Powerbar", name, makePosition(0, 0, 0));
 }
 
 static void loadSingleFace(int i, MugenDefScript* tScript) {
@@ -390,7 +390,7 @@ static void loadSingleFace(int i, MugenDefScript* tScript) {
 
 	Position basePosition;
 	sprintf(name, "p%d.pos", i + 1);
-	loadVectorOrDefault(&basePosition, tScript, "Face", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Face", name, makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	Player* p = getRootPlayer(i);
@@ -409,7 +409,7 @@ static void loadSingleName(int i, MugenDefScript* tScript) {
 
 	Position basePosition;
 	sprintf(name, "p%d.pos", i + 1);
-	loadVectorOrDefault(&basePosition, tScript, "Name", name, makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Name", name, makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
@@ -434,18 +434,18 @@ static void loadPlayerUIs(MugenDefScript* tScript) {
 
 static void loadTimer(MugenDefScript* tScript) {
 	Position basePosition;
-	loadVectorOrDefault(&basePosition, tScript, "Time", "pos", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Time", "pos", makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	int coordP = COORD_P; // TODO
 	loadSingleUIComponentWithFullComponentName(tScript, &gData.mFightSprites, &gData.mFightAnimations, basePosition, "Time", "bg", 0, &gData.mTime.mBGAnimationID, &gData.mTime.mBGPosition, coordP);
 
-	loadVectorOrDefault(&gData.mTime.mPosition, tScript, "Time", "counter.offset", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&gData.mTime.mPosition, tScript, "Time", "counter.offset", makePosition(0, 0, 0));
 	gData.mTime.mPosition = vecAdd(gData.mTime.mPosition, basePosition);
 	gData.mTime.mPosition = vecScale(gData.mTime.mPosition, 480.0 / coordP);
 	gData.mTime.mPosition.z++;
 
-	loadIntegerOrDefault(&gData.mTime.mFramesPerCount, tScript, "Time", "framespercount", 60);
+	getMugenDefIntegerOrDefault(&gData.mTime.mFramesPerCount, tScript, "Time", "framespercount", 60);
 
 	int textSize = 25;
 	int breakSize = -5;
@@ -461,11 +461,11 @@ static void loadTimer(MugenDefScript* tScript) {
 
 static void loadRound(MugenDefScript* tScript) {
 	Position basePosition;
-	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0,0,0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0,0,0));
 	basePosition.z = 20;
 
-	loadIntegerOrDefault(&gData.mRound.mRoundTime, tScript, "Round", "round.time", 0);
-	loadIntegerOrDefault(&gData.mRound.mDisplayTime, tScript, "Round", "round.default.displaytime", 0);
+	getMugenDefIntegerOrDefault(&gData.mRound.mRoundTime, tScript, "Round", "round.time", 0);
+	getMugenDefIntegerOrDefault(&gData.mRound.mDisplayTime, tScript, "Round", "round.default.displaytime", 0);
 
 	gData.mRound.mDefaultTextSize = 40;
 	gData.mRound.mDefaultBreakSize = -5;
@@ -498,7 +498,7 @@ static void loadRound(MugenDefScript* tScript) {
 
 static void loadFight(MugenDefScript* tScript) {
 	Position basePosition;
-	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	assert(loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(tScript, &gData.mFightAnimations, basePosition, "Round", "fight", 1, &gData.mFight.mAnimation, &gData.mFight.mPosition, &gData.mFight.mFaceDirection));
@@ -508,7 +508,7 @@ static void loadFight(MugenDefScript* tScript) {
 
 static void loadKO(MugenDefScript* tScript) {
 	Position basePosition;
-	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	assert(loadSingleUIComponentWithFullComponentNameForStorageAndReturnIfLegit(tScript, &gData.mFightAnimations, basePosition, "Round", "ko", 1, &gData.mKO.mAnimation, &gData.mKO.mPosition, &gData.mKO.mFaceDirection));
@@ -518,20 +518,20 @@ static void loadKO(MugenDefScript* tScript) {
 
 static void loadWinDisplay(MugenDefScript* tScript) {
 	Position basePosition;
-	loadVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&basePosition, tScript, "Round", "pos", makePosition(0, 0, 0));
 	basePosition.z = 20;
 
 	gData.mWin.mTextSize = 20;
 	gData.mWin.mBreakSize = -5;
 	loadSingleUITextWithFullComponentNameForStorage(tScript, basePosition, "Round", "win", 1, &gData.mWin.mPosition, 1, gData.mWin.mText, gData.mWin.mTextSize, gData.mWin.mBreakSize);
 
-	loadIntegerOrDefault(&gData.mWin.mDisplayTime, tScript, "Round", "win.displaytime", 0);
+	getMugenDefIntegerOrDefault(&gData.mWin.mDisplayTime, tScript, "Round", "win.displaytime", 0);
 
 	gData.mWin.mIsDisplaying = 0;
 }
 
 static void loadControl(MugenDefScript* tScript) {
-	loadIntegerOrDefault(&gData.mControl.mControlReturnTime, tScript, "Round", "ctrl.time", 0);
+	getMugenDefIntegerOrDefault(&gData.mControl.mControlReturnTime, tScript, "Round", "ctrl.time", 0);
 
 	gData.mControl.mIsCountingDownControl = 0;
 }
@@ -621,7 +621,7 @@ static void updateHealthBars() {
 
 
 static void playDisplayAnimation(int* oAnimationID, MugenAnimation* tAnimation, Position* tBasePosition, int tFaceDirection) {
-	*oAnimationID = addMugenAnimation(NULL, tAnimation, &gData.mFightSprites, tBasePosition, COORD_P, COORD_P); // TODO non-hardcoded
+	*oAnimationID = addRegisteredAnimation(NULL, tAnimation, &gData.mFightSprites, tBasePosition, COORD_P, COORD_P); // TODO non-hardcoded
 	setRegisteredAnimationToUseFixedZ(*oAnimationID);
 
 	if (tFaceDirection == -1) {
@@ -811,7 +811,7 @@ void playHitSpark(Position tPosition, Player* tPlayer, int tIsInPlayerFile, int 
 	
 	e->mPosition = tPosition;
 	e->mPosition.z = 16;
-	e->mAnimationID = addMugenAnimation(NULL, anim, spriteFile, &e->mPosition, tPositionCoordinateP, tScaleCoordinateP);
+	e->mAnimationID = addRegisteredAnimation(NULL, anim, spriteFile, &e->mPosition, tPositionCoordinateP, tScaleCoordinateP);
 	setRegisteredAnimationToUseFixedZ(e->mAnimationID);
 	setRegisteredAnimationCameraPositionReference(e->mAnimationID, getMugenStageHandlerCameraPositionReference());
 	if (!tIsFacingRight) {
@@ -938,7 +938,7 @@ static void parseWinText(char* tDst, char* tSrc, char* tName, Position* oDisplay
 			o++;
 		}
 	}
-	tDst = '\0';
+	tDst[o] = '\0';
 
 	*oDisplayPosition = tPosition;
 	oDisplayPosition->x -= (bonus * (double)(tSize + tBreakSize)) / 2;

@@ -46,7 +46,7 @@ Item = 0
 
 [Text 1]
 Speaker = "KFM(?) #1:"
-Text = "I guess we went a little overboard. I guess you don't have to stay down if you don't want to, Cop."
+Text = "I guess we went a little overboard. You don't have to stay down if you don't want to, Cop."
 
 [Text 1]
 Speaker = "Rita:"
@@ -153,7 +153,7 @@ Speaker = "Kat:"
 Text = "IT'S NOT FAIR! IT'S JUST NOT FAIR!"
 
 [Text 1]
-Speaker = "Cop Justice, patting Kat on the back:"
+Speaker = "Cop Justice:"
 Text = "There, there. I'm alright, I tell you. I'll just win next time."
 
 [Text 1]
@@ -173,7 +173,7 @@ Group = 1
 Item = 7
 
 [Text 1]
-Speaker = "TO BE CONTINUED IN:"
-Text = "DREAM FIGHT 17 A.D. and DOLMEXICA: INFINITE"
+Speaker = "THE END:"
+Text = "SEE YOU NEXT DREAM FIGHT!"
 
 [Ending 1]

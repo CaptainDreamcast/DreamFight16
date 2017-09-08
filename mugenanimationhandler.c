@@ -6,8 +6,8 @@
 #include <tari/math.h>
 #include <tari/drawing.h>
 #include <tari/collisionhandler.h>
+#include <tari/mugenspritefilereader.h>
 
-#include "mugenspritefilereader.h"
 #include "playerdefinition.h"
 #include "stage.h"
 #include "collision.h"
@@ -196,7 +196,7 @@ static void startNewAnimationWithStartStep(MugenAnimationHandlerElement* e, int 
 	loadNextStep(e);
 }
 
-int addMugenAnimation(Player* p, MugenAnimation * tStartAnimation, MugenSpriteFile* tSprites, Position* tBasePosition, int tPositionCoordinateSystemInP, int tScaleCoordinateSystemInP)
+int addRegisteredAnimation(Player* p, MugenAnimation * tStartAnimation, MugenSpriteFile* tSprites, Position* tBasePosition, int tPositionCoordinateSystemInP, int tScaleCoordinateSystemInP)
 {
 	MugenAnimationHandlerElement* e = allocMemory(sizeof(MugenAnimationHandlerElement));
 	e->mAnimation = tStartAnimation;
@@ -317,7 +317,7 @@ void setRegisteredAnimationBasePosition(int tID, Position * tBasePosition)
 	e->mBasePosition = tBasePosition;
 }
 
-void changeMugenAnimationWithStartStep(int tID, MugenAnimation * tNewAnimation, int tStartStep)
+void changeGameMugenAnimationWithStartStep(int tID, MugenAnimation * tNewAnimation, int tStartStep)
 {
 	MugenAnimationHandlerElement* e = int_map_get(&gData.mAnimations, tID);
 	e->mAnimation = tNewAnimation;
@@ -579,7 +579,7 @@ static void drawMugenAnimationHandler(void* tData) {
 }
 
 
-ActorBlueprint MugenAnimationHandler = {
+ActorBlueprint MugenGameAnimationHandler = {
 	.mLoad = loadMugenAnimationHandler,
 	.mUpdate = updateMugenAnimationHandler,
 	.mDraw = drawMugenAnimationHandler,

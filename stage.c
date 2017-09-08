@@ -10,9 +10,9 @@
 #include <tari/stagehandler.h>
 #include <tari/math.h>
 #include <tari/input.h>
+#include <tari/mugendefreader.h>
+#include <tari/mugenspritefilereader.h>
 
-#include "mugendefreader.h"
-#include "mugenspritefilereader.h"
 #include "playerdefinition.h"
 #include "mugenstagehandler.h"
 
@@ -139,84 +139,84 @@ static struct {
 } gData;
 
 static void loadStageInfo(MugenDefScript* s) {
-	loadStringOrDefault(gData.mInfo.mName, s, "Info", "name", "");
-	loadStringOrDefault(gData.mInfo.mDisplayName, s, "Info", "displayname", gData.mInfo.mName);
-	loadStringOrDefault(gData.mInfo.mVersionDate, s, "Info", "versiondate", "1.0");
-	loadStringOrDefault(gData.mInfo.mMugenVersion, s, "Info", "mugenversion", "1.0");
-	loadStringOrDefault(gData.mInfo.mAuthor, s, "Info", "author", "John Doe");
+	getMugenDefStringOrDefault(gData.mInfo.mName, s, "Info", "name", "");
+	getMugenDefStringOrDefault(gData.mInfo.mDisplayName, s, "Info", "displayname", gData.mInfo.mName);
+	getMugenDefStringOrDefault(gData.mInfo.mVersionDate, s, "Info", "versiondate", "1.0");
+	getMugenDefStringOrDefault(gData.mInfo.mMugenVersion, s, "Info", "mugenversion", "1.0");
+	getMugenDefStringOrDefault(gData.mInfo.mAuthor, s, "Info", "author", "John Doe");
 }
 
 static void loadStageCamera(MugenDefScript* s) {
 	gData.mCamera.mStartPosition = makePosition(0, 0, 0);
-	loadFloatOrDefault(&gData.mCamera.mStartPosition.x, s, "Camera", "startx", 0);
-	loadFloatOrDefault(&gData.mCamera.mStartPosition.y, s, "Camera", "starty", 0);
-	loadFloatOrDefault(&gData.mCamera.mBoundLeft, s, "Camera", "boundleft", 0);
-	loadFloatOrDefault(&gData.mCamera.mBoundRight, s, "Camera", "boundright", 0);
-	loadFloatOrDefault(&gData.mCamera.mBoundHigh, s, "Camera", "boundhigh", 0);
-	loadFloatOrDefault(&gData.mCamera.mBoundLow, s, "Camera", "boundlow", 0);
-	loadFloatOrDefault(&gData.mCamera.mTension, s, "Camera", "tension", 0);
-	loadFloatOrDefault(&gData.mCamera.mTensionHigh, s, "Camera", "tensionhigh", 0);
-	loadFloatOrDefault(&gData.mCamera.mTensionLow, s, "Camera", "tensionlow", 0);
-	loadFloatOrDefault(&gData.mCamera.mVerticalFollow, s, "Camera", "verticalfollow", 0);
-	loadFloatOrDefault(&gData.mCamera.mFloorTension, s, "Camera", "floortension", 0);
-	loadIntegerOrDefault(&gData.mCamera.mOverdrawHigh, s, "Camera", "overdrawhigh", 0);
-	loadIntegerOrDefault(&gData.mCamera.mOverdrawLow, s, "Camera", "overdrawlow", 0);
-	loadIntegerOrDefault(&gData.mCamera.mCutHigh, s, "Camera", "cuthigh", 0);
-	loadIntegerOrDefault(&gData.mCamera.mCutLow, s, "Camera", "cutlow", 0);
-	loadFloatOrDefault(&gData.mCamera.mStartZoom, s, "Camera", "startzoom", 1);
-	loadFloatOrDefault(&gData.mCamera.mZoomOut, s, "Camera", "zoomout", 1);
-	loadFloatOrDefault(&gData.mCamera.mZoomIn, s, "Camera", "zoomin", 1);
+	getMugenDefFloatOrDefault(&gData.mCamera.mStartPosition.x, s, "Camera", "startx", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mStartPosition.y, s, "Camera", "starty", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mBoundLeft, s, "Camera", "boundleft", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mBoundRight, s, "Camera", "boundright", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mBoundHigh, s, "Camera", "boundhigh", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mBoundLow, s, "Camera", "boundlow", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mTension, s, "Camera", "tension", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mTensionHigh, s, "Camera", "tensionhigh", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mTensionLow, s, "Camera", "tensionlow", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mVerticalFollow, s, "Camera", "verticalfollow", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mFloorTension, s, "Camera", "floortension", 0);
+	getMugenDefIntegerOrDefault(&gData.mCamera.mOverdrawHigh, s, "Camera", "overdrawhigh", 0);
+	getMugenDefIntegerOrDefault(&gData.mCamera.mOverdrawLow, s, "Camera", "overdrawlow", 0);
+	getMugenDefIntegerOrDefault(&gData.mCamera.mCutHigh, s, "Camera", "cuthigh", 0);
+	getMugenDefIntegerOrDefault(&gData.mCamera.mCutLow, s, "Camera", "cutlow", 0);
+	getMugenDefFloatOrDefault(&gData.mCamera.mStartZoom, s, "Camera", "startzoom", 1);
+	getMugenDefFloatOrDefault(&gData.mCamera.mZoomOut, s, "Camera", "zoomout", 1);
+	getMugenDefFloatOrDefault(&gData.mCamera.mZoomIn, s, "Camera", "zoomin", 1);
 }
 
 static void loadStagePlayerInfo(MugenDefScript* s) {
 
 	gData.mPlayerInfo.mP1Start = makePosition(0, 0, 0);
-	loadFloatOrDefault(&gData.mPlayerInfo.mP1Start.x, s, "PlayerInfo", "p1startx", 0);
-	loadFloatOrDefault(&gData.mPlayerInfo.mP1Start.y, s, "PlayerInfo", "p1starty", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mP1Start.x, s, "PlayerInfo", "p1startx", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mP1Start.y, s, "PlayerInfo", "p1starty", 0);
 
 	gData.mPlayerInfo.mP2Start = makePosition(0, 0, 0);
-	loadFloatOrDefault(&gData.mPlayerInfo.mP2Start.x, s, "PlayerInfo", "p2startx", 0);
-	loadFloatOrDefault(&gData.mPlayerInfo.mP2Start.y, s, "PlayerInfo", "p2starty", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mP2Start.x, s, "PlayerInfo", "p2startx", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mP2Start.y, s, "PlayerInfo", "p2starty", 0);
 
-	loadIntegerOrDefault(&gData.mPlayerInfo.mP1Facing, s, "PlayerInfo", "p1facing", 0);
-	loadIntegerOrDefault(&gData.mPlayerInfo.mP2Facing, s, "PlayerInfo", "p2facing", 0);
+	getMugenDefIntegerOrDefault(&gData.mPlayerInfo.mP1Facing, s, "PlayerInfo", "p1facing", 0);
+	getMugenDefIntegerOrDefault(&gData.mPlayerInfo.mP2Facing, s, "PlayerInfo", "p2facing", 0);
 
-	loadFloatOrDefault(&gData.mPlayerInfo.mLeftBound, s, "PlayerInfo", "leftbound", 0);
-	loadFloatOrDefault(&gData.mPlayerInfo.mRightBound, s, "PlayerInfo", "rightbound", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mLeftBound, s, "PlayerInfo", "leftbound", 0);
+	getMugenDefFloatOrDefault(&gData.mPlayerInfo.mRightBound, s, "PlayerInfo", "rightbound", 0);
 }
 
 static void loadStageBound(MugenDefScript* s) {
-	loadFloatOrDefault(&gData.mBound.mScreenLeft, s, "Bound", "screenleft", 0);
-	loadFloatOrDefault(&gData.mBound.mScreenRight, s, "Bound", "screenright", 0);
+	getMugenDefFloatOrDefault(&gData.mBound.mScreenLeft, s, "Bound", "screenleft", 0);
+	getMugenDefFloatOrDefault(&gData.mBound.mScreenRight, s, "Bound", "screenright", 0);
 }
 
 static void loadStageStageInfo(MugenDefScript* s) {
-	loadFloatOrDefault(&gData.mStageInfo.mZOffset, s, "StageInfo", "zoffset", 0);
-	loadIntegerOrDefault(&gData.mStageInfo.mZOffsetLink, s, "StageInfo", "zoffsetlink", 0);
-	loadIntegerOrDefault(&gData.mStageInfo.mAutoturn, s, "StageInfo", "autoturn", 1);
-	loadIntegerOrDefault(&gData.mStageInfo.mResetBG, s, "StageInfo", "resetBG", 0);
-	loadVectorIOrDefault(&gData.mStageInfo.mLocalCoordinates, s, "StageInfo", "localcoord", makeVector3DI(320, 240, 0));
+	getMugenDefFloatOrDefault(&gData.mStageInfo.mZOffset, s, "StageInfo", "zoffset", 0);
+	getMugenDefIntegerOrDefault(&gData.mStageInfo.mZOffsetLink, s, "StageInfo", "zoffsetlink", 0);
+	getMugenDefIntegerOrDefault(&gData.mStageInfo.mAutoturn, s, "StageInfo", "autoturn", 1);
+	getMugenDefIntegerOrDefault(&gData.mStageInfo.mResetBG, s, "StageInfo", "resetBG", 0);
+	getMugenDefVectorIOrDefault(&gData.mStageInfo.mLocalCoordinates, s, "StageInfo", "localcoord", makeVector3DI(320, 240, 0));
 
 	gData.mStageInfo.mScale = makePosition(1, 1, 1);
-	loadFloatOrDefault(&gData.mStageInfo.mScale.x, s, "StageInfo", "xscale", 1);
-	loadFloatOrDefault(&gData.mStageInfo.mScale.y, s, "StageInfo", "yscale", 1);
+	getMugenDefFloatOrDefault(&gData.mStageInfo.mScale.x, s, "StageInfo", "xscale", 1);
+	getMugenDefFloatOrDefault(&gData.mStageInfo.mScale.y, s, "StageInfo", "yscale", 1);
 }
 
 static void loadStageShadow(MugenDefScript* s) {
-	loadIntegerOrDefault(&gData.mShadow.mIntensity, s, "Shadow", "intensity", 128);
-	loadVectorOrDefault(&gData.mShadow.mColor, s, "StageInfo", "color", makePosition(1, 1, 1));
-	loadFloatOrDefault(&gData.mShadow.mScaleY, s, "StageInfo", "yscale", 1);
-	loadVectorIOrDefault(&gData.mShadow.mFadeRange, s, "StageInfo", "fade.range", makeVector3DI(0, 0, 0));
-	loadFloatOrDefault(&gData.mShadow.mXShear, s, "StageInfo", "xshear", 0);
+	getMugenDefIntegerOrDefault(&gData.mShadow.mIntensity, s, "Shadow", "intensity", 128);
+	getMugenDefVectorOrDefault(&gData.mShadow.mColor, s, "StageInfo", "color", makePosition(1, 1, 1));
+	getMugenDefFloatOrDefault(&gData.mShadow.mScaleY, s, "StageInfo", "yscale", 1);
+	getMugenDefVectorIOrDefault(&gData.mShadow.mFadeRange, s, "StageInfo", "fade.range", makeVector3DI(0, 0, 0));
+	getMugenDefFloatOrDefault(&gData.mShadow.mXShear, s, "StageInfo", "xshear", 0);
 }
 
 static void loadStageReflection(MugenDefScript* s) {
-	loadIntegerOrDefault(&gData.mReflection.mReflect, s, "Reflection", "reflect", 0);
+	getMugenDefIntegerOrDefault(&gData.mReflection.mReflect, s, "Reflection", "reflect", 0);
 }
 
 static void loadStageMusic(MugenDefScript* s) {
-	loadStringOrDefault(gData.mMusic.mBGMusic, s, "Music", "bgmusic", "");
-	loadIntegerOrDefault(&gData.mMusic.mBGVolume, s, "Music", "bgvolume", 0);
+	getMugenDefStringOrDefault(gData.mMusic.mBGMusic, s, "Music", "bgmusic", "");
+	getMugenDefIntegerOrDefault(&gData.mMusic.mBGVolume, s, "Music", "bgvolume", 0);
 }
 
 static MugenDefScriptGroup* loadStageBackgroundDefinitionAndReturnGroup(MugenDefScript* s) {
@@ -235,8 +235,8 @@ static MugenDefScriptGroup* loadStageBackgroundDefinitionAndReturnGroup(MugenDef
 
 	bgdef = string_map_get(&s->mGroups, name);
 
-	loadStringOrDefault(gData.mBackgroundDefinition.mSpritePath, s, name, "spr", "");
-	loadIntegerOrDefault(&gData.mBackgroundDefinition.mDebugBG, s, name, "debugbg", 0);
+	getMugenDefStringOrDefault(gData.mBackgroundDefinition.mSpritePath, s, name, "spr", "");
+	getMugenDefIntegerOrDefault(&gData.mBackgroundDefinition.mDebugBG, s, name, "debugbg", 0);
 
 	return bgdef;
 }
@@ -276,12 +276,12 @@ static void loadBackgroundElement(MugenDefScript* s, char* tName, int i) {
  	debugString(tName);
 
 	char type[100];
-	loadStringOrDefault(type, s, tName, "type", "normal");
+	getMugenDefStringOrDefault(type, s, tName, "type", "normal");
 	if (!strcmp("normal", type) || !strcmp("parallax", type)) { // TODO: parallax
 		e->mType = STAGE_BACKGROUND_STATIC;
 	} else if (!strcmp("anim", type)) {
 		e->mType = STAGE_BACKGROUND_ANIMATED;
-		loadIntegerOrDefault(&e->mActionNumber, s, tName, "actionno", -1);
+		getMugenDefIntegerOrDefault(&e->mActionNumber, s, tName, "actionno", -1);
 	}
 	else {
 		logError("Unknown type.");
@@ -289,13 +289,13 @@ static void loadBackgroundElement(MugenDefScript* s, char* tName, int i) {
 		abortSystem();
 	}
 
-	loadVectorIOrDefault(&e->mSpriteNo, s, tName, "spriteno", makeVector3DI(0, 0, 0));
-	loadIntegerOrDefault(&e->mLayerNo, s, tName, "layerno", 0);
-	loadVectorOrDefault(&e->mStart, s, tName, "start", makePosition(0, 0, 0));
-	loadVectorOrDefault(&e->mDelta, s, tName, "delta", makePosition(1, 1, 1));
-	loadIntegerOrDefault(&e->mMask, s, tName, "mask", 0);
-	loadVectorIOrDefault(&e->mTile, s, tName, "tile", makeVector3DI(0, 0, 0));
-	loadVectorIOrDefault(&e->mTileSpacing, s, tName, "tilespacing", makeVector3DI(0, 0, 0));
+	getMugenDefVectorIOrDefault(&e->mSpriteNo, s, tName, "spriteno", makeVector3DI(0, 0, 0));
+	getMugenDefIntegerOrDefault(&e->mLayerNo, s, tName, "layerno", 0);
+	getMugenDefVectorOrDefault(&e->mStart, s, tName, "start", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&e->mDelta, s, tName, "delta", makePosition(1, 1, 1));
+	getMugenDefIntegerOrDefault(&e->mMask, s, tName, "mask", 0);
+	getMugenDefVectorIOrDefault(&e->mTile, s, tName, "tile", makeVector3DI(0, 0, 0));
+	getMugenDefVectorIOrDefault(&e->mTileSpacing, s, tName, "tilespacing", makeVector3DI(0, 0, 0));
 	e->mListPosition = i;
 
 	addBackgroundElementToStageHandler(e);

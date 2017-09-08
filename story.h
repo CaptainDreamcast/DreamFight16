@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mugenspritefilereader.h"
+#include <tari/mugenspritefilereader.h>
 
 void resetStory();
 void startNextStoryPart();

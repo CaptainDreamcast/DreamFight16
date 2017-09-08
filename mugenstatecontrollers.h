@@ -1,7 +1,8 @@
 #pragma once
 
+#include <tari/mugendefreader.h>
+
 #include "mugenassignment.h"
-#include "mugendefreader.h"
 #include "playerdefinition.h"
 
 MugenStateController* parseMugenStateControllerFromGroup(MugenDefScriptGroup* tGroup);

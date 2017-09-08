@@ -180,7 +180,7 @@ static void handleSingleTile(int tTile, int* tStart, int* tAmount, int tSize, do
 
 static void addSingleMugenStageHandlerBackgroundElementTile(StaticStageHandlerElement* e, MugenSpriteFile* tSprites, Vector3D tOffset) {
 	StageElementAnimationReference* newAnimation = allocMemory(sizeof(StageElementAnimationReference));
-	newAnimation->mID = addMugenAnimation(NULL, e->mAnimation, tSprites, &newAnimation->mReferencePosition, e->mCoordinates.y, e->mCoordinates.y);
+	newAnimation->mID = addRegisteredAnimation(NULL, e->mAnimation, tSprites, &newAnimation->mReferencePosition, e->mCoordinates.y, e->mCoordinates.y);
 	newAnimation->mOffset = tOffset;
 	setRegisteredAnimationToUseFixedZ(newAnimation->mID);
 

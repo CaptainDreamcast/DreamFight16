@@ -2,9 +2,10 @@
 
 #include <tari/datastructures.h>
 
+#include <tari/mugenspritefilereader.h>
+#include <tari/mugenanimationreader.h>
+
 #include "mugenstatereader.h"
-#include "mugenanimationreader.h"
-#include "mugenspritefilereader.h"
 #include "mugencommandreader.h"
 
 typedef enum {

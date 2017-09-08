@@ -5,8 +5,8 @@
 #include <tari/log.h>
 #include <tari/system.h>
 #include <tari/memoryhandler.h>
+#include <tari/mugendefreader.h>
 
-#include "mugendefreader.h"
 #include "mugenstatecontrollers.h"
 
 static int isMugenStateDef(char* tName) {
@@ -325,20 +325,20 @@ static MugenConstants makeEmptyMugenConstants() {
 
 static void loadMugenConstantsSizeData(MugenConstantsSizeData* tSizeData, MugenDefScript* tScript) {
 	tSizeData->mScale = makePosition(1, 1, 1);
-	loadFloatOrDefault(&tSizeData->mScale.x, tScript, "Size", "xscale", 1);
-	loadFloatOrDefault(&tSizeData->mScale.y, tScript, "Size", "yscale", 1);
-	loadIntegerOrDefault(&tSizeData->mGroundBackWidth, tScript, "Size", "ground.back", 10);
-	loadIntegerOrDefault(&tSizeData->mGroundFrontWidth, tScript, "Size", "ground.front", 10);
-	loadIntegerOrDefault(&tSizeData->mAirBackWidth, tScript, "Size", "air.back", 10);
-	loadIntegerOrDefault(&tSizeData->mAirFrontWidth, tScript, "Size", "air.front", 10);
-	loadIntegerOrDefault(&tSizeData->mHeight, tScript, "Size", "height", 50);
-	loadIntegerOrDefault(&tSizeData->mAttackDistance, tScript, "Size", "attack.dist", 100);
-	loadIntegerOrDefault(&tSizeData->mProjectileAttackDistance, tScript, "Size", "proj.attack.dist", 100);
-	loadIntegerOrDefault(&tSizeData->mDoesScaleProjectiles, tScript, "Size", "proj.doscale", 0);
-	loadVectorOrDefault(&tSizeData->mHeadPosition, tScript, "Size", "head.pos", makePosition(0, 0, 0));
-	loadVectorOrDefault(&tSizeData->mMidPosition, tScript, "Size", "mid.pos", makePosition(0, 0, 0));
-	loadIntegerOrDefault(&tSizeData->mShadowOffset, tScript, "Size", "shadowoffset", 0);
-	loadVectorIOrDefault(&tSizeData->mDrawOffset, tScript, "Size", "draw.offset", makeVector3DI(0, 0, 0));
+	getMugenDefFloatOrDefault(&tSizeData->mScale.x, tScript, "Size", "xscale", 1);
+	getMugenDefFloatOrDefault(&tSizeData->mScale.y, tScript, "Size", "yscale", 1);
+	getMugenDefIntegerOrDefault(&tSizeData->mGroundBackWidth, tScript, "Size", "ground.back", 10);
+	getMugenDefIntegerOrDefault(&tSizeData->mGroundFrontWidth, tScript, "Size", "ground.front", 10);
+	getMugenDefIntegerOrDefault(&tSizeData->mAirBackWidth, tScript, "Size", "air.back", 10);
+	getMugenDefIntegerOrDefault(&tSizeData->mAirFrontWidth, tScript, "Size", "air.front", 10);
+	getMugenDefIntegerOrDefault(&tSizeData->mHeight, tScript, "Size", "height", 50);
+	getMugenDefIntegerOrDefault(&tSizeData->mAttackDistance, tScript, "Size", "attack.dist", 100);
+	getMugenDefIntegerOrDefault(&tSizeData->mProjectileAttackDistance, tScript, "Size", "proj.attack.dist", 100);
+	getMugenDefIntegerOrDefault(&tSizeData->mDoesScaleProjectiles, tScript, "Size", "proj.doscale", 0);
+	getMugenDefVectorOrDefault(&tSizeData->mHeadPosition, tScript, "Size", "head.pos", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&tSizeData->mMidPosition, tScript, "Size", "mid.pos", makePosition(0, 0, 0));
+	getMugenDefIntegerOrDefault(&tSizeData->mShadowOffset, tScript, "Size", "shadowoffset", 0);
+	getMugenDefVectorIOrDefault(&tSizeData->mDrawOffset, tScript, "Size", "draw.offset", makeVector3DI(0, 0, 0));
 }
 
 static void loadSingleSparkNumber(int* oIsSparkInPlayerFile, int* oSparkNumber, MugenDefScript* tScript, char* tGroup, char* tName, int tDefaultNumber) {
@@ -362,72 +362,72 @@ static void loadSingleSparkNumber(int* oIsSparkInPlayerFile, int* oSparkNumber, 
 }
 
 static void loadMugenConstantsHeader(MugenConstantsHeader* tHeader, MugenDefScript* tScript) {
-	loadIntegerOrDefault(&tHeader->mLife, tScript, "Data", "life", 1000);
-	loadIntegerOrDefault(&tHeader->mPower, tScript, "Data", "power", 3000);
-	loadIntegerOrDefault(&tHeader->mAttack, tScript, "Data", "attack", 100);
-	loadIntegerOrDefault(&tHeader->mDefense, tScript, "Data", "defence", 100);
-	loadIntegerOrDefault(&tHeader->mFallDefenseUp, tScript, "Data", "fall.defence_up", 50);
-	loadFloatOrDefault(&tHeader->mLiedownTime, tScript, "Data", "liedown.time", 60);
-	loadIntegerOrDefault(&tHeader->mAirJugglePoints, tScript, "Data", "airjuggle", 15);
+	getMugenDefIntegerOrDefault(&tHeader->mLife, tScript, "Data", "life", 1000);
+	getMugenDefIntegerOrDefault(&tHeader->mPower, tScript, "Data", "power", 3000);
+	getMugenDefIntegerOrDefault(&tHeader->mAttack, tScript, "Data", "attack", 100);
+	getMugenDefIntegerOrDefault(&tHeader->mDefense, tScript, "Data", "defence", 100);
+	getMugenDefIntegerOrDefault(&tHeader->mFallDefenseUp, tScript, "Data", "fall.defence_up", 50);
+	getMugenDefFloatOrDefault(&tHeader->mLiedownTime, tScript, "Data", "liedown.time", 60);
+	getMugenDefIntegerOrDefault(&tHeader->mAirJugglePoints, tScript, "Data", "airjuggle", 15);
 
 	loadSingleSparkNumber(&tHeader->mIsSparkNoInPlayerFile, &tHeader->mSparkNo, tScript, "Data", "sparkno", 2);
 	loadSingleSparkNumber(&tHeader->mIsGuardSparkNoInPlayerFile, &tHeader->mGuardSparkNo, tScript, "Data", "guard.sparkno", 40);
-	loadIntegerOrDefault(&tHeader->mKOEcho, tScript, "Data", "KO.echo", 0);
-	loadIntegerOrDefault(&tHeader->mVolume, tScript, "Data", "volume", 0);
+	getMugenDefIntegerOrDefault(&tHeader->mKOEcho, tScript, "Data", "KO.echo", 0);
+	getMugenDefIntegerOrDefault(&tHeader->mVolume, tScript, "Data", "volume", 0);
 
-	loadIntegerOrDefault(&tHeader->mIntPersistIndex, tScript, "Data", "IntPersistIndex", 60);
-	loadIntegerOrDefault(&tHeader->mFloatPersistIndex, tScript, "Data", "FloatPersistIndex", 40);
+	getMugenDefIntegerOrDefault(&tHeader->mIntPersistIndex, tScript, "Data", "IntPersistIndex", 60);
+	getMugenDefIntegerOrDefault(&tHeader->mFloatPersistIndex, tScript, "Data", "FloatPersistIndex", 40);
 }
 
 static void loadMugenConstantsVelocityData(MugenConstantsVelocityData* tVelocityData, MugenDefScript* tScript) {
-	loadVectorOrDefault(&tVelocityData->mWalkForward, tScript, "Velocity", "walk.fwd", makePosition(1, 0, 0));
-	loadVectorOrDefault(&tVelocityData->mWalkBackward, tScript, "Velocity", "walk.back", makePosition(-1, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mWalkForward, tScript, "Velocity", "walk.fwd", makePosition(1, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mWalkBackward, tScript, "Velocity", "walk.back", makePosition(-1, 0, 0));
 
-	loadVectorOrDefault(&tVelocityData->mRunForward, tScript, "Velocity", "run.fwd", makePosition(1, 0, 0));
-	loadVectorOrDefault(&tVelocityData->mRunBackward, tScript, "Velocity", "run.back", makePosition(-1, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mRunForward, tScript, "Velocity", "run.fwd", makePosition(1, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mRunBackward, tScript, "Velocity", "run.back", makePosition(-1, 0, 0));
 
-	loadVectorOrDefault(&tVelocityData->mJumpNeutral, tScript, "Velocity", "jump.neu", makePosition(0, 1, 0));
-	loadVectorOrDefault(&tVelocityData->mJumpBackward, tScript, "Velocity", "jump.back", makePosition(-1, 1, 0));
-	loadVectorOrDefault(&tVelocityData->mJumpForward, tScript, "Velocity", "jump.fwd", makePosition(1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mJumpNeutral, tScript, "Velocity", "jump.neu", makePosition(0, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mJumpBackward, tScript, "Velocity", "jump.back", makePosition(-1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mJumpForward, tScript, "Velocity", "jump.fwd", makePosition(1, 1, 0));
 
-	loadVectorOrDefault(&tVelocityData->mRunJumpBackward, tScript, "Velocity", "runjump.back", makePosition(-1, 1, 0));
-	loadVectorOrDefault(&tVelocityData->mRunJumpForward, tScript, "Velocity", "runjump.fwd", makePosition(1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mRunJumpBackward, tScript, "Velocity", "runjump.back", makePosition(-1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mRunJumpForward, tScript, "Velocity", "runjump.fwd", makePosition(1, 1, 0));
 
-	loadVectorOrDefault(&tVelocityData->mAirJumpNeutral, tScript, "Velocity", "airjump.neu", makePosition(0, 1, 0));
-	loadVectorOrDefault(&tVelocityData->mAirJumpBackward, tScript, "Velocity", "airjump.back", makePosition(-1, 1, 0));
-	loadVectorOrDefault(&tVelocityData->mAirJumpForward, tScript, "Velocity", "airjump.fwd", makePosition(1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirJumpNeutral, tScript, "Velocity", "airjump.neu", makePosition(0, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirJumpBackward, tScript, "Velocity", "airjump.back", makePosition(-1, 1, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirJumpForward, tScript, "Velocity", "airjump.fwd", makePosition(1, 1, 0));
 
-	loadVectorOrDefault(&tVelocityData->mAirGetHitGroundRecovery, tScript, "Velocity", "air.gethit.groundrecover", makePosition(0, 0, 0));
-	loadVectorOrDefault(&tVelocityData->mAirGetHitAirRecoveryMultiplier, tScript, "Velocity", "air.gethit.airrecover.mul", makePosition(1, 1, 1));
-	loadVectorOrDefault(&tVelocityData->mAirGetHitAirRecoveryOffset, tScript, "Velocity", "air.gethit.airrecover.add", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirGetHitGroundRecovery, tScript, "Velocity", "air.gethit.groundrecover", makePosition(0, 0, 0));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirGetHitAirRecoveryMultiplier, tScript, "Velocity", "air.gethit.airrecover.mul", makePosition(1, 1, 1));
+	getMugenDefVectorOrDefault(&tVelocityData->mAirGetHitAirRecoveryOffset, tScript, "Velocity", "air.gethit.airrecover.add", makePosition(0, 0, 0));
 
-	loadFloatOrDefault(&tVelocityData->mAirGetHitExtraXWhenHoldingBackward, tScript, "Velocity", "air.gethit.airrecover.back", 0);
-	loadFloatOrDefault(&tVelocityData->mAirGetHitExtraXWhenHoldingForward, tScript, "Velocity", "air.gethit.airrecover.fwd", 0);
-	loadFloatOrDefault(&tVelocityData->mAirGetHitExtraYWhenHoldingUp, tScript, "Velocity", "air.gethit.airrecover.up", 0);
-	loadFloatOrDefault(&tVelocityData->mAirGetHitExtraYWhenHoldingDown, tScript, "Velocity", "air.gethit.airrecover.down", 0);
+	getMugenDefFloatOrDefault(&tVelocityData->mAirGetHitExtraXWhenHoldingBackward, tScript, "Velocity", "air.gethit.airrecover.back", 0);
+	getMugenDefFloatOrDefault(&tVelocityData->mAirGetHitExtraXWhenHoldingForward, tScript, "Velocity", "air.gethit.airrecover.fwd", 0);
+	getMugenDefFloatOrDefault(&tVelocityData->mAirGetHitExtraYWhenHoldingUp, tScript, "Velocity", "air.gethit.airrecover.up", 0);
+	getMugenDefFloatOrDefault(&tVelocityData->mAirGetHitExtraYWhenHoldingDown, tScript, "Velocity", "air.gethit.airrecover.down", 0);
 }
 
 static void loadMugenConstantsMovementData(MugenConstantsMovementData* tMovementData, MugenDefScript* tScript) {
-	loadIntegerOrDefault(&tMovementData->mAllowedAirJumpAmount, tScript, "Movement", "airjump.num", 0);
-	loadIntegerOrDefault(&tMovementData->mAirJumpMinimumHeight, tScript, "Movement", "airjump.height", 10);
+	getMugenDefIntegerOrDefault(&tMovementData->mAllowedAirJumpAmount, tScript, "Movement", "airjump.num", 0);
+	getMugenDefIntegerOrDefault(&tMovementData->mAirJumpMinimumHeight, tScript, "Movement", "airjump.height", 10);
 
-	loadFloatOrDefault(&tMovementData->mVerticalAcceleration, tScript, "Movement", "yaccel", 1);
-	loadFloatOrDefault(&tMovementData->mStandFiction, tScript, "Movement", "stand.friction", 0.2);
-	loadFloatOrDefault(&tMovementData->mCrouchFriction, tScript, "Movement", "crouch.friction", 0.2);
-	loadFloatOrDefault(&tMovementData->mStandFrictionThreshold, tScript, "Movement", "stand.friction.threshold", 0.1);
-	loadFloatOrDefault(&tMovementData->mCrouchFrictionThreshold, tScript, "Movement", "crouch.friction.threshold", 0.1);
+	getMugenDefFloatOrDefault(&tMovementData->mVerticalAcceleration, tScript, "Movement", "yaccel", 1);
+	getMugenDefFloatOrDefault(&tMovementData->mStandFiction, tScript, "Movement", "stand.friction", 0.2);
+	getMugenDefFloatOrDefault(&tMovementData->mCrouchFriction, tScript, "Movement", "crouch.friction", 0.2);
+	getMugenDefFloatOrDefault(&tMovementData->mStandFrictionThreshold, tScript, "Movement", "stand.friction.threshold", 0.1);
+	getMugenDefFloatOrDefault(&tMovementData->mCrouchFrictionThreshold, tScript, "Movement", "crouch.friction.threshold", 0.1);
 
-	loadIntegerOrDefault(&tMovementData->mAirGetHitGroundLevelY, tScript, "Movement", "air.gethit.groundlevel", 10);
-	loadIntegerOrDefault(&tMovementData->mAirGetHitGroundRecoveryGroundYTheshold, tScript, "Movement", "air.gethit.groundrecover.ground.threshold", 10);
-	loadIntegerOrDefault(&tMovementData->mAirGetHitGroundRecoveryGroundGoundLevelY, tScript, "Movement", "air.gethit.groundrecover.groundlevel", 10);
-	loadFloatOrDefault(&tMovementData->mAirGetHitAirRecoveryVelocityYThreshold, tScript, "Movement", "air.gethit.airrecover.threshold", -1);
-	loadFloatOrDefault(&tMovementData->mAirGetHitAirRecoveryVerticalAcceleration, tScript, "Movement", "air.gethit.airrecover.yaccel", 0.2);
-	loadIntegerOrDefault(&tMovementData->mAirGetHitTripGroundLevelY, tScript, "Movement", "air.gethit.trip.groundlevel", 10);
+	getMugenDefIntegerOrDefault(&tMovementData->mAirGetHitGroundLevelY, tScript, "Movement", "air.gethit.groundlevel", 10);
+	getMugenDefIntegerOrDefault(&tMovementData->mAirGetHitGroundRecoveryGroundYTheshold, tScript, "Movement", "air.gethit.groundrecover.ground.threshold", 10);
+	getMugenDefIntegerOrDefault(&tMovementData->mAirGetHitGroundRecoveryGroundGoundLevelY, tScript, "Movement", "air.gethit.groundrecover.groundlevel", 10);
+	getMugenDefFloatOrDefault(&tMovementData->mAirGetHitAirRecoveryVelocityYThreshold, tScript, "Movement", "air.gethit.airrecover.threshold", -1);
+	getMugenDefFloatOrDefault(&tMovementData->mAirGetHitAirRecoveryVerticalAcceleration, tScript, "Movement", "air.gethit.airrecover.yaccel", 0.2);
+	getMugenDefIntegerOrDefault(&tMovementData->mAirGetHitTripGroundLevelY, tScript, "Movement", "air.gethit.trip.groundlevel", 10);
 
-	loadVectorOrDefault(&tMovementData->mBounceOffset, tScript, "Movement", "down.bounce.offset", makePosition(0, 0, 0));
-	loadFloatOrDefault(&tMovementData->mVerticalBounceAcceleration, tScript, "Movement", "down.bounce.yaccel", 0);
-	loadIntegerOrDefault(&tMovementData->mBounceGroundLevel, tScript, "Movement", "down.bounce.groundlevel", 10);
-	loadFloatOrDefault(&tMovementData->mLyingDownFrictionThreshold, tScript, "Movement", "down.friction.threshold", 0.05);	
+	getMugenDefVectorOrDefault(&tMovementData->mBounceOffset, tScript, "Movement", "down.bounce.offset", makePosition(0, 0, 0));
+	getMugenDefFloatOrDefault(&tMovementData->mVerticalBounceAcceleration, tScript, "Movement", "down.bounce.yaccel", 0);
+	getMugenDefIntegerOrDefault(&tMovementData->mBounceGroundLevel, tScript, "Movement", "down.bounce.groundlevel", 10);
+	getMugenDefFloatOrDefault(&tMovementData->mLyingDownFrictionThreshold, tScript, "Movement", "down.friction.threshold", 0.05);	
 }
 
 static void loadMugenConstantsFromScript(MugenConstants* tConstants, MugenDefScript* tScript) {

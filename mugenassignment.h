@@ -2,7 +2,7 @@
 
 #include <tari/geometry.h>
 
-#include "mugendefreader.h"
+#include <tari/mugendefreader.h>
 
 typedef enum {
 	MUGEN_ASSIGNMENT_TYPE_FIXED_BOOLEAN,

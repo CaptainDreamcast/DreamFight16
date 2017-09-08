@@ -2,7 +2,8 @@
 
 #include <assert.h>
 
-#include "mugenanimationreader.h"
+#include <tari/mugenanimationreader.h>
+
 #include "playerdefinition.h"
 #include "fightui.h"
 #include "mugenanimationhandler.h"
@@ -136,7 +137,7 @@ void setSuperPauseAnimation(int tIsInPlayerFile, int tAnimationNumber)
 	}
 
 	gData.mSuperPause.mHasAnimation = 1;
-	gData.mSuperPause.mMugenAnimationID = addMugenAnimation(NULL, animation, sprites, &gData.mSuperPause.mAnimationReferencePosition, getPlayerCoordinateP(gData.mSuperPause.mPlayer), getPlayerCoordinateP(gData.mSuperPause.mPlayer));
+	gData.mSuperPause.mMugenAnimationID = addRegisteredAnimation(NULL, animation, sprites, &gData.mSuperPause.mAnimationReferencePosition, getPlayerCoordinateP(gData.mSuperPause.mPlayer), getPlayerCoordinateP(gData.mSuperPause.mPlayer));
 	setRegisteredAnimationCameraPositionReference(gData.mSuperPause.mMugenAnimationID, getMugenStageHandlerCameraPositionReference());
 	setRegisteredAnimationToUseFixedZ(gData.mSuperPause.mMugenAnimationID);
 }

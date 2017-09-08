@@ -9,12 +9,11 @@
 #include <tari/system.h>
 #include <tari/timer.h>
 #include <tari/math.h>
+#include <tari/mugendefreader.h>
+#include <tari/mugenanimationreader.h>
 
-#include "mugendefreader.h"
 #include "mugencommandreader.h"
 #include "mugenstatereader.h"
-#include "mugenanimationreader.h"
-#include "mugenspritefilereader.h"
 #include "mugenanimationhandler.h"
 #include "mugencommandhandler.h"
 #include "mugenstatehandler.h"
@@ -32,14 +31,14 @@ static struct {
 } gData;
 
 static void loadPlayerHeaderFromScript(PlayerHeader* tHeader, MugenDefScript* tScript) {
-	loadStringOrDefault(tHeader->mName, tScript, "Info", "name", "Character");
-	loadStringOrDefault(tHeader->mDisplayName, tScript, "Info", "displayname", tHeader->mName);
-	loadStringOrDefault(tHeader->mVersion, tScript, "Info", "versiondate", "09,09,2017");
-	loadStringOrDefault(tHeader->mMugenVersion, tScript, "Info", "mugenversion", "1.1");
-	loadStringOrDefault(tHeader->mAuthor, tScript, "Info", "author", "John Doe");
-	loadStringOrDefault(tHeader->mPaletteDefaults, tScript, "Info", "pal.defaults", "1");
+	getMugenDefStringOrDefault(tHeader->mName, tScript, "Info", "name", "Character");
+	getMugenDefStringOrDefault(tHeader->mDisplayName, tScript, "Info", "displayname", tHeader->mName);
+	getMugenDefStringOrDefault(tHeader->mVersion, tScript, "Info", "versiondate", "09,09,2017");
+	getMugenDefStringOrDefault(tHeader->mMugenVersion, tScript, "Info", "mugenversion", "1.1");
+	getMugenDefStringOrDefault(tHeader->mAuthor, tScript, "Info", "author", "John Doe");
+	getMugenDefStringOrDefault(tHeader->mPaletteDefaults, tScript, "Info", "pal.defaults", "1");
 
-	loadVectorIOrDefault(&tHeader->mLocalCoordinates, tScript, "Info", "localcoord", makeVector3DI(320, 240, 0));
+	getMugenDefVectorIOrDefault(&tHeader->mLocalCoordinates, tScript, "Info", "localcoord", makeVector3DI(320, 240, 0));
 }
 
 static void loadOptionalStateFiles(MugenDefScript* tScript, char* tPath, Player* tPlayer) {
@@ -50,7 +49,7 @@ static void loadOptionalStateFiles(MugenDefScript* tScript, char* tPath, Player*
 	int i = 1;
 	while (i) {
 		sprintf(name, "st%d", i);
-		loadStringOrDefault(file, tScript, "Files", name, "");
+		getMugenDefStringOrDefault(file, tScript, "Files", name, "");
 		sprintf(scriptPath, "%s%s", tPath, file);
 		if (!isFile(scriptPath)) return;
 		
@@ -70,7 +69,7 @@ static void setPlayerExternalDependencies(Player* tPlayer) {
 	setPlayerStateMoveType(tPlayer, MUGEN_STATE_MOVE_TYPE_IDLE);
 	setPlayerStateType(tPlayer, MUGEN_STATE_TYPE_STANDING);
 
-	tPlayer->mAnimationID = addMugenAnimation(tPlayer, getMugenAnimation(&tPlayer->mAnimations, 0), &tPlayer->mSprites, getHandledPhysicsPositionReference(tPlayer->mPhysicsID), tPlayer->mHeader.mLocalCoordinates.y, tPlayer->mHeader.mLocalCoordinates.y);
+	tPlayer->mAnimationID = addRegisteredAnimation(tPlayer, getMugenAnimation(&tPlayer->mAnimations, 0), &tPlayer->mSprites, getHandledPhysicsPositionReference(tPlayer->mPhysicsID), tPlayer->mHeader.mLocalCoordinates.y, tPlayer->mHeader.mLocalCoordinates.y);
 	setRegisteredAnimationCameraPositionReference(tPlayer->mAnimationID, getMugenStageHandlerCameraPositionReference());
 	tPlayer->mStateMachineID = registerMugenStateMachine(&tPlayer->mConstants.mStates, tPlayer);
 }
@@ -82,18 +81,18 @@ static void loadPlayerFiles(char* tPath, Player* tPlayer, MugenDefScript* tScrip
 	char name[100];
 	getPathToFile(path, tPath);
 
-	loadStringOrDefault(file, tScript, "Files", "cns", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "cns", "");
 	assert(strcmp("", file));
 	sprintf(scriptPath, "%s%s", path, file);
 	tPlayer->mConstants = loadMugenConstantsFile(scriptPath);
 
-	loadStringOrDefault(file, tScript, "Files", "stcommon", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "stcommon", "");
 	sprintf(scriptPath, "%s%s", path, file);
 	if (isFile(scriptPath)) {
 		loadMugenStateDefinitionsFromFile(&tPlayer->mConstants.mStates, scriptPath);
 	}
 
-	loadStringOrDefault(file, tScript, "Files", "st", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "st", "");
 	sprintf(scriptPath, "%s%s", path, file);
 	if (isFile(scriptPath)) {
 		loadMugenStateDefinitionsFromFile(&tPlayer->mConstants.mStates, scriptPath);
@@ -101,13 +100,13 @@ static void loadPlayerFiles(char* tPath, Player* tPlayer, MugenDefScript* tScrip
 	
 	loadOptionalStateFiles(tScript, path, tPlayer);
 
-	loadStringOrDefault(file, tScript, "Files", "cmd", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "cmd", "");
 	assert(strcmp("", file));
 	sprintf(scriptPath, "%s%s", path, file);
 	tPlayer->mCommands = loadMugenCommandFile(scriptPath);
 	loadMugenStateDefinitionsFromFile(&tPlayer->mConstants.mStates, scriptPath);
 
-	loadStringOrDefault(file, tScript, "Files", "anim", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "anim", "");
 	assert(strcmp("", file));
 	sprintf(scriptPath, "%s%s", path, file);
 	tPlayer->mAnimations = loadMugenAnimationFile(scriptPath);
@@ -115,11 +114,11 @@ static void loadPlayerFiles(char* tPath, Player* tPlayer, MugenDefScript* tScrip
 	char palettePath[1024];
 	int preferredPalette = tPlayer->mPreferredPalette;
 	sprintf(name, "pal%d", preferredPalette + 1);
-	loadStringOrDefault(file, tScript, "Files", name, "");
+	getMugenDefStringOrDefault(file, tScript, "Files", name, "");
 	int hasPalettePath = strcmp("", file);
 	sprintf(palettePath, "%s%s", path, file);
 
-	loadStringOrDefault(file, tScript, "Files", "sprite", "");
+	getMugenDefStringOrDefault(file, tScript, "Files", "sprite", "");
 	assert(strcmp("", file));
 	sprintf(scriptPath, "%s%s", path, file);
 	tPlayer->mSprites = loadMugenSpriteFile(scriptPath, preferredPalette, hasPalettePath, palettePath);
@@ -1521,14 +1520,14 @@ void changePlayerAnimation(Player* p, int tNewAnimation)
 void changePlayerAnimationWithStartStep(Player* p, int tNewAnimation, int tStartStep)
 {
 	MugenAnimation* newAnimation = getMugenAnimation(&p->mAnimations, tNewAnimation);
-	changeMugenAnimationWithStartStep(p->mAnimationID, newAnimation, tStartStep);
+	changeGameMugenAnimationWithStartStep(p->mAnimationID, newAnimation, tStartStep);
 }
 
 void changePlayerAnimationToPlayer2AnimationWithStartStep(Player * p, int tNewAnimation, int tStartStep)
 {
 	Player* otherPlayer = getPlayerOtherPlayer(p);
 	MugenAnimation* newAnimation = getMugenAnimation(&otherPlayer->mAnimations, tNewAnimation);
-	changeMugenAnimationWithStartStep(p->mAnimationID, newAnimation, tStartStep);
+	changeGameMugenAnimationWithStartStep(p->mAnimationID, newAnimation, tStartStep);
 }
 
 int isPlayerStartingAnimationElementWithID(Player* p, int tStepID)

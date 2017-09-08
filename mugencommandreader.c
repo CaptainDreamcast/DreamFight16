@@ -7,8 +7,8 @@
 #include <tari/system.h>
 #include <tari/log.h>
 #include <tari/memoryhandler.h>
+#include <tari/mugendefreader.h>
 
-#include "mugendefreader.h"
 
 static struct {
 	int mDefaultTime;

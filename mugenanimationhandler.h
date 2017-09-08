@@ -2,12 +2,12 @@
 
 #include <tari/actorhandler.h>
 #include <tari/geometry.h>
+#include <tari/mugenspritefilereader.h>
+#include <tari/mugenanimationreader.h>
 
-#include "mugenanimationreader.h"
-#include "mugenspritefilereader.h"
 #include "playerdefinition.h"
 
-int addMugenAnimation(Player* p, MugenAnimation * tStartAnimation, MugenSpriteFile* tSprites, Position* tBasePosition, int tPositionCoordinateSystemInP, int tScaleCoordinateSystemInP);
+int addRegisteredAnimation(Player* p, MugenAnimation * tStartAnimation, MugenSpriteFile* tSprites, Position* tBasePosition, int tPositionCoordinateSystemInP, int tScaleCoordinateSystemInP);
 void removeRegisteredAnimation(int tID);
 
 int getRegisteredAnimationAnimationNumber(int tID);
@@ -23,7 +23,7 @@ void setRegisteredAnimationOneFrameFixedDrawAngle(int tID, double tAngle);
 void setRegisteredAnimationToNotUseStage(int tID);
 void setRegisteredAnimationBasePosition(int tID, Position* tBasePosition);
 
-void changeMugenAnimationWithStartStep(int tID, MugenAnimation* tNewAnimation, int tStartStep);
+void changeGameMugenAnimationWithStartStep(int tID, MugenAnimation* tNewAnimation, int tStartStep);
 
 int isStartingHandledAnimationElementWithID(int tID, int tStepID);
 int getTimeFromHandledAnimationElement(int tID, int tStep);
@@ -36,4 +36,4 @@ void unpauseRegisteredAnimation(int tID);
 
 void advanceRegisteredAnimationOneTick(int tID);
 
-extern ActorBlueprint MugenAnimationHandler;
+extern ActorBlueprint MugenGameAnimationHandler;

@@ -879,7 +879,7 @@ static void parseRoundText(char* tDst, char* tSrc, int tRoundNumber) {
 			o++;
 		}
 	}
-	tDst = '\0';
+	tDst[o] = '\0';
 }
 
 void playRoundAnimation(int tRound, void(*tFunc)())

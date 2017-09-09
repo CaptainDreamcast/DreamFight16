@@ -8,6 +8,7 @@ dc-tool_*
 *.pkg
 filesystem
 
+web/*
 *.html
 *.html.mem
 *.data
